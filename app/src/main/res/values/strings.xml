@@ -13,5 +13,8 @@
     <string name="signUpLabel">Sign up !</string>
     <string name="signUpButton">Sign Up</string>
     <string name="signUpErrorMessage">please make sure you fill all field correctly</string>
-    <string name="signUpErrorTitle">Error</string>
+    <string name="loginErrorMessage">username or password not filled correctly</string>
+    <string name="signUpErrorTitle">Oops</string>
+    <string name="loginErrorTitle">Oops</string>
+    <string name="action_logout">Logout</string>
 </resources>
