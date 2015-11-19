@@ -17,4 +17,8 @@
     <string name="signUpErrorTitle">Oops</string>
     <string name="loginErrorTitle">Oops</string>
     <string name="action_logout">Logout</string>
+    <string name="inboxTitle">inbox</string>
+    <string name="friendsTitle">friends</string>
+    <string name="emptyInboxLabel">inbox is empty</string>
+    <string name="emptyFriendsLabel">add friends to begin</string>
 </resources>
