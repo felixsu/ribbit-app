@@ -1,9 +1,13 @@
-package felix.com.ribbit;
+package felix.com.ribbit.adapter;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+
+import felix.com.ribbit.R;
+import felix.com.ribbit.fragment.FriendsFragment;
+import felix.com.ribbit.fragment.InboxFragment;
 
 /**
  * Created by fsoewito on 11/20/2015.

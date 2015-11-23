@@ -16,9 +16,18 @@
     <string name="loginErrorMessage">username or password not filled correctly</string>
     <string name="signUpErrorTitle">Oops</string>
     <string name="loginErrorTitle">Oops</string>
-    <string name="action_logout">Logout</string>
     <string name="inboxTitle">inbox</string>
     <string name="friendsTitle">friends</string>
     <string name="emptyInboxLabel">inbox is empty</string>
     <string name="emptyFriendsLabel">add friends to begin</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_add_friends">Add Friend</string>
+
+    <string name="title_activity_edit_friends">EditFriendsActivity</string>
+    <string name="editFriendsErrorTitle">Sorry!!</string>
+    <string name="emptyList">There\'s no people to display</string>
+    <string name="item_nameLabel">Name</string>
+    <string name="item_emailLabel">Email</string>
+    <string name="action_add">add</string>
+    <string name="selected_count">%1$s selected</string>
 </resources>

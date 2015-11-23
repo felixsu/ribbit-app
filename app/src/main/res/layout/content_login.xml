@@ -10,7 +10,7 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="felix.com.ribbit.LoginActivity"
+    tools:context="felix.com.ribbit.ui.LoginActivity"
     tools:showIn="@layout/activity_login">
 
     <EditText
@@ -45,4 +45,12 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
         android:text="@string/signUpLabel"/>
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminate="true"/>
 </RelativeLayout>
