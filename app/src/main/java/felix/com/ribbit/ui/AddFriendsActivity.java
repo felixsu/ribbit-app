@@ -1,6 +1,7 @@
 package felix.com.ribbit.ui;
 
 import android.app.AlertDialog;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +17,9 @@ import android.widget.ProgressBar;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseQuery;
+import com.parse.ParseRelation;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 import java.util.List;
 
@@ -47,26 +50,21 @@ public class AddFriendsActivity extends AppCompatActivity
     ActionBar mActionBar;
     ParseUserAdapter mAdapter;
     View mView;
+    private int mState;
 
     protected List<ParseUser> mUsers;
-    protected ParseUser[] mParseUsers = new ParseUser[]{};
-    private int mState;
+    protected ParseRelation<ParseUser> mFriendsRelation;
+    protected ParseUser mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_friends);
         ButterKnife.bind(this);
-
         initView();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-        mActionBar = getSupportActionBar();
 
-        if (mActionBar != null) {
-            mActionBar.setDisplayHomeAsUpEnabled(true);
-            mActionBar.setTitle(TITLE);
-        }
+        mCurrentUser = ParseUser.getCurrentUser();
+        mFriendsRelation = mCurrentUser.getRelation(ParseConstants.KEY_FRIENDS_RELATION);
     }
 
     @Override
@@ -83,13 +81,6 @@ public class AddFriendsActivity extends AppCompatActivity
                 toggleLoadingScreen();
                 if (e == null) {
                     mUsers = users;
-                    mParseUsers = new ParseUser[mUsers.size()];
-                    int i = 0;
-                    for (ParseUser user : users) {
-                        mParseUsers[i] = user;
-                        i++;
-                    }
-
                     initData();
                 } else {
                     Log.e(TAG, e.getMessage());
@@ -116,26 +107,53 @@ public class AddFriendsActivity extends AppCompatActivity
     }
 
     @Override
-    public void onBackPressed() {
-        if (mState == STATE_SELECT){
-            mAdapter.clearSelections();
-            toggleActionBar();
-        }else {
-            super.onBackPressed();
-        }
-    }
-
-    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_add) {
+            addFriend();
+            initData();
+            toggleActionBar();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
+    private void addFriend() {
+        List<ParseUser> friendsSelected = mAdapter.getSelectedItems();
+        for (ParseUser friend: friendsSelected){
+            mFriendsRelation.add(friend);
+            mCurrentUser.saveInBackground(new SaveCallback() {
+                @Override
+                public void done(ParseException e) {
+                    if (e != null) {
+                        Log.e(TAG, e.getMessage());
+                    }
+                }
+            });
+        }
+        mAdapter.clearSelections();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mState == STATE_SELECT) {
+            mAdapter.clearSelections();
+            toggleActionBar();
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private void initView() {
         mView = getWindow().getDecorView().getRootView();
         mProgressBar.setVisibility(View.INVISIBLE);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        mActionBar = getSupportActionBar();
+
+        if (mActionBar != null) {
+            mActionBar.setDisplayHomeAsUpEnabled(true);
+            mActionBar.setTitle(TITLE);
+        }
     }
 
     private void toggleLoadingScreen() {
@@ -148,26 +166,48 @@ public class AddFriendsActivity extends AppCompatActivity
 
 
     private void initData() {
-        mAdapter =
-                new ParseUserAdapter(AddFriendsActivity.this, mParseUsers);
-        mAdapter.setItemLongClickListener(this);
-        mAdapter.setItemClickListener(this);
-        mRecyclerView.setAdapter(mAdapter);
+        //filter friends data
+        mFriendsRelation.getQuery().findInBackground(new FindCallback<ParseUser>() {
+            @Override
+            public void done(List<ParseUser> friends, ParseException e) {
+                Log.i(TAG, String.format("Num of user : %d", mUsers.size()));
+                Log.i(TAG, String.format("Num of friend : %d", friends.size()));
+                if (e == null) {
+                    for (int i = 0; i < mUsers.size(); i++) {
+                        ParseUser user = mUsers.get(i);
+                        for (ParseUser friend : friends) {
+                            if (user.getObjectId().equals(friend.getObjectId())
+                                    || user.getObjectId().equals(mCurrentUser.getObjectId())) {
+                                mUsers.remove(i);
+                                i--;
+                                break;
+                            }
+                        }
+                    }
+                    mAdapter = new ParseUserAdapter(AddFriendsActivity.this, mUsers);
+                    mAdapter.setItemLongClickListener(AddFriendsActivity.this);
+                    mAdapter.setItemClickListener(AddFriendsActivity.this);
+                    mRecyclerView.setAdapter(mAdapter);
 
-        RecyclerView.LayoutManager layoutManager =
-                new LinearLayoutManager(AddFriendsActivity.this);
-        layoutManager.scrollToPosition(0);
-        mRecyclerView.setLayoutManager(layoutManager);
+                    RecyclerView.LayoutManager layoutManager =
+                            new LinearLayoutManager(AddFriendsActivity.this);
+                    layoutManager.scrollToPosition(0);
+                    mRecyclerView.setLayoutManager(layoutManager);
 
-        RecyclerView.ItemDecoration decoration = new DividerItemDecoration(this, null);
-        mRecyclerView.addItemDecoration(decoration);
-
+                    RecyclerView.ItemDecoration decoration =
+                            new DividerItemDecoration(AddFriendsActivity.this, null);
+                    mRecyclerView.addItemDecoration(decoration);
+                } else {
+                    Log.e(TAG, e.getMessage());
+                }
+            }
+        });
     }
 
     @Override
     public void onItemClick(View view, int index) {
-        ParseUser parseUser = mParseUsers[index];
-        if (mState == STATE_SELECT){
+        ParseUser parseUser = mUsers.get(index);
+        if (mState == STATE_SELECT) {
             mAdapter.toggleSelection(index);
             mActionBar.setTitle(String.format("%d selected", mAdapter.getSelectedCounts()));
         }
@@ -175,19 +215,19 @@ public class AddFriendsActivity extends AppCompatActivity
 
     @Override
     public void OnLongClick(View view, int index) {
-        ParseUser parseUser = mParseUsers[index];
-        if (mState == STATE_IDLE){
+        ParseUser parseUser = mUsers.get(index);
+        if (mState == STATE_IDLE) {
             mAdapter.toggleSelection(index);
             toggleActionBar();
         }
     }
 
-    private void toggleActionBar(){
-        mState = (mState == STATE_IDLE?STATE_SELECT:STATE_IDLE);
-        if (mState == STATE_IDLE){
+    private void toggleActionBar() {
+        mState = (mState == STATE_IDLE ? STATE_SELECT : STATE_IDLE);
+        if (mState == STATE_IDLE) {
             mActionBar.setDisplayHomeAsUpEnabled(true);
             mActionBar.setTitle(TITLE);
-        }else{
+        } else {
             mActionBar.setDisplayHomeAsUpEnabled(false);
             mActionBar.setTitle(String.format("%d selected", mAdapter.getSelectedCounts()));
         }

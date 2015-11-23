@@ -27,10 +27,10 @@ public class ParseUserAdapter extends RecyclerView.Adapter<ParseUserAdapter.Pars
     private ItemClickListener mItemClickListener;
     private ItemLongClickListener mItemLongClickListener;
 
-    protected ParseUser[] mParseUsers;
+    protected List<ParseUser> mParseUsers;
     protected HashMap<Integer, ParseUser> mSelectedItems= new HashMap<>();
 
-    public ParseUserAdapter(Context context, ParseUser[] parseUsers) {
+    public ParseUserAdapter(Context context, List<ParseUser> parseUsers) {
         mContext = context;
         mParseUsers = parseUsers;
     }
@@ -43,13 +43,13 @@ public class ParseUserAdapter extends RecyclerView.Adapter<ParseUserAdapter.Pars
 
     @Override
     public void onBindViewHolder(ParseUserViewHolder holder, int position) {
-        holder.bindParseUser(mParseUsers[position]);
+        holder.bindParseUser(mParseUsers.get(position));
         holder.itemView.setActivated(mSelectedItems.containsKey(position));
     }
 
     @Override
     public int getItemCount() {
-        return mParseUsers.length;
+        return mParseUsers.size();
     }
 
     public void setItemClickListener(ItemClickListener itemClickListener) {
@@ -64,7 +64,7 @@ public class ParseUserAdapter extends RecyclerView.Adapter<ParseUserAdapter.Pars
         if (mSelectedItems.containsKey(pos)) {
             mSelectedItems.remove(pos);
         } else {
-            mSelectedItems.put(pos, mParseUsers[pos]);
+            mSelectedItems.put(pos, mParseUsers.get(pos));
         }
         notifyItemChanged(pos);
     }
@@ -76,10 +76,6 @@ public class ParseUserAdapter extends RecyclerView.Adapter<ParseUserAdapter.Pars
 
     public int getSelectedCounts() {
         return mSelectedItems.size();
-    }
-
-    public ParseUser getItem(int idx){
-        return mParseUsers[idx];
     }
 
     public List<ParseUser> getSelectedItems() {
