@@ -11,6 +11,7 @@ import felix.com.ribbit.fragment.InboxFragment;
 
 /**
  * Created by fsoewito on 11/20/2015.
+ *
  */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 

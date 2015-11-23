@@ -10,12 +10,12 @@ import felix.com.ribbit.R;
 
 /**
  * Created by fsoewito on 11/20/2015.
+ *
  */
 public class FriendsFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.fragment_edit_friends, container, false);
-        return rootView;
+        return inflater.inflate(R.layout.fragment_edit_friends, container, false);
     }
 }
