@@ -107,10 +107,8 @@ public class LoginActivity extends AppCompatActivity {
     private void toggleLoadingScreen(){
         if (mProgressBar.getVisibility() == View.INVISIBLE){
             mProgressBar.setVisibility(View.VISIBLE);
-            mView.setAlpha(0.8f);
         }else{
             mProgressBar.setVisibility(View.INVISIBLE);
-            mView.setAlpha(0f);
         }
     }
 }
