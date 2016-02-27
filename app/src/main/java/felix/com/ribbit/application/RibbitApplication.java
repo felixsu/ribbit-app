@@ -1,14 +1,12 @@
-package felix.com.ribbit;
+package felix.com.ribbit.application;
 
 import android.app.Application;
 
 import com.parse.Parse;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 
 /**
  * Created by fsoewito on 11/18/2015.
+ *
  */
 public class RibbitApplication extends Application {
     @Override
