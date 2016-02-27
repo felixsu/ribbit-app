@@ -1,36 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout android:id="@+id/parseUserContainer"
-              xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@drawable/statelist_item_background"
-              android:orientation="horizontal">
+<RelativeLayout
+    android:id="@+id/parseUserContainer"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/vertical_separator_half"
+    android:layout_marginTop="@dimen/vertical_separator_half"
+    android:background="@drawable/statelist_item_background"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin">
 
     <ImageView
-        android:layout_width="0dp"
+        android:id="@+id/ic_user"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
+        android:layout_centerVertical="true"
         android:src="@drawable/clear_day"/>
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:id="@+id/text_container"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="9"
-        android:orientation="vertical">
+        android:layout_toRightOf="@id/ic_user"
+        android:orientation="vertical"
+        android:paddingLeft="4dp">
 
         <TextView
-            android:id="@+id/nameLabel"
+            android:id="@+id/label_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textSize="21sp"
+            android:textStyle="bold"
             tools:text="@string/item_nameLabel"/>
 
         <TextView
-            android:id="@+id/emailLabel"
+            android:id="@+id/label_email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingTop="2dp"
             tools:text="@string/item_emailLabel"/>
     </LinearLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

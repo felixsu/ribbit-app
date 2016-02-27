@@ -22,7 +22,7 @@ import felix.com.ribbit.listener.ItemLongClickListener;
  * Created by fsoewito on 11/21/2015.
  *
  */
-public class ParseUserAdapter extends RecyclerView.Adapter<ParseUserAdapter.ParseUserViewHolder>{
+public class AddUserAdapter extends RecyclerView.Adapter<AddUserAdapter.ParseUserViewHolder>{
     protected Context mContext;
     private ItemClickListener mItemClickListener;
     private ItemLongClickListener mItemLongClickListener;
@@ -30,7 +30,7 @@ public class ParseUserAdapter extends RecyclerView.Adapter<ParseUserAdapter.Pars
     protected List<ParseUser> mParseUsers;
     protected HashMap<Integer, ParseUser> mSelectedItems= new HashMap<>();
 
-    public ParseUserAdapter(Context context, List<ParseUser> parseUsers) {
+    public AddUserAdapter(Context context, List<ParseUser> parseUsers) {
         mContext = context;
         mParseUsers = parseUsers;
     }
@@ -100,8 +100,8 @@ public class ParseUserAdapter extends RecyclerView.Adapter<ParseUserAdapter.Pars
                                    ItemLongClickListener itemLongClickListener) {
             super(itemView);
 
-            mNameLabel = (TextView) itemView.findViewById(R.id.nameLabel);
-            mEmailLabel = (TextView) itemView.findViewById(R.id.emailLabel);
+            mNameLabel = (TextView) itemView.findViewById(R.id.label_name);
+            mEmailLabel = (TextView) itemView.findViewById(R.id.label_email);
 
             mItemClickListener = itemClickListener;
             mItemLongClickListener = itemLongClickListener;
