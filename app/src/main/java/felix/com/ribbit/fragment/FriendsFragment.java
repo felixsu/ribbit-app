@@ -43,7 +43,9 @@ public class FriendsFragment extends Fragment {
                              Bundle savedInstanceState) {
         view=inflater.inflate(R.layout.fragment_edit_friends, container, false);
         mCurrentUser = ParseUser.getCurrentUser();
-        mFriendsRelation = mCurrentUser.getRelation(ParseConstants.KEY_FRIENDS_RELATION);
+        if(mCurrentUser!=null) {
+            mFriendsRelation = mCurrentUser.getRelation(ParseConstants.KEY_FRIENDS_RELATION);
+        }
         ButterKnife.bind(getActivity());
         mRecyclerView=(RecyclerView)view.findViewById(R.id.recyclerViewFriends);
         return view;
