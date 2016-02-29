@@ -3,7 +3,6 @@ package felix.com.ribbit.fragment;
 import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -17,17 +16,13 @@ import com.parse.ParseQuery;
 import com.parse.ParseRelation;
 import com.parse.ParseUser;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
 import butterknife.ButterKnife;
 import felix.com.ribbit.R;
-import felix.com.ribbit.adapter.FriendsAdapter;
-import felix.com.ribbit.adapter.ParseUserAdapter;
+import felix.com.ribbit.adapter.AddUserAdapter;
 import felix.com.ribbit.constant.ParseConstants;
 import felix.com.ribbit.decoration.DividerItemDecoration;
-import felix.com.ribbit.dto.FriendsDto;
 
 /**
  * Created by fsoewito on 11/20/2015.
@@ -35,12 +30,11 @@ import felix.com.ribbit.dto.FriendsDto;
  */
 public class FriendsFragment extends Fragment {
     private static final String TAG = FriendsFragment.class.getSimpleName();
-    FriendsAdapter adapter;
-    public FriendsDto friendList;
+    
     protected List<ParseUser> mUsers;
     protected ParseRelation<ParseUser> mFriendsRelation;
     protected ParseUser mCurrentUser;
-    ParseUserAdapter mAdapter;
+    AddUserAdapter mAdapter;
     RecyclerView mRecyclerView;
     View view;
 
@@ -75,7 +69,7 @@ public class FriendsFragment extends Fragment {
                         friend.setEmail(user.getEmail());
                         mUsers.add(friend);
                     }
-                    mAdapter = new ParseUserAdapter(getContext(), friends);
+                    mAdapter = new AddUserAdapter(getContext(), friends);
                     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
                     layoutManager.scrollToPosition(0);
                     mRecyclerView.setLayoutManager(layoutManager);

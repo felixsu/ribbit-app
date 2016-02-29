@@ -25,7 +25,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import felix.com.ribbit.R;
-import felix.com.ribbit.adapter.ParseUserAdapter;
+import felix.com.ribbit.adapter.AddUserAdapter;
 import felix.com.ribbit.constant.ParseConstants;
 import felix.com.ribbit.decoration.DividerItemDecoration;
 import felix.com.ribbit.listener.ItemClickListener;
@@ -47,7 +47,7 @@ public class AddFriendsActivity extends AppCompatActivity
     ProgressBar mProgressBar;
 
     ActionBar mActionBar;
-    ParseUserAdapter mAdapter;
+    AddUserAdapter mAdapter;
     View mView;
     private int mState;
 
@@ -58,7 +58,7 @@ public class AddFriendsActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_friends);
+        setContentView(R.layout.activity_add_friends);
         ButterKnife.bind(this);
         initView();
 
@@ -169,8 +169,8 @@ public class AddFriendsActivity extends AppCompatActivity
         mFriendsRelation.getQuery().findInBackground(new FindCallback<ParseUser>() {
             @Override
             public void done(List<ParseUser> friends, ParseException e) {
-                Log.i(TAG, String.format("Num of user : %d", mUsers.size()));
-                Log.i(TAG, String.format("Num of friend : %d", friends.size()));
+                Log.d(TAG, String.format("Num of user : %d", mUsers.size()));
+                Log.d(TAG, String.format("Num of friend : %d", friends.size()));
                 if (e == null) {
                     for (int i = 0; i < mUsers.size(); i++) {
                         ParseUser user = mUsers.get(i);
@@ -183,7 +183,7 @@ public class AddFriendsActivity extends AppCompatActivity
                             }
                         }
                     }
-                    mAdapter = new ParseUserAdapter(AddFriendsActivity.this, mUsers);
+                    mAdapter = new AddUserAdapter(AddFriendsActivity.this, mUsers);
                     mAdapter.setItemLongClickListener(AddFriendsActivity.this);
                     mAdapter.setItemClickListener(AddFriendsActivity.this);
                     mRecyclerView.setAdapter(mAdapter);

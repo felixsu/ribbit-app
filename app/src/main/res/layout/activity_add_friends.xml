@@ -22,6 +22,6 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/content_edit_friends"/>
+    <include layout="@layout/content_add_friends"/>
 
 </android.support.design.widget.CoordinatorLayout>
