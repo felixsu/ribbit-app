@@ -30,7 +30,7 @@ import felix.com.ribbit.decoration.DividerItemDecoration;
  */
 public class FriendsFragment extends Fragment {
     private static final String TAG = FriendsFragment.class.getSimpleName();
-    
+
     protected List<ParseUser> mUsers;
     protected ParseRelation<ParseUser> mFriendsRelation;
     protected ParseUser mCurrentUser;
