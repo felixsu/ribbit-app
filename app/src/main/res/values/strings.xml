@@ -3,12 +3,12 @@
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
 
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">Login</string>
     <string name="username_hint">Username</string>
     <string name="password_hint">password</string>
     <string name="login_button">Login</string>
 
-    <string name="title_activity_sign_up">SignUpActivity</string>
+    <string name="title_activity_sign_up">Registration</string>
     <string name="email_hint">email</string>
     <string name="signUpLabel">Sign up !</string>
     <string name="signUpButton">Sign Up</string>
@@ -19,7 +19,7 @@
     <string name="inboxTitle">inbox</string>
     <string name="friendsTitle">friends</string>
     <string name="emptyInboxLabel">inbox is empty</string>
-    <string name="emptyFriendsLabel">add friends to begin</string>
+    <string name="emptyFriendsLabel">Add Friends to Begin</string>
     <string name="action_logout">Logout</string>
     <string name="action_add_friends">Add Friend</string>
 
