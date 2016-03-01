@@ -183,7 +183,7 @@ public class AddFriendsActivity extends AppCompatActivity
                             }
                         }
                     }
-                    mAdapter = new AddUserAdapter(AddFriendsActivity.this, mUsers);
+                    mAdapter = new AddUserAdapter(AddFriendsActivity.this, mUsers,true);
                     mAdapter.setItemLongClickListener(AddFriendsActivity.this);
                     mAdapter.setItemClickListener(AddFriendsActivity.this);
                     mRecyclerView.setAdapter(mAdapter);
@@ -193,9 +193,9 @@ public class AddFriendsActivity extends AppCompatActivity
                     layoutManager.scrollToPosition(0);
                     mRecyclerView.setLayoutManager(layoutManager);
 
-                    RecyclerView.ItemDecoration decoration =
+                  /*  RecyclerView.ItemDecoration decoration =
                             new DividerItemDecoration(AddFriendsActivity.this, null);
-                    mRecyclerView.addItemDecoration(decoration);
+                    mRecyclerView.addItemDecoration(decoration);*/
                 } else {
                     Log.e(TAG, e.getMessage());
                 }

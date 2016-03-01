@@ -4,6 +4,7 @@
     <string name="section_format">Hello World from section: %1$d</string>
 
     <string name="title_activity_login">Login</string>
+    <string name="title_activity_chat">Message</string>
     <string name="username_hint">Username</string>
     <string name="password_hint">password</string>
     <string name="login_button">Login</string>
@@ -22,6 +23,9 @@
     <string name="emptyFriendsLabel">Add Friends to Begin</string>
     <string name="action_logout">Logout</string>
     <string name="action_add_friends">Add Friend</string>
+
+    <string name="profile_other">profile other</string>
+    <string name="profile_me">profile me</string>
 
     <string name="title_activity_edit_friends">EditFriendsActivity</string>
     <string name="editFriendsErrorTitle">Sorry!!</string>

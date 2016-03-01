@@ -1,15 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+    android:background="#ffffff">
 
 
     <TextView
         android:id="@+id/noFriendList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/emptyFriendsLabel"/>
+        android:text="@string/emptyFriendsLabel"
+        android:layout_marginBottom="20dp"/>
 
-    <include layout="@layout/content_listoffriends"/>
+    <include layout="@layout/content_listoffriends"
+        android:layout_below="@+id/noFriendList" />
 
 </RelativeLayout>

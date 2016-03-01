@@ -29,10 +29,12 @@ public class AddUserAdapter extends RecyclerView.Adapter<AddUserAdapter.ParseUse
 
     protected List<ParseUser> mParseUsers;
     protected HashMap<Integer, ParseUser> mSelectedItems= new HashMap<>();
+    boolean hideEmail=false;
 
-    public AddUserAdapter(Context context, List<ParseUser> parseUsers) {
+    public AddUserAdapter(Context context, List<ParseUser> parseUsers, Boolean hide) {
         mContext = context;
         mParseUsers = parseUsers;
+        hideEmail=hide;
     }
 
     @Override
@@ -112,6 +114,9 @@ public class AddUserAdapter extends RecyclerView.Adapter<AddUserAdapter.ParseUse
 
         public void bindParseUser(ParseUser parseUser) {
             mNameLabel.setText(parseUser.getUsername());
+            if(!hideEmail){
+                mEmailLabel.setVisibility(View.GONE);
+            }
             mEmailLabel.setText(parseUser.getEmail());
         }
 

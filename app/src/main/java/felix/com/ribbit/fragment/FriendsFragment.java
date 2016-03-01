@@ -1,6 +1,7 @@
 package felix.com.ribbit.fragment;
 
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,12 +24,15 @@ import felix.com.ribbit.R;
 import felix.com.ribbit.adapter.AddUserAdapter;
 import felix.com.ribbit.constant.ParseConstants;
 import felix.com.ribbit.decoration.DividerItemDecoration;
+import felix.com.ribbit.listener.ItemClickListener;
+import felix.com.ribbit.listener.ItemLongClickListener;
+import felix.com.ribbit.ui.ChatActivity;
 
 /**
  * Created by fsoewito on 11/20/2015.
  *
  */
-public class FriendsFragment extends Fragment {
+public class FriendsFragment extends Fragment implements ItemClickListener, ItemLongClickListener {
     private static final String TAG = FriendsFragment.class.getSimpleName();
 
     protected List<ParseUser> mUsers;
@@ -71,12 +75,14 @@ public class FriendsFragment extends Fragment {
                         friend.setEmail(user.getEmail());
                         mUsers.add(friend);
                     }
-                    mAdapter = new AddUserAdapter(getContext(), friends);
+                    mAdapter = new AddUserAdapter(getContext(), friends,false);
+                    mAdapter.setItemClickListener(FriendsFragment.this);
+
                     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
                     layoutManager.scrollToPosition(0);
                     mRecyclerView.setLayoutManager(layoutManager);
-                    RecyclerView.ItemDecoration decoration = new DividerItemDecoration(getContext(), null);
-                    mRecyclerView.addItemDecoration(decoration);
+                   /* RecyclerView.ItemDecoration decoration = new DividerItemDecoration(getContext(), null);
+                    mRecyclerView.addItemDecoration(decoration);*/
                     mRecyclerView.setAdapter(mAdapter);
                     unlockScreen();
                 } else {
@@ -99,6 +105,19 @@ public class FriendsFragment extends Fragment {
 
     private void unlockScreen(){
         view.findViewById(R.id.progressBarFriendList).setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void onItemClick(View view, int index) {
+       Intent i=new Intent(view.getContext(), ChatActivity.class);
+        i.putExtra("user_name",mUsers.get(index).getUsername());
+        startActivity(i);
+
+    }
+
+    @Override
+    public void OnLongClick(View view, int index) {
 
     }
 
