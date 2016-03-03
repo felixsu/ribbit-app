@@ -39,7 +39,7 @@ public class AddUserAdapter extends RecyclerView.Adapter<AddUserAdapter.ParseUse
 
     @Override
     public ParseUserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_parse_user_item, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_add_friend_item, parent, false);
         return new ParseUserViewHolder(view, mItemClickListener, mItemLongClickListener);
     }
 

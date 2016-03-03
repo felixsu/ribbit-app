@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/parseUserContainer"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:background="@drawable/statelist_item_background"
+    android:gravity="center_vertical"
+    android:paddingBottom="@dimen/vertical_separator_full"
+    android:paddingTop="@dimen/vertical_separator_full">
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_profile"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingLeft="@dimen/vertical_separator_double"
+        android:layout_toRightOf="@id/imageView">
+
+        <TextView
+            android:id="@+id/label_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            tools:text="@string/item_nameLabel"/>
+
+        <TextView
+            android:id="@+id/label_email"
+            android:layout_below="@id/label_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="4dp"
+            tools:text="@string/item_emailLabel"/>
+
+        <View
+            android:paddingTop="@dimen/vertical_separator_double"
+            android:layout_width="match_parent"
+            android:layout_below="@id/label_email"
+            android:layout_height="@dimen/vertical_separator_half"
+            android:background="@color/separator"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>
