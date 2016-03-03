@@ -20,6 +20,7 @@ import com.parse.ParseRelation;
 import com.parse.ParseUser;
 import com.parse.SaveCallback;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -27,7 +28,6 @@ import butterknife.ButterKnife;
 import felix.com.ribbit.R;
 import felix.com.ribbit.adapter.AddUserAdapter;
 import felix.com.ribbit.constant.ParseConstants;
-import felix.com.ribbit.decoration.DividerItemDecoration;
 import felix.com.ribbit.listener.ItemClickListener;
 import felix.com.ribbit.listener.ItemLongClickListener;
 
@@ -41,14 +41,14 @@ public class AddFriendsActivity extends AppCompatActivity
     private static final String TITLE = "Hold to add";
 
     @Bind(R.id.recyclerView)
-    RecyclerView mRecyclerView;
+    protected RecyclerView mRecyclerView;
 
     @Bind(R.id.progressBar)
-    ProgressBar mProgressBar;
+    protected ProgressBar mProgressBar;
 
-    ActionBar mActionBar;
-    AddUserAdapter mAdapter;
-    View mView;
+    protected ActionBar mActionBar;
+    protected AddUserAdapter mAdapter;
+    protected View mView;
     private int mState;
 
     protected List<ParseUser> mUsers;
@@ -118,7 +118,7 @@ public class AddFriendsActivity extends AppCompatActivity
 
     private void addFriend() {
         List<ParseUser> friendsSelected = mAdapter.getSelectedItems();
-        for (ParseUser friend: friendsSelected){
+        for (ParseUser friend : friendsSelected) {
             mFriendsRelation.add(friend);
             mCurrentUser.saveInBackground(new SaveCallback() {
                 @Override
@@ -143,6 +143,7 @@ public class AddFriendsActivity extends AppCompatActivity
     }
 
     private void initView() {
+        Log.d(TAG, "entering initView()");
         mView = getWindow().getDecorView().getRootView();
         mProgressBar.setVisibility(View.INVISIBLE);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -153,9 +154,11 @@ public class AddFriendsActivity extends AppCompatActivity
             mActionBar.setDisplayHomeAsUpEnabled(true);
             mActionBar.setTitle(TITLE);
         }
+        Log.d(TAG, "leaving initView()");
     }
 
     private void toggleLoadingScreen() {
+        Log.d(TAG, "toggling loading screen");
         if (mProgressBar.getVisibility() == View.INVISIBLE) {
             mProgressBar.setVisibility(View.VISIBLE);
         } else {
@@ -172,30 +175,7 @@ public class AddFriendsActivity extends AppCompatActivity
                 Log.d(TAG, String.format("Num of user : %d", mUsers.size()));
                 Log.d(TAG, String.format("Num of friend : %d", friends.size()));
                 if (e == null) {
-                    for (int i = 0; i < mUsers.size(); i++) {
-                        ParseUser user = mUsers.get(i);
-                        for (ParseUser friend : friends) {
-                            if (user.getObjectId().equals(friend.getObjectId())
-                                    || user.getObjectId().equals(mCurrentUser.getObjectId())) {
-                                mUsers.remove(i);
-                                i--;
-                                break;
-                            }
-                        }
-                    }
-                    mAdapter = new AddUserAdapter(AddFriendsActivity.this, mUsers,true);
-                    mAdapter.setItemLongClickListener(AddFriendsActivity.this);
-                    mAdapter.setItemClickListener(AddFriendsActivity.this);
-                    mRecyclerView.setAdapter(mAdapter);
-
-                    RecyclerView.LayoutManager layoutManager =
-                            new LinearLayoutManager(AddFriendsActivity.this);
-                    layoutManager.scrollToPosition(0);
-                    mRecyclerView.setLayoutManager(layoutManager);
-
-                  /*  RecyclerView.ItemDecoration decoration =
-                            new DividerItemDecoration(AddFriendsActivity.this, null);
-                    mRecyclerView.addItemDecoration(decoration);*/
+                    refreshFriendsCandidate(friends);
                 } else {
                     Log.e(TAG, e.getMessage());
                 }
@@ -205,7 +185,6 @@ public class AddFriendsActivity extends AppCompatActivity
 
     @Override
     public void onItemClick(View view, int index) {
-        ParseUser parseUser = mUsers.get(index);
         if (mState == STATE_SELECT) {
             mAdapter.toggleSelection(index);
             mActionBar.setTitle(String.format("%d selected", mAdapter.getSelectedCounts()));
@@ -214,7 +193,6 @@ public class AddFriendsActivity extends AppCompatActivity
 
     @Override
     public void OnLongClick(View view, int index) {
-        ParseUser parseUser = mUsers.get(index);
         if (mState == STATE_IDLE) {
             mAdapter.toggleSelection(index);
             toggleActionBar();
@@ -232,5 +210,37 @@ public class AddFriendsActivity extends AppCompatActivity
         }
 
         supportInvalidateOptionsMenu();
+    }
+
+    private void refreshFriendsCandidate(List<ParseUser> friends) {
+        List<ParseUser> filteredList = new ArrayList<ParseUser>();
+        for (ParseUser user : mUsers) {
+            boolean found = false;
+            if (user.getObjectId().equals(mCurrentUser.getObjectId())) {
+                found = true;
+            }
+            if (!found) {
+                for (ParseUser friend : friends) {
+                    if (user.getObjectId().equals(friend.getObjectId())) {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            if (!found) {
+                filteredList.add(user);
+            }
+        }
+
+        mUsers = filteredList;
+        mAdapter = new AddUserAdapter(AddFriendsActivity.this, mUsers, true);
+        mAdapter.setItemLongClickListener(AddFriendsActivity.this);
+        mAdapter.setItemClickListener(AddFriendsActivity.this);
+        mRecyclerView.setAdapter(mAdapter);
+
+        RecyclerView.LayoutManager layoutManager =
+                new LinearLayoutManager(AddFriendsActivity.this);
+        layoutManager.scrollToPosition(0);
+        mRecyclerView.setLayoutManager(layoutManager);
     }
 }

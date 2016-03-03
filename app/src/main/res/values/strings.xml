@@ -34,4 +34,11 @@
     <string name="item_emailLabel">Email@email.com</string>
     <string name="action_add">add</string>
     <string name="selected_count">%1$s selected</string>
+    <string name="phoneNumber_hint">phone number</string>
+    <string name="username_error">username should contain 4 - 20 char</string>
+    <string name="password_error">password should contain 8 - 20 char</string>
+    <string name="email_error">email not valid</string>
+    <string name="name_hint">full name</string>
+    <string name="name_error">name can\'t be empty</string>
+    <string name="phone_number_error">phone number field can\'t be empty</string>
 </resources>
