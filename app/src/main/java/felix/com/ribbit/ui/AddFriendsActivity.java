@@ -1,6 +1,7 @@
 package felix.com.ribbit.ui;
 
 import android.app.AlertDialog;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +13,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -28,8 +30,10 @@ import butterknife.ButterKnife;
 import felix.com.ribbit.R;
 import felix.com.ribbit.adapter.AddUserAdapter;
 import felix.com.ribbit.constant.ParseConstants;
+import felix.com.ribbit.decoration.DividerItemDecoration;
 import felix.com.ribbit.listener.ItemClickListener;
 import felix.com.ribbit.listener.ItemLongClickListener;
+import felix.com.ribbit.util.Util;
 
 public class AddFriendsActivity extends AppCompatActivity
         implements ItemClickListener, ItemLongClickListener {
@@ -99,6 +103,7 @@ public class AddFriendsActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         if (mState == STATE_SELECT) {
             getMenuInflater().inflate(R.menu.menu_state_add_friends, menu);
+            menu.getItem(0).setIcon(Util.setTint(getDrawable(R.drawable.ic_action_add), getResources().getColor(R.color.colorAccent)));
             return true;
         }
         return true;
@@ -117,19 +122,24 @@ public class AddFriendsActivity extends AppCompatActivity
     }
 
     private void addFriend() {
-        List<ParseUser> friendsSelected = mAdapter.getSelectedItems();
+        final List<ParseUser> friendsSelected = mAdapter.getSelectedItems();
+        Log.d(TAG, "number of selected friend = {}" + friendsSelected.size());
         for (ParseUser friend : friendsSelected) {
             mFriendsRelation.add(friend);
-            mCurrentUser.saveInBackground(new SaveCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e != null) {
-                        Log.e(TAG, e.getMessage());
-                    }
-                }
-            });
         }
-        mAdapter.clearSelections();
+        mCurrentUser.saveInBackground(new SaveCallback() {
+            @Override
+            public void done(ParseException e) {
+                if (e != null) {
+                    Toast.makeText(AddFriendsActivity.this, "failed to add friends", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, e.getMessage());
+                } else{
+                    mAdapter.clearSelections();
+                    mAdapter.remove(friendsSelected);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -208,7 +218,6 @@ public class AddFriendsActivity extends AppCompatActivity
             mActionBar.setDisplayHomeAsUpEnabled(false);
             mActionBar.setTitle(String.format("%d selected", mAdapter.getSelectedCounts()));
         }
-
         supportInvalidateOptionsMenu();
     }
 
@@ -242,5 +251,6 @@ public class AddFriendsActivity extends AppCompatActivity
                 new LinearLayoutManager(AddFriendsActivity.this);
         layoutManager.scrollToPosition(0);
         mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, null));
     }
 }

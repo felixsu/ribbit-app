@@ -84,10 +84,29 @@ public class AddUserAdapter extends RecyclerView.Adapter<AddUserAdapter.ParseUse
         List<ParseUser> result = new ArrayList<>(mSelectedItems.size());
 
         Iterator<Integer> iterator = mSelectedItems.keySet().iterator();
-        if (iterator.hasNext()){
+        while (iterator.hasNext()){
             result.add(mSelectedItems.get(iterator.next()));
         }
         return result;
+    }
+
+    public void remove(List<ParseUser> friends){
+        List<ParseUser> newList = new ArrayList<>();
+
+            for (ParseUser oldElement : mParseUsers){
+                boolean found = false;
+                for (ParseUser friend : friends){
+                    if (friend.getObjectId().equals(oldElement.getObjectId())){
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found){
+                    newList.add(oldElement);
+                }
+            }
+        mParseUsers = newList;
+        notifyDataSetChanged();
     }
 
     public class ParseUserViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{

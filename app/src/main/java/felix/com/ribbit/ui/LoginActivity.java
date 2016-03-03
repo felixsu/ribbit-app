@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -24,10 +25,10 @@ public class LoginActivity extends AppCompatActivity {
     TextView mSignUpText;
 
     @Bind(R.id.usernameField)
-    TextView mUsernameField;
+    EditText mUsernameField;
 
     @Bind(R.id.passwordField)
-    TextView mPasswordField;
+    EditText mPasswordField;
 
     @Bind(R.id.loginButton)
     Button mLoginButton;
@@ -44,8 +45,7 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         initView();
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
+
 
         mSignUpText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -102,6 +102,8 @@ public class LoginActivity extends AppCompatActivity {
     private void initView(){
         mView = getWindow().getDecorView().getRootView();
         mProgressBar.setVisibility(View.INVISIBLE);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
     private void toggleLoadingScreen(){

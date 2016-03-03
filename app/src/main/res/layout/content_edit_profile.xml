@@ -9,23 +9,36 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/white"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="felix.com.ribbit.ui.EditProfileActivity"
     tools:showIn="@layout/activity_edit_profile">
 
+    <TextView
+        android:id="@+id/label_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxLines="1"
+        android:textSize="24sp"
+        android:layout_centerHorizontal="true"
+        tools:text="My Name"/>
+
     <ImageView
-        android:id="@+id/image_picture"
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:paddingTop="24dp"
+        android:id="@+id/image_profile_picture"
+        android:layout_width="176dp"
+        android:layout_below="@id/label_name"
+        android:layout_height="176dp"
         android:layout_centerHorizontal="true"
         android:src="@drawable/ic_profile"
         />
 
     <TextView
+        android:paddingTop="24dp"
         android:id="@+id/text_status"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/image_picture"
+        android:layout_below="@id/image_profile_picture"
         android:layout_centerHorizontal="true"
         android:text="status"
         android:maxLines="1"/>
