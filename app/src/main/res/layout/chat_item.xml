@@ -2,27 +2,27 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:gravity="center_vertical">
     <ImageView
         android:id="@+id/ivProfileOther"
         android:contentDescription="@string/profile_other"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:src="@drawable/ic_profile" />
+        android:src="@drawable/ic_profile"
+        android:layout_marginLeft="5dp" />
     <TextView
-        android:textSize="18sp"
+        android:textSize="15sp"
         android:id="@+id/tvBody"
-        android:padding="20dp"
-        android:lines="3"
-        android:layout_marginEnd="64dp"
-        android:layout_width="match_parent"
-        android:layout_height="64dp">
+        android:lines="1"
+        android:layout_width="315dp"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
     </TextView>
     <ImageView
         android:id="@+id/ivProfileMe"
         android:contentDescription="@string/profile_me"
-        android:layout_marginStart="-64dp"
         android:layout_width="30dp"
-        android:layout_height="50dp"
+        android:layout_height="30dp"
         android:src="@drawable/ic_profile" />
 </LinearLayout>

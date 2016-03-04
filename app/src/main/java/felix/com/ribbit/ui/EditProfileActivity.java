@@ -39,7 +39,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
     private void initData() {
         mCurrentUser = ParseUser.getCurrentUser();
-        String name = (String) mCurrentUser.get(ParseConstants.KEY_NAME);
+        String name = (String) mCurrentUser.get(ParseConstants.KEY_USERNAME);
         Log.d(TAG, name);
         mNameField.setText(name);
     }

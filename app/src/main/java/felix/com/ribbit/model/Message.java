@@ -9,8 +9,9 @@ import com.parse.ParseUser;
  */
 @ParseClassName("Message")
 public class Message extends ParseObject {
-    public static final String USER_ID_KEY = "userId";
+    public static final String USER_ID_KEY = "user_id";
     public static final String BODY_KEY = "body";
+    public static final String CLIENT_ID="recipient_id";
 
     public String getUserId() {
         return getString(USER_ID_KEY);
@@ -26,6 +27,14 @@ public class Message extends ParseObject {
 
     public void setBody(String body) {
         put(BODY_KEY, body);
+    }
+
+    public String getClientId(){
+        return getString(CLIENT_ID);
+    }
+
+    public void setClientId(String client){
+       put(CLIENT_ID,client);
     }
 }
 

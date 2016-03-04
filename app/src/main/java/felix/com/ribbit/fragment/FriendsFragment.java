@@ -40,6 +40,8 @@ public class FriendsFragment extends Fragment implements ItemClickListener, Item
     protected ParseUser mCurrentUser;
     AddUserAdapter mAdapter;
     RecyclerView mRecyclerView;
+    ParseUser friend;
+    List<ParseUser> friends;
     View view;
 
     @Override
@@ -70,7 +72,7 @@ public class FriendsFragment extends Fragment implements ItemClickListener, Item
                 if (e == null) {
                     for (int i = 0; i < friends.size(); i++) {
                         ParseUser user = friends.get(i);
-                        ParseUser friend=new ParseUser();
+                        friend=new ParseUser();
                         friend.setUsername(user.getUsername());
                         friend.setEmail(user.getEmail());
                         mUsers.add(friend);
@@ -81,14 +83,15 @@ public class FriendsFragment extends Fragment implements ItemClickListener, Item
                     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
                     layoutManager.scrollToPosition(0);
                     mRecyclerView.setLayoutManager(layoutManager);
-                   /* RecyclerView.ItemDecoration decoration = new DividerItemDecoration(getContext(), null);
-                    mRecyclerView.addItemDecoration(decoration);*/
                     mRecyclerView.setAdapter(mAdapter);
                     unlockScreen();
                 } else {
                     Log.e(TAG, e.getMessage());
                 }
+
             }
+
+
         });
     }
 
@@ -111,7 +114,8 @@ public class FriendsFragment extends Fragment implements ItemClickListener, Item
     @Override
     public void onItemClick(View view, int index) {
        Intent i=new Intent(view.getContext(), ChatActivity.class);
-        i.putExtra("user_name",mUsers.get(index).getUsername());
+        i.putExtra("user_name", mUsers.get(index).getUsername());
+        i.putExtra("client_id",mUsers.get(index).getObjectId());
         startActivity(i);
 
     }

@@ -27,6 +27,7 @@ import java.util.List;
 
 import felix.com.ribbit.R;
 import felix.com.ribbit.adapter.ChatListAdapter;
+import felix.com.ribbit.constant.ParseConstants;
 import felix.com.ribbit.model.Message;
 
 /**
@@ -37,12 +38,14 @@ public class ChatActivity extends AppCompatActivity {
     EditText etMessage;
     TextView tvChat;
     private static String USER_ID_KEY="user_id";
+    private static String RECIPIENT_ID="recipient_id";
     private static String BODY_KEY="body";
     static final int MAX_CHAT_MESSAGES_TO_SHOW = 50;
     ListView lvChat;
     ArrayList<Message> mMessages;
     ChatListAdapter mAdapter;
     boolean mFirstLoad;
+    String clientId;
 
 
 
@@ -50,8 +53,11 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.chat_layout);
+        clientId=getIntent().getExtras().getString("client_id");
         setTitle(getIntent().getExtras().getString("user_name"));
+        refreshMessages();
         setupMessagePosting();
+
 
     }
     @Override
@@ -78,12 +84,13 @@ public class ChatActivity extends AppCompatActivity {
                 ParseObject message = ParseObject.create("Message");
                 message.put(USER_ID_KEY, ParseUser.getCurrentUser().getObjectId());
                 message.put(BODY_KEY, data);
+                message.put(RECIPIENT_ID,clientId);
                 Log.d("ChatActivity", data);
                 message.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(ParseException e) {
-                        Toast.makeText(ChatActivity.this, "Successfully created message on Parse",
-                                Toast.LENGTH_SHORT).show();
+                       /* Toast.makeText(ChatActivity.this, "Successfully created message on Parse",
+                                Toast.LENGTH_SHORT).show();*/
                         refreshMessages();
 
 
@@ -107,7 +114,18 @@ public class ChatActivity extends AppCompatActivity {
             public void done(List<Message> messages, ParseException e) {
                 if (e == null) {
                     mMessages.clear();
-                    mMessages.addAll(messages);
+                    int p;
+                    for(p=0;p<messages.size();p++) {
+                        String currentUser=ParseUser.getCurrentUser().getObjectId();
+                    if(messages.get(p).getClientId().equals(clientId)&& messages.get(p).getUserId().equals((ParseUser.getCurrentUser()).getObjectId())) {
+                        Message messaging=new Message();
+                        messaging.setBody(messages.get(p).getBody());
+                        messaging.setClientId(messages.get(p).getClientId());
+                        messaging.setUserId(messages.get(p).getUserId());
+                        mMessages.add(messaging);
+                    }
+                    }
+
                     mAdapter.notifyDataSetChanged(); // update adapter
                     // Scroll to the bottom of the list on initial load
                     if (mFirstLoad) {

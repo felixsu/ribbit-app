@@ -1,54 +1,57 @@
 package felix.com.ribbit.adapter;
 
 
-import android.content.Context;
-import android.view.Gravity;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.TextView;
+        import android.content.Context;
+        import android.view.Gravity;
+        import android.view.LayoutInflater;
+        import android.view.View;
+        import android.view.ViewGroup;
+        import android.widget.ArrayAdapter;
+        import android.widget.ImageView;
+        import android.widget.TextView;
 
-import com.parse.ParseUser;
+        import com.parse.ParseUser;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.util.ArrayList;
-import java.util.List;
+        import java.math.BigInteger;
+        import java.security.MessageDigest;
+        import java.util.ArrayList;
+        import java.util.List;
 
-import felix.com.ribbit.R;
-import felix.com.ribbit.model.Message;
+        import felix.com.ribbit.R;
+        import felix.com.ribbit.constant.ParseConstants;
+        import felix.com.ribbit.model.Message;
 
 /**
  * Created by rrsari on 01/03/2016.
  */
-public class ChatListAdapter extends ArrayAdapter<Message> {
-    private String mUserId;
-    List<Message> messages = new ArrayList<>();
+        public class ChatListAdapter extends ArrayAdapter<Message> {
+            private String mUserId;
+            List<Message> messages = new ArrayList<>();
 
 
-    public ChatListAdapter(Context context, String userId, List<Message> message) {
-        super(context, 0, message);
-        this.mUserId = userId;
-        this.messages=message;
-    }
+            public ChatListAdapter(Context context, String userId, List<Message> message) {
+                super(context, 0, message);
+                this.mUserId = userId;
+                this.messages=message;
+            }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).
-                    inflate(R.layout.chat_item, parent, false);
-            final ViewHolder holder = new ViewHolder();
-            holder.imageOther = (ImageView)convertView.findViewById(R.id.ivProfileOther);
-            holder.imageMe = (ImageView)convertView.findViewById(R.id.ivProfileMe);
-            holder.body = (TextView)convertView.findViewById(R.id.tvBody);
-            convertView.setTag(holder);
-        }
-        final Message message = getItem(position);
-        final ViewHolder holder = (ViewHolder)convertView.getTag();
-       /* mUserId=ParseUser.getCurrentUser().getObjectId();
-        final boolean isMe = message.getUserId().equals(mUserId);
+            @Override
+            public View getView(int position, View convertView, ViewGroup parent) {
+                if (convertView == null) {
+                    convertView = LayoutInflater.from(getContext()).
+                            inflate(R.layout.chat_item, parent, false);
+                    final ViewHolder holder = new ViewHolder();
+                    holder.imageOther = (ImageView)convertView.findViewById(R.id.ivProfileOther);
+                    holder.imageMe = (ImageView)convertView.findViewById(R.id.ivProfileMe);
+                    holder.body = (TextView)convertView.findViewById(R.id.tvBody);
+                    convertView.setTag(holder);
+                }
+                final Message message = getItem(position);
+                final ViewHolder holder = (ViewHolder)convertView.getTag();
+                mUserId=(String)ParseUser.getCurrentUser().getObjectId();
+                String messageId=(String)message.get(ParseConstants.KEY_USER_ID);
+            final boolean isMe = messageId.equals(mUserId);
+
         // Show-hide image based on the logged-in user.
         // Display the profile image to the right for our user, left for other users.
         if (isMe) {
@@ -60,7 +63,7 @@ public class ChatListAdapter extends ArrayAdapter<Message> {
             holder.imageMe.setVisibility(View.GONE);
             holder.body.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
         }
-        final ImageView profileView = isMe ? holder.imageMe : holder.imageOther;*/
+        final ImageView profileView = isMe ? holder.imageMe : holder.imageOther;
         //Picasso.with(getContext()).load(getProfileUrl(message.getUserId())).into(profileView);
         holder.body.setText(message.getBody());
         return convertView;
