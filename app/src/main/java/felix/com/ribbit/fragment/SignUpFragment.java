@@ -1,13 +1,16 @@
 package felix.com.ribbit.fragment;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -50,6 +53,9 @@ public class SignUpFragment extends Fragment {
     @Nullable
     @Bind(R.id.image_profile_picture)
     ImageView mProfilePicture;
+    @Nullable
+    @Bind(R.id.button_edit_profile_picture)
+    ImageButton mEditProfilePictureButton;
 
     //text input layout section
     @Nullable
@@ -73,6 +79,7 @@ public class SignUpFragment extends Fragment {
     private ParseUser mCandidate;
     private SignUpActivity mActivity;
     private View mView;
+    private DialogInterface.OnClickListener mListener;
 
     private static final String ARG_SECTION_NUMBER = "section_number";
 
@@ -139,6 +146,32 @@ public class SignUpFragment extends Fragment {
         }
         if (mNameHolder != null && mNameField != null) {
             mNameField.setOnFocusChangeListener(new TextInputLayoutFocusListener(mNameHolder));
+        }
+        if (mProfilePicture != null && mEditProfilePictureButton != null) {
+            mListener = new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case 0:
+                            break;
+                        case 1:
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            };
+            mEditProfilePictureButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setItems(R.array.edit_profile_pictures, null);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+                }
+            });
+
+
         }
     }
 

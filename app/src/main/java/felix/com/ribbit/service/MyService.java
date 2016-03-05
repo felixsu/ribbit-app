@@ -53,7 +53,7 @@ public class MyService extends IntentService {
         if (receiver != null) {
             Log.d(TAG, "receiver not null");
             try {
-                Thread.sleep(700l);
+                Thread.sleep(900l);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
