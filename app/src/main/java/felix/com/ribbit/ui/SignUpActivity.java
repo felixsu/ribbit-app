@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 import felix.com.ribbit.R;
 import felix.com.ribbit.adapter.SignUpPagerAdapter;
 import felix.com.ribbit.exception.InputValidityException;
-import felix.com.ribbit.fragment.SignUpFragment;
+import felix.com.ribbit.model.Validatable;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -102,8 +102,8 @@ public class SignUpActivity extends AppCompatActivity {
     private void goToNextPage() {
         try {
             mCurrentPage = mViewPager.getCurrentItem();
-            SignUpFragment fragment = (SignUpFragment) mSignUpPagerAdapter.getFragment(mCurrentPage);
-            fragment.validateInput();
+            Validatable validatable = (Validatable) mSignUpPagerAdapter.getFragment(mCurrentPage);
+            validatable.validate();
             int totalPage = mSignUpPagerAdapter.getCount();
             Log.d(TAG, "Current Item : " + mCurrentPage);
             Log.d(TAG, "Total Item : " + totalPage);
@@ -112,7 +112,7 @@ public class SignUpActivity extends AppCompatActivity {
                 mViewPager.setCurrentItem(mCurrentPage, true);
                 //on second page
                 if (mCurrentPage == totalPage - 2) {
-                    mNextButton.setText("FINISH");
+                    mNextButton.setText(R.string.finish);
                 }
                 mCurrentPage++;
                 mViewPager.setCurrentItem(mCurrentPage, true);
@@ -169,4 +169,6 @@ public class SignUpActivity extends AppCompatActivity {
     public ParseUser getCandidate() {
         return mCandidate;
     }
+
+
 }

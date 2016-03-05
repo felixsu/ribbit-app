@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import java.util.HashMap;
 import java.util.Map;
 
-import felix.com.ribbit.fragment.SignUpFragment;
+import felix.com.ribbit.fragment.AccountDataFragment;
+import felix.com.ribbit.fragment.PhoneFragment;
+import felix.com.ribbit.fragment.UserDataFragment;
 
 public class SignUpPagerAdapter extends FragmentPagerAdapter {
     private static final String TAG = SignUpPagerAdapter.class.getName();
@@ -31,7 +33,7 @@ public class SignUpPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public Fragment getItem(int position) {
-        return SignUpFragment.newInstance(position + 1);
+        return generateSignUpFragment(position + 1);
     }
 
     @Override
@@ -59,5 +61,22 @@ public class SignUpPagerAdapter extends FragmentPagerAdapter {
             return null;
         }
     }
+
+    private Fragment generateSignUpFragment(int sectionNumber) {
+        switch (sectionNumber) {
+            case 1:
+                Log.d(TAG, "creating first page");
+                return new AccountDataFragment();
+            case 2:
+                Log.d(TAG, "creating second page");
+                return new PhoneFragment();
+            case 3:
+                Log.d(TAG, "creating third page");
+                return new UserDataFragment();
+            default:
+                return null;
+        }
+    }
+
 
 }

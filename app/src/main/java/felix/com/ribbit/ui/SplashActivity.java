@@ -41,7 +41,6 @@ public class SplashActivity extends AppCompatActivity implements Receiver {
     protected void onResume() {
         Log.d(TAG, "enter on resume");
         super.onResume();
-        mSplashLabel.setText(getString(R.string.app_name));
         if (mReceiver.getReceiver() == null) {
             mReceiver.setReceiver(this);
         }
