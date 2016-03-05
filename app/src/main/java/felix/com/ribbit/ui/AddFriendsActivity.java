@@ -1,7 +1,6 @@
 package felix.com.ribbit.ui;
 
 import android.app.AlertDialog;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -103,7 +102,10 @@ public class AddFriendsActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         if (mState == STATE_SELECT) {
             getMenuInflater().inflate(R.menu.menu_state_add_friends, menu);
-            menu.getItem(0).setIcon(Util.setTint(getDrawable(R.drawable.ic_action_add), getResources().getColor(R.color.colorAccent)));
+            menu.getItem(0).setIcon(Util.setTint(
+                            getResources().getDrawable(R.drawable.ic_action_add),
+                            getResources().getColor(R.color.colorAccent))
+            );
             return true;
         }
         return true;
