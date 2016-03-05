@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.parse.LogInCallback;
 import com.parse.ParseException;
@@ -21,8 +20,8 @@ import butterknife.OnClick;
 import felix.com.ribbit.R;
 
 public class LoginActivity extends AppCompatActivity {
-    @Bind(R.id.signUpLabel)
-    TextView mSignUpText;
+    @Bind(R.id.button_signUp)
+    Button mSignUpButton;
 
     @Bind(R.id.usernameField)
     EditText mUsernameField;
@@ -30,7 +29,7 @@ public class LoginActivity extends AppCompatActivity {
     @Bind(R.id.passwordField)
     EditText mPasswordField;
 
-    @Bind(R.id.loginButton)
+    @Bind(R.id.button_login)
     Button mLoginButton;
 
     @Bind(R.id.progressBar)
@@ -43,11 +42,8 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
-
         initView();
-
-
-        mSignUpText.setOnClickListener(new View.OnClickListener() {
+        mSignUpButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
@@ -58,7 +54,7 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
-    @OnClick(R.id.loginButton)
+    @OnClick(R.id.button_login)
     void onClickLoginButton() {
         String username = mUsernameField.getText().toString();
         String password = mPasswordField.getText().toString();

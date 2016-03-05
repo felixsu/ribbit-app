@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "felix.com.ribbit"
-        minSdkVersion 14
+        minSdkVersion 19
         targetSdkVersion 23
         versionCode 2
         versionName "1.0"
@@ -23,14 +23,21 @@ android {
     }
 }
 
+repositories {
+    maven {
+        url "https://jitpack.io"
+    }
+}
+
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     testCompile 'junit:junit:4.12'
-    compile 'com.android.support:appcompat-v7:23.1.0'
-    compile 'com.android.support:recyclerview-v7:23.1.0'
-    compile 'com.android.support:design:23.1.0'
+    compile 'com.android.support:appcompat-v7:23.1.1'
+    compile 'com.android.support:recyclerview-v7:23.1.1'
+    compile 'com.android.support:design:23.1.1'
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'com.parse.bolts:bolts-android:1.+'
     compile 'com.parse:parse-android:1.+'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
+    compile 'com.github.Commit451:InkPageIndicator:93b60fb78e'
 }
