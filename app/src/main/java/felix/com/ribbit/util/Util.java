@@ -44,7 +44,7 @@ public class Util {
         Bitmap bm = v.getDrawingCache();
 
         ByteArrayOutputStream o = new ByteArrayOutputStream();
-        bm.compress(Bitmap.CompressFormat.PNG, 100, o);
+        bm.compress(Bitmap.CompressFormat.JPEG, 80, o);
         byte[] b = o.toByteArray();
 
         return base64Encode(b, b.length);

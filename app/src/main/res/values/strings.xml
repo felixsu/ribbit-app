@@ -52,7 +52,7 @@
     <string name="negative_save_profile">profile saved unsuccessfully</string>
 
     <string-array name="edit_profile_pictures">
-        <item>take one from SD card</item>
+        <item>pick from SD card</item>
         <item>take a picture</item>
     </string-array>
 </resources>
