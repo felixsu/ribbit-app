@@ -23,10 +23,8 @@ import felix.com.ribbit.ui.SignUpActivity;
 public class PhoneFragment extends Fragment implements Validatable {
     private static final String TAG = PhoneFragment.class.getName();
 
-    @Nullable
     @Bind(R.id.phoneNumberField)
     TextView mPhoneNumberField;
-    @Nullable
     @Bind(R.id.phoneNumberHolder)
     TextInputLayout mPhoneNumberHolder;
 
@@ -57,9 +55,8 @@ public class PhoneFragment extends Fragment implements Validatable {
     private void initData() {
         mActivity = (SignUpActivity) getActivity();
         mCandidate = mActivity.getCandidate();
-        if (mPhoneNumberHolder != null && mPhoneNumberField != null) {
-            mPhoneNumberField.setOnFocusChangeListener(new TextInputLayoutFocusListener(mPhoneNumberHolder));
-        }
+        mPhoneNumberField.setOnFocusChangeListener(new TextInputLayoutFocusListener(mPhoneNumberHolder));
+
     }
 
     public void showError(TextInputLayout v, String error) {

@@ -56,7 +56,7 @@
         android:text="@string/signUpLabel"/>
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/etc_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

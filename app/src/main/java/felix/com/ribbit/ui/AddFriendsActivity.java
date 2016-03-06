@@ -46,7 +46,7 @@ public class AddFriendsActivity extends AppCompatActivity
     @Bind(R.id.recyclerView)
     protected RecyclerView mRecyclerView;
 
-    @Bind(R.id.progressBar)
+    @Bind(R.id.etc_progress_bar)
     protected ProgressBar mProgressBar;
 
     protected ActionBar mActionBar;

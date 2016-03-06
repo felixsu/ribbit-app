@@ -46,6 +46,10 @@
     <string name="media_storage_error">Failed to get destination URI</string>
     <string name="finish">FINISH</string>
     <string name="action_cancel">action canceled</string>
+    <string name="default_profile_status">i don\'t like share my doubt</string>
+    <string name="default_profile_name">No Name</string>
+    <string name="positive_save_profile">profile saved successfully</string>
+    <string name="negative_save_profile">profile saved unsuccessfully</string>
 
     <string-array name="edit_profile_pictures">
         <item>take one from SD card</item>

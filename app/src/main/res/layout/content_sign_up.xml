@@ -18,8 +18,8 @@
         android:layout_below="@id/container"
         android:paddingTop="8dp"
         app:currentPageIndicatorColor="@color/colorAccent"
-        app:dotDiameter="12dp"
-        app:dotGap="12dp"
+        app:dotDiameter="8dp"
+        app:dotGap="8dp"
         app:pageIndicatorColor="@color/colorPrimary"/>
 
     <LinearLayout
@@ -52,7 +52,7 @@
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/progressBar"
+        android:id="@+id/etc_progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

@@ -17,7 +17,7 @@
             android:layout_height="160dp"
             tools:src="@drawable/ic_user_default"/>
 
-        <ImageButton
+        <ImageView
             android:layout_alignTop="@id/image_profile_picture"
             android:layout_alignBottom="@id/image_profile_picture"
             android:layout_alignLeft="@id/image_profile_picture"

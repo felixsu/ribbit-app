@@ -32,7 +32,7 @@ public class LoginActivity extends AppCompatActivity {
     @Bind(R.id.button_login)
     Button mLoginButton;
 
-    @Bind(R.id.progressBar)
+    @Bind(R.id.etc_progress_bar)
     ProgressBar mProgressBar;
 
     View mView;

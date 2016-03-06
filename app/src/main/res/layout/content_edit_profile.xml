@@ -29,12 +29,13 @@
             android:textSize="24sp"
             tools:text="My Name "/>
 
-        <ImageButton
+        <ImageView
             android:id="@+id/button_edit_name"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_toRightOf="@id/label_name"
             android:paddingLeft="8dp"
+            android:clickable="true"
             tools:src="@drawable/ic_action_edit"/>
     </RelativeLayout>
 
@@ -57,10 +58,11 @@
         android:gravity="right"
         android:layout_alignRight="@id/image_profile_picture">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/button_edit_profile_picture"
             android:layout_width="24dp"
             android:layout_height="24dp"
+            android:clickable="true"
             tools:src="@drawable/ic_action_edit"/>
     </RelativeLayout>
 
@@ -84,4 +86,13 @@
         android:maxLength="160"
         android:maxLines="2"
         tools:text="expect nothing and keep going"/>
+
+    <ProgressBar
+        android:id="@+id/etc_progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:indeterminate="true"/>
+
 </RelativeLayout>

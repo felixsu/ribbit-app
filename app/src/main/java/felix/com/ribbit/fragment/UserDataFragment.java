@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,18 +32,18 @@ import felix.com.ribbit.util.MediaUtil;
 import felix.com.ribbit.util.Util;
 
 public class UserDataFragment extends Fragment implements Validatable {
+
     private static final String TAG = UserDataFragment.class.getName();
 
-    @Nullable
+    private static final int DIALOG_PICK_PICTURE = 0;
+    private static final int DIALOG_TAKE_PICTURE = 1;
+
     @Bind(R.id.nameField)
     TextView mNameField;
-    @Nullable
     @Bind(R.id.image_profile_picture)
     ImageView mProfilePicture;
-    @Nullable
     @Bind(R.id.button_edit_profile_picture)
-    ImageButton mEditProfilePictureButton;
-    @Nullable
+    ImageView mEditProfilePictureButton;
     @Bind(R.id.nameHolder)
     TextInputLayout mNameHolder;
 
@@ -83,28 +82,26 @@ public class UserDataFragment extends Fragment implements Validatable {
     private void initData() {
         mActivity = (SignUpActivity) getActivity();
         mCandidate = mActivity.getCandidate();
-        if (mNameHolder != null && mNameField != null) {
-            mNameField.setOnFocusChangeListener(new TextInputLayoutFocusListener(mNameHolder));
-        }
-        if (mProfilePicture != null && mEditProfilePictureButton != null) {
-            mEditProfilePictureButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setItems(R.array.edit_profile_pictures, mListener);
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-                }
-            });
-        }
+        mNameField.setOnFocusChangeListener(new TextInputLayoutFocusListener(mNameHolder));
+
+        mEditProfilePictureButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setItems(R.array.edit_profile_pictures, mListener);
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
         mListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 switch (which) {
-                    case MediaUtil.REQUEST_PICK_PICTURE:
+                    case DIALOG_PICK_PICTURE:
                         //get from local
                         break;
-                    case MediaUtil.REQUEST_TAKE_PICTURE:
+                    case DIALOG_TAKE_PICTURE:
                         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                         mMediaUri = MediaUtil.getOutputMediaFileUri(MediaUtil.MEDIA_TYPE_IMAGE, getActivity().getString(R.string.title_activity_splash_screen));
                         if (mMediaUri == null) {
@@ -134,8 +131,6 @@ public class UserDataFragment extends Fragment implements Validatable {
         String name = mNameField.getText().toString();
         String errorMsg;
 
-        name = name.trim();
-
         if (name.isEmpty()) {
             errorMsg = getString(R.string.name_error);
             showError(mNameHolder, errorMsg);
@@ -143,7 +138,7 @@ public class UserDataFragment extends Fragment implements Validatable {
         }
 
         mCandidate.put(ParseConstants.KEY_NAME, name);
-        mCandidate.put(ParseConstants.KEY_PROFILE_PICTURE, Util.ImageViewToString(mProfilePicture));
+        mCandidate.put(ParseConstants.KEY_PROFILE_PICTURE, Util.imageViewToString(mProfilePicture));
         mCandidate.put(ParseConstants.KEY_STATUS, "Newbie in action");
     }
 

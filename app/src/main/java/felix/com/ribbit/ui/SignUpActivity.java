@@ -24,6 +24,7 @@ import felix.com.ribbit.R;
 import felix.com.ribbit.adapter.SignUpPagerAdapter;
 import felix.com.ribbit.exception.InputValidityException;
 import felix.com.ribbit.model.Validatable;
+import felix.com.ribbit.util.Util;
 
 public class SignUpActivity extends AppCompatActivity {
 
@@ -37,7 +38,7 @@ public class SignUpActivity extends AppCompatActivity {
     InkPageIndicator mIndicator;
 
     //etc section
-    @Bind(R.id.progressBar)
+    @Bind(R.id.etc_progress_bar)
     ProgressBar mProgressBar;
 
     private SignUpPagerAdapter mSignUpPagerAdapter;
@@ -125,21 +126,13 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    private void toggleLoadingScreen() {
-        if (mProgressBar.getVisibility() == View.INVISIBLE) {
-            mProgressBar.setVisibility(View.VISIBLE);
-        } else {
-            mProgressBar.setVisibility(View.INVISIBLE);
-        }
-    }
-
     public void doFinalize() {
         hideKeyboard();
-        toggleLoadingScreen();
+        Util.showView(mProgressBar);
         mCandidate.signUpInBackground(new SignUpCallback() {
             @Override
             public void done(ParseException e) {
-                toggleLoadingScreen();
+                Util.hideView(mProgressBar);
                 if (e == null) {
                     Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

@@ -1,9 +1,13 @@
 package felix.com.ribbit.util;
 
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Base64;
+import android.view.View;
 import android.widget.ImageView;
 
 import java.io.ByteArrayOutputStream;
@@ -30,7 +34,11 @@ public class Util {
         return Base64.encodeToString(input, 0, len, Base64.CRLF);
     }
 
-    public static String ImageViewToString(ImageView v) {
+    public static byte[] base64Decode(String input) {
+        return Base64.decode(input, Base64.CRLF);
+    }
+
+    public static String imageViewToString(ImageView v) {
         v.setDrawingCacheEnabled(true);
         v.buildDrawingCache();
         Bitmap bm = v.getDrawingCache();
@@ -41,5 +49,23 @@ public class Util {
 
         return base64Encode(b, b.length);
 
+    }
+
+    public static Drawable stringToDrawable(String encodedImage) {
+        return stringToDrawable(encodedImage, null);
+    }
+
+    public static Drawable stringToDrawable(String encodedImage, Resources res) {
+        byte[] b = base64Decode(encodedImage);
+        Bitmap bm = BitmapFactory.decodeByteArray(b, 0, b.length);
+        return new BitmapDrawable(res, bm);
+    }
+
+    public static void hideView(View v) {
+        v.setVisibility(View.INVISIBLE);
+    }
+
+    public static void showView(View v) {
+        v.setVisibility(View.VISIBLE);
     }
 }

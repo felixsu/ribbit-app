@@ -28,24 +28,18 @@ public class AccountDataFragment extends Fragment implements Validatable {
     private static final int LEN_PASSWORD_MIN = 8;
     private static final int LEN_PASSWORD_MAX = 20;
 
-    @Nullable
     @Bind(R.id.usernameField)
     TextView mUsernameField;
-    @Nullable
     @Bind(R.id.passwordField)
     TextView mPasswordField;
-    @Nullable
     @Bind(R.id.emailField)
     TextView mEmailField;
 
-    @Nullable
     @Bind(R.id.usernameHolder)
     TextInputLayout mUsernameHolder;
-    @Nullable
     @Bind(R.id.passwordHolder)
     TextInputLayout mPasswordHolder;
 
-    @Nullable
     @Bind(R.id.emailHolder)
     TextInputLayout mEmailHolder;
 
