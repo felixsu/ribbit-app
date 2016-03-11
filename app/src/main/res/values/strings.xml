@@ -50,6 +50,7 @@
     <string name="default_profile_name">No Name</string>
     <string name="positive_save_profile">profile saved successfully</string>
     <string name="negative_save_profile">profile saved unsuccessfully</string>
+    <string name="item_statusLabel">my status</string>
 
     <string-array name="edit_profile_pictures">
         <item>pick from SD card</item>

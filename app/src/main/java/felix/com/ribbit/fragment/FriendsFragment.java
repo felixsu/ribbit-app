@@ -21,9 +21,8 @@ import java.util.List;
 
 import butterknife.ButterKnife;
 import felix.com.ribbit.R;
-import felix.com.ribbit.adapter.AddUserAdapter;
+import felix.com.ribbit.adapter.FriendAdapter;
 import felix.com.ribbit.constant.ParseConstants;
-import felix.com.ribbit.decoration.DividerItemDecoration;
 import felix.com.ribbit.listener.ItemClickListener;
 import felix.com.ribbit.listener.ItemLongClickListener;
 import felix.com.ribbit.ui.ChatActivity;
@@ -38,7 +37,7 @@ public class FriendsFragment extends Fragment implements ItemClickListener, Item
     protected List<ParseUser> mUsers;
     protected ParseRelation<ParseUser> mFriendsRelation;
     protected ParseUser mCurrentUser;
-    AddUserAdapter mAdapter;
+    FriendAdapter mAdapter;
     RecyclerView mRecyclerView;
     ParseUser friend;
     List<ParseUser> friends;
@@ -77,7 +76,7 @@ public class FriendsFragment extends Fragment implements ItemClickListener, Item
                         friend.setEmail(user.getEmail());
                         mUsers.add(friend);
                     }
-                    mAdapter = new AddUserAdapter(getContext(), friends,false);
+                    mAdapter = new FriendAdapter(getContext(), friends);
                     mAdapter.setItemClickListener(FriendsFragment.this);
 
                     RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());

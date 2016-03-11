@@ -27,7 +27,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import felix.com.ribbit.R;
-import felix.com.ribbit.adapter.AddUserAdapter;
+import felix.com.ribbit.adapter.AddFriendAdapter;
 import felix.com.ribbit.constant.ParseConstants;
 import felix.com.ribbit.decoration.DividerItemDecoration;
 import felix.com.ribbit.listener.ItemClickListener;
@@ -50,13 +50,12 @@ public class AddFriendsActivity extends AppCompatActivity
     protected ProgressBar mProgressBar;
 
     protected ActionBar mActionBar;
-    protected AddUserAdapter mAdapter;
+    protected AddFriendAdapter mAdapter;
     protected View mView;
-    private int mState;
-
     protected List<ParseUser> mUsers;
     protected ParseRelation<ParseUser> mFriendsRelation;
     protected ParseUser mCurrentUser;
+    private int mState;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -244,7 +243,7 @@ public class AddFriendsActivity extends AppCompatActivity
         }
 
         mUsers = filteredList;
-        mAdapter = new AddUserAdapter(AddFriendsActivity.this, mUsers, true);
+        mAdapter = new AddFriendAdapter(AddFriendsActivity.this, mUsers);
         mAdapter.setItemLongClickListener(AddFriendsActivity.this);
         mAdapter.setItemClickListener(AddFriendsActivity.this);
         mRecyclerView.setAdapter(mAdapter);

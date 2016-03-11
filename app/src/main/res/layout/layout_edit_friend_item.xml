@@ -39,6 +39,14 @@
                 android:textStyle="bold"
                 tools:text="@string/item_nameLabel"/>
 
+            <TextView
+                android:id="@+id/label_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/label_name"
+                android:paddingTop="4dp"
+                tools:text="@string/item_statusLabel"/>
+
         </RelativeLayout>
     </RelativeLayout>
 </RelativeLayout>
