@@ -1,5 +1,6 @@
 package felix.com.ribbit.view;
 
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
@@ -22,9 +23,11 @@ import felix.com.ribbit.view.base.BaseViewHolder;
 public class AddFriendViewHolder extends BaseViewHolder<ParseUser> {
     private TextView mNameLabel;
     private ImageView mProfileImage;
+    private Resources mRes;
 
-    public AddFriendViewHolder(View itemView, ItemClickListener itemClickListener, ItemLongClickListener itemLongClickListener) {
+    public AddFriendViewHolder(View itemView, ItemClickListener itemClickListener, ItemLongClickListener itemLongClickListener, Resources res) {
         super(itemView, itemClickListener, itemLongClickListener);
+        mRes = res;
         initView();
     }
 

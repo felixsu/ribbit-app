@@ -5,11 +5,14 @@
 
     <string name="title_activity_login">Login</string>
     <string name="title_activity_chat">Message</string>
+    <string name="title_activity_sign_up">Registration</string>
+    <string name="title_activity_add_friends">Add Friends</string>
+    <string name="title_activity_edit_profile">Edit Profile</string>
+    <string name="title_activity_splash_screen">Ribbit</string>
+
     <string name="username_hint">Username</string>
     <string name="password_hint">password</string>
     <string name="login_button">Login</string>
-
-    <string name="title_activity_sign_up">Registration</string>
     <string name="email_hint">email</string>
     <string name="signUpLabel">Sign up !</string>
     <string name="signUpButton">Sign Up</string>
@@ -23,11 +26,8 @@
     <string name="emptyFriendsLabel">Add Friends to Begin</string>
     <string name="action_logout">Logout</string>
     <string name="action_add_friends">Add Friend</string>
-
     <string name="profile_other">profile other</string>
     <string name="profile_me">profile me</string>
-
-    <string name="title_activity_edit_friends">EditFriendsActivity</string>
     <string name="editFriendsErrorTitle">Sorry!!</string>
     <string name="emptyList">There\'s no people to display</string>
     <string name="item_nameLabel">My Name</string>
@@ -41,8 +41,6 @@
     <string name="name_hint">full name</string>
     <string name="name_error">name can\'t be empty</string>
     <string name="phone_number_error">phone number field can\'t be empty</string>
-    <string name="title_activity_edit_profile">Edit Profile</string>
-    <string name="title_activity_splash_screen">Ribbit</string>
     <string name="media_storage_error">Failed to get destination URI</string>
     <string name="finish">FINISH</string>
     <string name="action_cancel">action canceled</string>
@@ -55,5 +53,10 @@
     <string-array name="edit_profile_pictures">
         <item>pick from SD card</item>
         <item>take a picture</item>
+    </string-array>
+
+    <string-array name="add_friend_dialog">
+        <item>open</item>
+        <item>add friend</item>
     </string-array>
 </resources>

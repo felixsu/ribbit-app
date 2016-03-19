@@ -1,8 +1,9 @@
 package felix.com.ribbit.ui;
 
-import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -39,9 +40,8 @@ public class AddFriendsActivity extends AppCompatActivity
 
     private static final String TAG = AddFriendsActivity.class.getSimpleName();
     private static final int MAX_FRIEND = 1000;
-    private static final int STATE_IDLE = 0;
-    private static final int STATE_SELECT = 1;
-    private static final String TITLE = "Hold to add";
+    private static final int INDEX_OPEN = 0;
+    private static final int INDEX_ADD_FRIEND = 1;
 
     @Bind(R.id.recyclerView)
     protected RecyclerView mRecyclerView;
@@ -49,13 +49,12 @@ public class AddFriendsActivity extends AppCompatActivity
     @Bind(R.id.etc_progress_bar)
     protected ProgressBar mProgressBar;
 
-    protected ActionBar mActionBar;
-    protected AddFriendAdapter mAdapter;
-    protected View mView;
-    protected List<ParseUser> mUsers;
-    protected ParseRelation<ParseUser> mFriendsRelation;
-    protected ParseUser mCurrentUser;
-    private int mState;
+    private ActionBar mActionBar;
+    private AddFriendAdapter mAdapter;
+    private View mView;
+    private List<ParseUser> mUsers;
+    private ParseRelation<ParseUser> mFriendsRelation;
+    private ParseUser mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,44 +98,26 @@ public class AddFriendsActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (mState == STATE_SELECT) {
-            getMenuInflater().inflate(R.menu.menu_state_add_friends, menu);
-            menu.getItem(0).setIcon(Util.setTint(
-                            getResources().getDrawable(R.drawable.ic_action_add),
-                            getResources().getColor(R.color.colorAccent))
-            );
-            return true;
-        }
         return true;
 
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.action_add) {
-            addFriend();
-            initData();
-            toggleActionBar();
-            return true;
-        }
         return super.onOptionsItemSelected(item);
     }
 
-    private void addFriend() {
-        final List<ParseUser> friendsSelected = mAdapter.getSelectedItems();
-        Log.d(TAG, "number of selected friend = {}" + friendsSelected.size());
-        for (ParseUser friend : friendsSelected) {
-            mFriendsRelation.add(friend);
-        }
+    private void addFriend(final int pos) {
+        ParseUser candidate = mAdapter.getItem(pos);
+        mFriendsRelation.add(candidate);
         mCurrentUser.saveInBackground(new SaveCallback() {
             @Override
             public void done(ParseException e) {
                 if (e != null) {
                     Toast.makeText(AddFriendsActivity.this, "failed to add friends", Toast.LENGTH_SHORT).show();
                     Log.e(TAG, e.getMessage());
-                } else{
-                    mAdapter.clearSelections();
-                    mAdapter.remove(friendsSelected);
+                } else {
+                    mAdapter.remove(pos);
                 }
             }
         });
@@ -145,12 +126,7 @@ public class AddFriendsActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        if (mState == STATE_SELECT) {
-            mAdapter.clearSelections();
-            toggleActionBar();
-        } else {
             super.onBackPressed();
-        }
     }
 
     private void initView() {
@@ -163,7 +139,6 @@ public class AddFriendsActivity extends AppCompatActivity
 
         if (mActionBar != null) {
             mActionBar.setDisplayHomeAsUpEnabled(true);
-            mActionBar.setTitle(TITLE);
         }
         Log.d(TAG, "leaving initView()");
     }
@@ -196,34 +171,19 @@ public class AddFriendsActivity extends AppCompatActivity
 
     @Override
     public void onItemClick(View view, int index) {
-        if (mState == STATE_SELECT) {
-            mAdapter.toggleSelection(index);
-            mActionBar.setTitle(String.format("%d selected", mAdapter.getSelectedCounts()));
-        }
+        Toast.makeText(this, "[DEBUG] on click : " + index, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void OnLongClick(View view, int index) {
-        if (mState == STATE_IDLE) {
-            mAdapter.toggleSelection(index);
-            toggleActionBar();
-        }
-    }
-
-    private void toggleActionBar() {
-        mState = (mState == STATE_IDLE ? STATE_SELECT : STATE_IDLE);
-        if (mState == STATE_IDLE) {
-            mActionBar.setDisplayHomeAsUpEnabled(true);
-            mActionBar.setTitle(TITLE);
-        } else {
-            mActionBar.setDisplayHomeAsUpEnabled(false);
-            mActionBar.setTitle(String.format("%d selected", mAdapter.getSelectedCounts()));
-        }
-        supportInvalidateOptionsMenu();
+        AlertDialog.Builder builder = new AlertDialog.Builder(AddFriendsActivity.this);
+        builder.setItems(R.array.add_friend_dialog, new MyDialogOnClickListener(index));
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void refreshFriendsCandidate(List<ParseUser> friends) {
-        List<ParseUser> filteredList = new ArrayList<ParseUser>();
+        List<ParseUser> filteredList = new ArrayList<>();
         for (ParseUser user : mUsers) {
             boolean found = false;
             if (user.getObjectId().equals(mCurrentUser.getObjectId())) {
@@ -253,5 +213,27 @@ public class AddFriendsActivity extends AppCompatActivity
         layoutManager.scrollToPosition(0);
         mRecyclerView.setLayoutManager(layoutManager);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(this, null));
+    }
+
+    public class MyDialogOnClickListener implements DialogInterface.OnClickListener {
+        private int pos;
+
+        public MyDialogOnClickListener(int pos) {
+            this.pos = pos;
+        }
+
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+            switch (which){
+                case INDEX_OPEN :
+                    Toast.makeText(AddFriendsActivity.this, "[DEBUG] on click : ", Toast.LENGTH_SHORT).show();
+                    break;
+                case INDEX_ADD_FRIEND :
+                    addFriend(pos);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }

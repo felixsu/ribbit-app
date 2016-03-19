@@ -11,19 +11,15 @@ import java.util.List;
 
 import felix.com.ribbit.R;
 import felix.com.ribbit.adapter.base.BaseViewAdapter;
+import felix.com.ribbit.adapter.base.SingleSelectableAdapter;
 import felix.com.ribbit.view.FriendViewHolder;
 
 /**
  * Created by fsoewito on 3/11/2016.
  */
-public class FriendAdapter extends BaseViewAdapter<ParseUser, FriendViewHolder> {
+public class FriendAdapter extends SingleSelectableAdapter<ParseUser, FriendViewHolder> {
     public FriendAdapter(Context context, List<ParseUser> items) {
         super(context, items);
-    }
-
-    @Override
-    public void remove(List<ParseUser> friends) {
-
     }
 
     @Override

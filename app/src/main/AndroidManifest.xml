@@ -66,7 +66,7 @@
         </activity>
         <activity
             android:name=".ui.AddFriendsActivity"
-            android:label="@string/title_activity_edit_friends"
+            android:label="@string/title_activity_add_friends"
             android:parentActivityName=".ui.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
