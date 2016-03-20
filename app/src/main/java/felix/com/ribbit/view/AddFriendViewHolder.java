@@ -6,12 +6,10 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.parse.ParseUser;
-
 import felix.com.ribbit.R;
-import felix.com.ribbit.constant.ParseConstants;
 import felix.com.ribbit.listener.ItemClickListener;
 import felix.com.ribbit.listener.ItemLongClickListener;
+import felix.com.ribbit.model.UserData;
 import felix.com.ribbit.util.Util;
 import felix.com.ribbit.view.base.BaseViewHolder;
 
@@ -20,7 +18,7 @@ import felix.com.ribbit.view.base.BaseViewHolder;
  * todo
  * increase performance on inflating layout (generate thumbnails use many resource)
  */
-public class AddFriendViewHolder extends BaseViewHolder<ParseUser> {
+public class AddFriendViewHolder extends BaseViewHolder<UserData> {
     private TextView mNameLabel;
     private ImageView mProfileImage;
     private Resources mRes;
@@ -32,9 +30,9 @@ public class AddFriendViewHolder extends BaseViewHolder<ParseUser> {
     }
 
     @Override
-    public void bindView(ParseUser object) {
-        mNameLabel.setText(object.getUsername());
-        Drawable d = Util.stringToDrawable((String) object.get(ParseConstants.KEY_PROFILE_PICTURE));
+    public void bindView(UserData userData) {
+        mNameLabel.setText(userData.getUsername());
+        Drawable d = Util.stringToDrawable(userData.getPictureLocalUri());
         mProfileImage.setImageDrawable(d);
     }
 

@@ -2,21 +2,29 @@ package felix.com.ribbit.application;
 
 import android.app.Application;
 
-import com.parse.Parse;
-import com.parse.ParseObject;
+import com.firebase.client.Firebase;
 
-import felix.com.ribbit.model.Message;
+import felix.com.ribbit.model.Ribbit;
+import io.filepicker.Filepicker;
 
 /**
  * Created by fsoewito on 11/18/2015.
  *
  */
 public class RibbitApplication extends Application {
+
+    private static final String FILE_PICKER_API_KEY = "AeExLGVTSkmKDB6x0atUsz";
+    private static final String FILE_PICKER_APP_NAME = "Ribbit-App";
+
     @Override
     public void onCreate() {
         super.onCreate();
-        ParseObject.registerSubclass(Message.class);
-        Parse.initialize(this, "xblroS8M8SPINp3F9XCuQqn577f9ajERIJzuyAjw", "GMRJvzwzMOgplW4l4meKCjhRO9QykvTx43bZi8IF");
 
+        Filepicker.setKey(FILE_PICKER_API_KEY);
+        Filepicker.setAppName(FILE_PICKER_APP_NAME);
+
+        Firebase.setAndroidContext(this);
+
+        Ribbit.setAndroidContext(this);
     }
 }

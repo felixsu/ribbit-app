@@ -12,45 +12,54 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.commit451.inkpageindicator.InkPageIndicator;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SignUpCallback;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import felix.com.ribbit.R;
 import felix.com.ribbit.adapter.SignUpPagerAdapter;
 import felix.com.ribbit.exception.InputValidityException;
+import felix.com.ribbit.listener.RibbitListener;
+import felix.com.ribbit.model.UserWrapper;
 import felix.com.ribbit.model.Validatable;
 import felix.com.ribbit.util.Util;
 
-public class SignUpActivity extends AppCompatActivity {
+public class SignUpActivity extends AppCompatActivity implements RibbitListener {
 
     public static final String TAG = SignUpActivity.class.getName();
 
     @Bind(R.id.button_next)
-    Button mNextButton;
+    Button mButtonNext;
     @Bind(R.id.button_prev)
-    Button mPrevButton;
+    Button mButtonPrev;
     @Bind(R.id.indicator)
     InkPageIndicator mIndicator;
 
     //etc section
-    @Bind(R.id.etc_progress_bar)
+    @Bind(R.id.progress_bar)
     ProgressBar mProgressBar;
 
     private SignUpPagerAdapter mSignUpPagerAdapter;
     private ViewPager mViewPager;
     private int mCurrentPage = 0;
-    private ParseUser mCandidate;
+    private UserWrapper mCandidate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         initView();
         initData();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mCurrentPage != 0) {
+            goToPrevPage();
+        } else {
+            super.onBackPressed();
+        }
     }
 
     private void initView() {
@@ -65,21 +74,21 @@ public class SignUpActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSignUpPagerAdapter);
         mIndicator.setViewPager(mViewPager);
-        mNextButton.setOnClickListener(new View.OnClickListener() {
+        mButtonNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToNextPage();
             }
         });
 
-        mPrevButton.setOnClickListener(new View.OnClickListener() {
+        mButtonPrev.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 goToPrevPage();
             }
         });
 
-        mPrevButton.setVisibility(View.INVISIBLE);
+        mButtonPrev.setVisibility(View.INVISIBLE);
     }
 
     private void goToPrevPage() {
@@ -89,15 +98,17 @@ public class SignUpActivity extends AppCompatActivity {
         Log.d(TAG, "Total Item : " + totalPage);
         if (mCurrentPage != 0) {
             if (mCurrentPage == 1) {
-                mPrevButton.setVisibility(View.INVISIBLE);
+                mButtonPrev.setVisibility(View.INVISIBLE);
             }
             mCurrentPage--;
+            mButtonNext.setText(R.string.text_next);
             mViewPager.setCurrentItem(mCurrentPage, true);
         }
     }
 
     private void initData() {
-        mCandidate = new ParseUser();
+        mCandidate = new UserWrapper();
+
     }
 
     private void goToNextPage() {
@@ -108,12 +119,12 @@ public class SignUpActivity extends AppCompatActivity {
             int totalPage = mSignUpPagerAdapter.getCount();
             Log.d(TAG, "Current Item : " + mCurrentPage);
             Log.d(TAG, "Total Item : " + totalPage);
-            mPrevButton.setVisibility(View.VISIBLE);
+            mButtonPrev.setVisibility(View.VISIBLE);
             if (mCurrentPage != totalPage - 1) {
                 mViewPager.setCurrentItem(mCurrentPage, true);
                 //on second page
                 if (mCurrentPage == totalPage - 2) {
-                    mNextButton.setText(R.string.finish);
+                    mButtonNext.setText(R.string.finish);
                 }
                 mCurrentPage++;
                 mViewPager.setCurrentItem(mCurrentPage, true);
@@ -129,26 +140,7 @@ public class SignUpActivity extends AppCompatActivity {
     public void doFinalize() {
         hideKeyboard();
         Util.showView(mProgressBar);
-        mCandidate.signUpInBackground(new SignUpCallback() {
-            @Override
-            public void done(ParseException e) {
-                Util.hideView(mProgressBar);
-                if (e == null) {
-                    Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(intent);
-                } else {
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SignUpActivity.this);
-                    dialogBuilder.setMessage(e.getMessage())
-                            .setTitle(R.string.signUpErrorTitle)
-                            .setPositiveButton(android.R.string.ok, null);
-
-                    AlertDialog dialog = dialogBuilder.create();
-                    dialog.show();
-                }
-            }
-        });
+        mCandidate.signUp(this);
     }
 
     private void hideKeyboard() {
@@ -159,9 +151,34 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    public ParseUser getCandidate() {
+    public UserWrapper getCandidate() {
         return mCandidate;
     }
 
 
+    @Override
+    public void onFinish() {
+        Util.hideView(mProgressBar);
+    }
+
+    @Override
+    public void onSuccess() {
+        Toast.makeText(this, "success to create user " + mCandidate.getUid(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+
+    }
+
+    @Override
+    public void onError(Throwable e) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SignUpActivity.this);
+        dialogBuilder.setMessage(e.getMessage())
+                .setTitle(R.string.signUpErrorTitle)
+                .setPositiveButton(android.R.string.ok, null);
+
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
+    }
 }

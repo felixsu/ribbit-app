@@ -15,9 +15,9 @@
     tools:showIn="@layout/activity_edit_profile">
 
     <RelativeLayout
+        android:id="@+id/container_name"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/container_name">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/label_name"
@@ -34,8 +34,8 @@
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:layout_toRightOf="@id/label_name"
-            android:paddingLeft="8dp"
             android:clickable="true"
+            android:paddingLeft="8dp"
             tools:src="@drawable/ic_action_edit"/>
     </RelativeLayout>
 
@@ -52,11 +52,11 @@
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/transparent_grey"
-        android:layout_alignLeft="@id/image_profile_picture"
         android:layout_alignBottom="@id/image_profile_picture"
-        android:gravity="right"
-        android:layout_alignRight="@id/image_profile_picture">
+        android:layout_alignLeft="@id/image_profile_picture"
+        android:layout_alignRight="@id/image_profile_picture"
+        android:background="@color/transparent_grey"
+        android:gravity="right">
 
         <ImageView
             android:id="@+id/button_edit_profile_picture"
@@ -88,7 +88,7 @@
         tools:text="expect nothing and keep going"/>
 
     <ProgressBar
-        android:id="@+id/etc_progress_bar"
+        android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

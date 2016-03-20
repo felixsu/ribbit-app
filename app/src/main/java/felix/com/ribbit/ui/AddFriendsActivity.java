@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -15,25 +14,17 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
-import com.parse.FindCallback;
-import com.parse.ParseException;
-import com.parse.ParseQuery;
-import com.parse.ParseRelation;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
-
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import felix.com.ribbit.R;
 import felix.com.ribbit.adapter.AddFriendAdapter;
-import felix.com.ribbit.constant.ParseConstants;
-import felix.com.ribbit.decoration.DividerItemDecoration;
 import felix.com.ribbit.listener.ItemClickListener;
 import felix.com.ribbit.listener.ItemLongClickListener;
-import felix.com.ribbit.util.Util;
+import felix.com.ribbit.model.Ribbit;
+import felix.com.ribbit.model.UserData;
+import felix.com.ribbit.model.UserWrapper;
 
 public class AddFriendsActivity extends AppCompatActivity
         implements ItemClickListener, ItemLongClickListener {
@@ -46,15 +37,15 @@ public class AddFriendsActivity extends AppCompatActivity
     @Bind(R.id.recyclerView)
     protected RecyclerView mRecyclerView;
 
-    @Bind(R.id.etc_progress_bar)
+    @Bind(R.id.progress_bar)
     protected ProgressBar mProgressBar;
 
     private ActionBar mActionBar;
     private AddFriendAdapter mAdapter;
     private View mView;
-    private List<ParseUser> mUsers;
-    private ParseRelation<ParseUser> mFriendsRelation;
-    private ParseUser mCurrentUser;
+    private List<UserData> mUserDatas;
+    //private ParseRelation<ParseUser> mFriendsRelation;
+    private UserWrapper mCurrentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,37 +54,37 @@ public class AddFriendsActivity extends AppCompatActivity
         ButterKnife.bind(this);
         initView();
 
-        mCurrentUser = ParseUser.getCurrentUser();
-        mFriendsRelation = mCurrentUser.getRelation(ParseConstants.KEY_FRIENDS_RELATION);
+        mCurrentUser = Ribbit.getCurrentUser();
+        //mFriendsRelation = mCurrentUser.getRelation(ParseConstants.KEY_FRIENDS_RELATION);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        ParseQuery<ParseUser> query = ParseUser.getQuery();
-        query.orderByAscending(ParseConstants.KEY_USERNAME);
-        query.setLimit(MAX_FRIEND);
-        toggleLoadingScreen();
-        query.findInBackground(new FindCallback<ParseUser>() {
-            @Override
-            public void done(List<ParseUser> users, ParseException e) {
-                toggleLoadingScreen();
-                if (e == null) {
-                    mUsers = users;
-                    initData();
-                } else {
-                    Log.e(TAG, e.getMessage());
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddFriendsActivity.this);
-                    dialogBuilder.setMessage(e.getMessage())
-                            .setTitle(R.string.editFriendsErrorTitle)
-                            .setPositiveButton(android.R.string.ok, null);
-
-                    AlertDialog dialog = dialogBuilder.create();
-                    dialog.show();
-                }
-            }
-        });
+//        ParseQuery<ParseUser> query = ParseUser.getQuery();
+//        query.orderByAscending(ParseConstants.KEY_USERNAME);
+//        query.setLimit(MAX_FRIEND);
+//        toggleLoadingScreen();
+//        query.findInBackground(new FindCallback<ParseUser>() {
+//            @Override
+//            public void done(List<ParseUser> users, ParseException e) {
+//                toggleLoadingScreen();
+//                if (e == null) {
+//                    mUserDatas = users;
+//                    initData();
+//                } else {
+//                    Log.e(TAG, e.getMessage());
+//                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(AddFriendsActivity.this);
+//                    dialogBuilder.setMessage(e.getMessage())
+//                            .setTitle(R.string.editFriendsErrorTitle)
+//                            .setPositiveButton(android.R.string.ok, null);
+//
+//                    AlertDialog dialog = dialogBuilder.create();
+//                    dialog.show();
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -108,19 +99,19 @@ public class AddFriendsActivity extends AppCompatActivity
     }
 
     private void addFriend(final int pos) {
-        ParseUser candidate = mAdapter.getItem(pos);
-        mFriendsRelation.add(candidate);
-        mCurrentUser.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                if (e != null) {
-                    Toast.makeText(AddFriendsActivity.this, "failed to add friends", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, e.getMessage());
-                } else {
-                    mAdapter.remove(pos);
-                }
-            }
-        });
+//        ParseUser candidate = mAdapter.getItem(pos);
+//        mFriendsRelation.add(candidate);
+//        mCurrentUser.saveInBackground(new SaveCallback() {
+//            @Override
+//            public void done(ParseException e) {
+//                if (e != null) {
+//                    Toast.makeText(AddFriendsActivity.this, "failed to add friends", Toast.LENGTH_SHORT).show();
+//                    Log.e(TAG, e.getMessage());
+//                } else {
+//                    mAdapter.remove(pos);
+//                }
+//            }
+//        });
 
     }
 
@@ -155,18 +146,18 @@ public class AddFriendsActivity extends AppCompatActivity
 
     private void initData() {
         //filter friends data
-        mFriendsRelation.getQuery().findInBackground(new FindCallback<ParseUser>() {
-            @Override
-            public void done(List<ParseUser> friends, ParseException e) {
-                Log.d(TAG, String.format("Num of user : %d", mUsers.size()));
-                Log.d(TAG, String.format("Num of friend : %d", friends.size()));
-                if (e == null) {
-                    refreshFriendsCandidate(friends);
-                } else {
-                    Log.e(TAG, e.getMessage());
-                }
-            }
-        });
+//        mFriendsRelation.getQuery().findInBackground(new FindCallback<ParseUser>() {
+//            @Override
+//            public void done(List<ParseUser> friends, ParseException e) {
+//                Log.d(TAG, String.format("Num of user : %d", mUserDatas.size()));
+//                Log.d(TAG, String.format("Num of friend : %d", friends.size()));
+//                if (e == null) {
+//                    refreshFriendsCandidate(friends);
+//                } else {
+//                    Log.e(TAG, e.getMessage());
+//                }
+//            }
+//        });
     }
 
     @Override
@@ -182,38 +173,38 @@ public class AddFriendsActivity extends AppCompatActivity
         dialog.show();
     }
 
-    private void refreshFriendsCandidate(List<ParseUser> friends) {
-        List<ParseUser> filteredList = new ArrayList<>();
-        for (ParseUser user : mUsers) {
-            boolean found = false;
-            if (user.getObjectId().equals(mCurrentUser.getObjectId())) {
-                found = true;
-            }
-            if (!found) {
-                for (ParseUser friend : friends) {
-                    if (user.getObjectId().equals(friend.getObjectId())) {
-                        found = true;
-                        break;
-                    }
-                }
-            }
-            if (!found) {
-                filteredList.add(user);
-            }
-        }
-
-        mUsers = filteredList;
-        mAdapter = new AddFriendAdapter(AddFriendsActivity.this, mUsers);
-        mAdapter.setItemLongClickListener(AddFriendsActivity.this);
-        mAdapter.setItemClickListener(AddFriendsActivity.this);
-        mRecyclerView.setAdapter(mAdapter);
-
-        RecyclerView.LayoutManager layoutManager =
-                new LinearLayoutManager(AddFriendsActivity.this);
-        layoutManager.scrollToPosition(0);
-        mRecyclerView.setLayoutManager(layoutManager);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, null));
-    }
+//    private void refreshFriendsCandidate(List<ParseUser> friends) {
+//        List<ParseUser> filteredList = new ArrayList<>();
+//        for (ParseUser user : mUserDatas) {
+//            boolean found = false;
+//            if (user.getObjectId().equals(mCurrentUser.getObjectId())) {
+//                found = true;
+//            }
+//            if (!found) {
+//                for (ParseUser friend : friends) {
+//                    if (user.getObjectId().equals(friend.getObjectId())) {
+//                        found = true;
+//                        break;
+//                    }
+//                }
+//            }
+//            if (!found) {
+//                filteredList.add(user);
+//            }
+//        }
+//
+//        mUserDatas = filteredList;
+//        mAdapter = new AddFriendAdapter(AddFriendsActivity.this, mUserDatas);
+//        mAdapter.setItemLongClickListener(AddFriendsActivity.this);
+//        mAdapter.setItemClickListener(AddFriendsActivity.this);
+//        mRecyclerView.setAdapter(mAdapter);
+//
+//        RecyclerView.LayoutManager layoutManager =
+//                new LinearLayoutManager(AddFriendsActivity.this);
+//        layoutManager.scrollToPosition(0);
+//        mRecyclerView.setLayoutManager(layoutManager);
+//        mRecyclerView.addItemDecoration(new DividerItemDecoration(this, null));
+//    }
 
     public class MyDialogOnClickListener implements DialogInterface.OnClickListener {
         private int pos;

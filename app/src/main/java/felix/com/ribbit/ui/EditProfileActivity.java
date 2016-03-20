@@ -20,10 +20,6 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parse.ParseException;
-import com.parse.ParseUser;
-import com.parse.SaveCallback;
-
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -33,11 +29,14 @@ import java.io.InputStream;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import felix.com.ribbit.R;
-import felix.com.ribbit.constant.ParseConstants;
+import felix.com.ribbit.listener.RibbitListener;
+import felix.com.ribbit.model.Ribbit;
+import felix.com.ribbit.model.UserData;
+import felix.com.ribbit.model.UserWrapper;
 import felix.com.ribbit.util.MediaUtil;
 import felix.com.ribbit.util.Util;
 
-public class EditProfileActivity extends AppCompatActivity {
+public class EditProfileActivity extends AppCompatActivity implements RibbitListener {
 
     private static final String TAG = EditProfileActivity.class.getName();
 
@@ -56,10 +55,12 @@ public class EditProfileActivity extends AppCompatActivity {
     protected ImageView mEditNameButton;
     @Bind(R.id.button_edit_profile_picture)
     protected ImageView mEditProfilePictureButton;
-    @Bind(R.id.etc_progress_bar)
+    @Bind(R.id.progress_bar)
     protected ProgressBar mProgressBar;
 
-    private ParseUser mCurrentUser;
+    private UserWrapper mCurrentUser;
+    private UserData mUserData;
+
     private Uri mMediaUri;
     private DialogInterface.OnClickListener mEditPictureDialogListener;
     private DialogInterface.OnClickListener mEditNameDialogPositiveListener;
@@ -94,7 +95,8 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        mCurrentUser = ParseUser.getCurrentUser();
+        mCurrentUser = Ribbit.getCurrentUser();
+        mUserData = mCurrentUser.getData();
 
         mEditNameButton.setImageDrawable(Util.setTint(
                 getResources().getDrawable(R.drawable.ic_action_edit),
@@ -102,26 +104,20 @@ public class EditProfileActivity extends AppCompatActivity {
         mEditProfilePictureButton.setImageDrawable(Util.setTint(
                 getResources().getDrawable(R.drawable.ic_action_edit),
                 getResources().getColor(R.color.colorAccent)));
-        String name = (String) mCurrentUser.get(ParseConstants.KEY_NAME);
+        String name = mUserData.getName();
         if (name != null) {
             mNameField.setText(name);
         } else {
             mNameField.setText(R.string.default_profile_name);
         }
 
-        String status = (String) mCurrentUser.get(ParseConstants.KEY_STATUS);
+        String status = mUserData.getStatus();
         if (status != null) {
             mStatusField.setText(status);
         } else {
             mStatusField.setText(R.string.default_profile_status);
         }
 
-        String profilePicture = (String) mCurrentUser.get(ParseConstants.KEY_PROFILE_PICTURE);
-        if (profilePicture != null) {
-            mProfilePicture.setImageDrawable(Util.stringToDrawable(profilePicture, getResources()));
-        } else {
-            mProfilePicture.setImageDrawable(getResources().getDrawable(R.drawable.ic_user_default));
-        }
         mEditPictureDialogListener = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -161,7 +157,7 @@ public class EditProfileActivity extends AppCompatActivity {
         mEditNameButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                nameText.setText((CharSequence) mCurrentUser.get(ParseConstants.KEY_NAME));
+                nameText.setText(mUserData.getName());
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(EditProfileActivity.this);
                 builder
@@ -265,30 +261,30 @@ public class EditProfileActivity extends AppCompatActivity {
     }
 
     private void saveNewProfile() {
-        String newPicture = Util.imageViewToString(mProfilePicture);
-        Log.d(TAG, "decoded picture " + newPicture);
         String newName = mNameField.getText().toString();
         String newStatus = mStatusField.getText().toString();
 
-        mCurrentUser.put(ParseConstants.KEY_NAME, newName);
-        mCurrentUser.put(ParseConstants.KEY_PROFILE_PICTURE, newPicture);
-        mCurrentUser.put(ParseConstants.KEY_STATUS, newStatus);
+        mUserData.setName(newName);
+        mUserData.setStatus(newStatus);
 
         Util.showView(mProgressBar);
-        mCurrentUser.saveInBackground(new SaveCallback() {
-            @Override
-            public void done(ParseException e) {
-                Util.hideView(mProgressBar);
-                if (e == null) {
-                    Toast.makeText(EditProfileActivity.this, R.string.positive_save_profile, Toast.LENGTH_SHORT).show();
-                    finish();
-                } else {
-                    Log.e(TAG, "profile not saved", e);
-                    Toast.makeText(EditProfileActivity.this, R.string.negative_save_profile, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
+        mCurrentUser.update(this);
     }
 
+    @Override
+    public void onFinish() {
+        Util.hideView(mProgressBar);
+    }
+
+    @Override
+    public void onSuccess() {
+        Toast.makeText(EditProfileActivity.this, R.string.positive_save_profile, Toast.LENGTH_SHORT).show();
+        finish();
+    }
+
+    @Override
+    public void onError(Throwable e) {
+        Log.e(TAG, "profile not saved", e);
+        Toast.makeText(EditProfileActivity.this, R.string.negative_save_profile, Toast.LENGTH_SHORT).show();
+    }
 }

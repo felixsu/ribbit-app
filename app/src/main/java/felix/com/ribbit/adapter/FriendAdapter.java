@@ -5,20 +5,18 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.parse.ParseUser;
-
 import java.util.List;
 
 import felix.com.ribbit.R;
-import felix.com.ribbit.adapter.base.BaseViewAdapter;
 import felix.com.ribbit.adapter.base.SingleSelectableAdapter;
+import felix.com.ribbit.model.UserData;
 import felix.com.ribbit.view.FriendViewHolder;
 
 /**
  * Created by fsoewito on 3/11/2016.
  */
-public class FriendAdapter extends SingleSelectableAdapter<ParseUser, FriendViewHolder> {
-    public FriendAdapter(Context context, List<ParseUser> items) {
+public class FriendAdapter extends SingleSelectableAdapter<UserData, FriendViewHolder> {
+    public FriendAdapter(Context context, List<UserData> items) {
         super(context, items);
     }
 

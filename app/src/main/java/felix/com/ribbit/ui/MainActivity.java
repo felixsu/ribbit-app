@@ -9,10 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import com.parse.ParseUser;
-
 import felix.com.ribbit.R;
 import felix.com.ribbit.adapter.SectionsPagerAdapter;
+import felix.com.ribbit.model.Ribbit;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -46,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_logout) {
-            ParseUser.logOutInBackground();
+            Ribbit.logout();
             navigateToLogin();
             return true;
         }

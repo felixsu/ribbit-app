@@ -9,10 +9,9 @@ import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.parse.ParseAnalytics;
-import com.parse.ParseUser;
-
 import felix.com.ribbit.R;
+import felix.com.ribbit.model.Ribbit;
+import felix.com.ribbit.model.UserWrapper;
 import felix.com.ribbit.receiver.MyReceiver;
 import felix.com.ribbit.receiver.Receiver;
 import felix.com.ribbit.service.MyService;
@@ -20,19 +19,15 @@ import felix.com.ribbit.util.Util;
 
 public class SplashActivity extends AppCompatActivity implements Receiver {
     public static final String TAG = SplashActivity.class.getName();
-
+    MyReceiver mReceiver;
     private ImageView mSplashIcon;
     private TextView mSplashLabel;
-
-    MyReceiver mReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "enter on create");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
-        ParseAnalytics.trackAppOpenedInBackground(getIntent());
 
         initField();
     }
@@ -60,11 +55,11 @@ public class SplashActivity extends AppCompatActivity implements Receiver {
     public void onReceiveResult(int resultCode, Bundle resultData) {
         Log.d(TAG, "enter on receiver receiver");
 
-        ParseUser currentUser = ParseUser.getCurrentUser();
+        UserWrapper currentUser = Ribbit.getCurrentUser();
         if (currentUser == null) {
             navigateToLogin();
         } else {
-            Log.i(TAG, String.format("User %s is login", currentUser.getUsername()));
+            Log.i(TAG, String.format("UserData %s is login", currentUser.getData().getUsername()));
             navigateToMainActivity();
         }
     }

@@ -17,7 +17,7 @@
     </android.support.v7.widget.RecyclerView>
 
     <ProgressBar
-        android:id="@+id/etc_progress_bar"
+        android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

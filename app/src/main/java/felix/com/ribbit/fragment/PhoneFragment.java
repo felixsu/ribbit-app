@@ -9,14 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.parse.ParseUser;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import felix.com.ribbit.R;
-import felix.com.ribbit.constant.ParseConstants;
 import felix.com.ribbit.exception.InputValidityException;
 import felix.com.ribbit.listener.TextInputLayoutFocusListener;
+import felix.com.ribbit.model.UserData;
+import felix.com.ribbit.model.UserWrapper;
 import felix.com.ribbit.model.Validatable;
 import felix.com.ribbit.ui.SignUpActivity;
 
@@ -28,7 +27,8 @@ public class PhoneFragment extends Fragment implements Validatable {
     @Bind(R.id.phoneNumberHolder)
     TextInputLayout mPhoneNumberHolder;
 
-    private ParseUser mCandidate;
+    private UserWrapper mCandidate;
+    private UserData mUserData;
     private SignUpActivity mActivity;
 
     public PhoneFragment() {
@@ -55,6 +55,7 @@ public class PhoneFragment extends Fragment implements Validatable {
     private void initData() {
         mActivity = (SignUpActivity) getActivity();
         mCandidate = mActivity.getCandidate();
+        mUserData = mCandidate.getData();
         mPhoneNumberField.setOnFocusChangeListener(new TextInputLayoutFocusListener(mPhoneNumberHolder));
 
     }
@@ -81,6 +82,6 @@ public class PhoneFragment extends Fragment implements Validatable {
             throw new InputValidityException(errorMsg);
         }
 
-        mCandidate.put(ParseConstants.KEY_PHONE_NUMBER, phoneNumber);
+        mUserData.setPhoneNumber(phoneNumber);
     }
 }

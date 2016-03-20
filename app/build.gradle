@@ -19,6 +19,7 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE-FIREBASE.txt'
         exclude 'META-INF/NOTICE'
     }
 }
@@ -36,8 +37,8 @@ dependencies {
     compile 'com.android.support:recyclerview-v7:23.1.1'
     compile 'com.android.support:design:23.1.1'
     compile 'com.jakewharton:butterknife:7.0.1'
-    compile 'com.parse.bolts:bolts-android:1.+'
-    compile 'com.parse:parse-android:1.+'
     compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
     compile 'com.github.Commit451:InkPageIndicator:93b60fb78e'
+    compile 'io.filepicker:filepicker-android:3.9.0'
+    compile 'com.firebase:firebase-client-android:2.5.1'
 }

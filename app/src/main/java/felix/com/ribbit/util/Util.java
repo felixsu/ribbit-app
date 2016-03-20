@@ -10,12 +10,16 @@ import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.io.ByteArrayOutputStream;
 
 /**
  * Created by fsoewito on 3/3/2016.
  */
 public class Util {
+    private final static ObjectMapper mapper = new ObjectMapper();
+
     public final static boolean isValidEmail(CharSequence target) {
         if (target == null) {
             return false;
@@ -67,5 +71,9 @@ public class Util {
 
     public static void showView(View v) {
         v.setVisibility(View.VISIBLE);
+    }
+
+    public static ObjectMapper getMapperInstance() {
+        return mapper;
     }
 }

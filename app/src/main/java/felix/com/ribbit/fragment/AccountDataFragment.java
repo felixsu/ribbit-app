@@ -9,13 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.parse.ParseUser;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import felix.com.ribbit.R;
 import felix.com.ribbit.exception.InputValidityException;
 import felix.com.ribbit.listener.TextInputLayoutFocusListener;
+import felix.com.ribbit.model.UserData;
+import felix.com.ribbit.model.UserWrapper;
 import felix.com.ribbit.model.Validatable;
 import felix.com.ribbit.ui.SignUpActivity;
 import felix.com.ribbit.util.Util;
@@ -28,22 +28,24 @@ public class AccountDataFragment extends Fragment implements Validatable {
     private static final int LEN_PASSWORD_MIN = 8;
     private static final int LEN_PASSWORD_MAX = 20;
 
-    @Bind(R.id.usernameField)
+    @Bind(R.id.field_email)
     TextView mUsernameField;
-    @Bind(R.id.passwordField)
+    @Bind(R.id.field_password)
     TextView mPasswordField;
     @Bind(R.id.emailField)
     TextView mEmailField;
 
-    @Bind(R.id.usernameHolder)
+    @Bind(R.id.holder_email)
     TextInputLayout mUsernameHolder;
-    @Bind(R.id.passwordHolder)
+    @Bind(R.id.holde_password)
     TextInputLayout mPasswordHolder;
 
     @Bind(R.id.emailHolder)
     TextInputLayout mEmailHolder;
 
-    private ParseUser mCandidate;
+    private UserWrapper mCandidate;
+    private UserData mUserData;
+
     private SignUpActivity mActivity;
 
     public AccountDataFragment() {
@@ -70,6 +72,8 @@ public class AccountDataFragment extends Fragment implements Validatable {
     private void initData() {
         mActivity = (SignUpActivity) getActivity();
         mCandidate = mActivity.getCandidate();
+        mUserData = mCandidate.getData();
+
         if ((mEmailHolder != null) && (mEmailField != null)) {
             mEmailField.setOnFocusChangeListener(new TextInputLayoutFocusListener(mEmailHolder));
         }
@@ -112,9 +116,9 @@ public class AccountDataFragment extends Fragment implements Validatable {
             throw new InputValidityException(errorMsg);
         }
 
-        mCandidate.setUsername(username);
-        mCandidate.setPassword(password);
-        mCandidate.setEmail(email);
+        mUserData.setUsername(username);
+        mUserData.setPassword(password);
+        mUserData.setEmail(email);
     }
 
     public void showError(TextInputLayout v, String error) {

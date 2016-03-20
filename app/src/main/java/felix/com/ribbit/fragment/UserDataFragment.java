@@ -18,18 +18,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.parse.ParseUser;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import felix.com.ribbit.R;
-import felix.com.ribbit.constant.ParseConstants;
 import felix.com.ribbit.exception.InputValidityException;
 import felix.com.ribbit.listener.TextInputLayoutFocusListener;
+import felix.com.ribbit.model.UserData;
+import felix.com.ribbit.model.UserWrapper;
 import felix.com.ribbit.model.Validatable;
 import felix.com.ribbit.ui.SignUpActivity;
 import felix.com.ribbit.util.MediaUtil;
-import felix.com.ribbit.util.Util;
 
 public class UserDataFragment extends Fragment implements Validatable {
 
@@ -47,7 +45,9 @@ public class UserDataFragment extends Fragment implements Validatable {
     @Bind(R.id.nameHolder)
     TextInputLayout mNameHolder;
 
-    private ParseUser mCandidate;
+    private UserWrapper mCandidate;
+    private UserData mUserData;
+
     private SignUpActivity mActivity;
     private DialogInterface.OnClickListener mListener;
     private Uri mMediaUri;
@@ -82,6 +82,7 @@ public class UserDataFragment extends Fragment implements Validatable {
     private void initData() {
         mActivity = (SignUpActivity) getActivity();
         mCandidate = mActivity.getCandidate();
+        mUserData = mCandidate.getData();
         mNameField.setOnFocusChangeListener(new TextInputLayoutFocusListener(mNameHolder));
 
         mEditProfilePictureButton.setOnClickListener(new View.OnClickListener() {
@@ -137,9 +138,9 @@ public class UserDataFragment extends Fragment implements Validatable {
             throw new InputValidityException(errorMsg);
         }
 
-        mCandidate.put(ParseConstants.KEY_NAME, name);
-        mCandidate.put(ParseConstants.KEY_PROFILE_PICTURE, Util.imageViewToString(mProfilePicture));
-        mCandidate.put(ParseConstants.KEY_STATUS, "Newbie in action");
+        mUserData.setName(name);
+        //mCandidate.setPictureUri(mMediaUri.toString());
+        mUserData.setStatus("Newbie in action");
     }
 
     @Override

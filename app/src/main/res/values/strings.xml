@@ -13,7 +13,7 @@
     <string name="username_hint">Username</string>
     <string name="password_hint">password</string>
     <string name="login_button">Login</string>
-    <string name="email_hint">email</string>
+    <string name="email_hint">email@gmail.com</string>
     <string name="signUpLabel">Sign up !</string>
     <string name="signUpButton">Sign Up</string>
     <string name="signUpErrorMessage">please make sure you fill all field correctly</string>
@@ -49,6 +49,8 @@
     <string name="positive_save_profile">profile saved successfully</string>
     <string name="negative_save_profile">profile saved unsuccessfully</string>
     <string name="item_statusLabel">my status</string>
+    <string name="text_previous">prev</string>
+    <string name="text_next">next</string>
 
     <string-array name="edit_profile_pictures">
         <item>pick from SD card</item>

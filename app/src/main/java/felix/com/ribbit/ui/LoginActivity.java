@@ -10,29 +10,27 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 
-import com.parse.LogInCallback;
-import com.parse.ParseException;
-import com.parse.ParseUser;
-
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import felix.com.ribbit.R;
+import felix.com.ribbit.listener.RibbitListener;
+import felix.com.ribbit.model.Ribbit;
+import felix.com.ribbit.util.Util;
 
-public class LoginActivity extends AppCompatActivity {
-    @Bind(R.id.button_signUp)
+public class LoginActivity extends AppCompatActivity implements RibbitListener {
+    @Bind(R.id.button_sign_up)
     Button mSignUpButton;
 
-    @Bind(R.id.usernameField)
-    EditText mUsernameField;
+    @Bind(R.id.field_email)
+    EditText mFieldEmail;
 
-    @Bind(R.id.passwordField)
-    EditText mPasswordField;
+    @Bind(R.id.field_password)
+    EditText mFieldPassword;
 
     @Bind(R.id.button_login)
     Button mLoginButton;
 
-    @Bind(R.id.etc_progress_bar)
+    @Bind(R.id.progress_bar)
     ProgressBar mProgressBar;
 
     View mView;
@@ -51,48 +49,31 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        mLoginButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String email = mFieldEmail.getText().toString();
+                String password = mFieldPassword.getText().toString();
 
-    }
+                email = email.trim();
+                password = password.trim();
 
-    @OnClick(R.id.button_login)
-    void onClickLoginButton() {
-        String username = mUsernameField.getText().toString();
-        String password = mPasswordField.getText().toString();
+                if (email.isEmpty() || password.isEmpty()) {
+                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this);
+                    dialogBuilder.setMessage(R.string.loginErrorMessage)
+                            .setTitle(R.string.loginErrorTitle)
+                            .setPositiveButton(android.R.string.ok, null);
 
-        username = username.trim();
-        password = password.trim();
-
-        if (username.isEmpty() || password.isEmpty()) {
-            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(this);
-            dialogBuilder.setMessage(R.string.loginErrorMessage)
-                    .setTitle(R.string.loginErrorTitle)
-                    .setPositiveButton(android.R.string.ok, null);
-
-            AlertDialog dialog = dialogBuilder.create();
-            dialog.show();
-        } else {
-            toggleLoadingScreen();
-            ParseUser.logInInBackground(username, password, new LogInCallback() {
-                @Override
-                public void done(ParseUser user, ParseException e) {
-                    toggleLoadingScreen();
-                    if (e == null){
-                        Intent intent = new Intent (LoginActivity.this, MainActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                    } else{
-                        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this);
-                        dialogBuilder.setMessage(e.getMessage())
-                                .setTitle(R.string.loginErrorTitle)
-                                .setPositiveButton(android.R.string.ok, null);
-
-                        AlertDialog dialog = dialogBuilder.create();
-                        dialog.show();
-                    }
+                    AlertDialog dialog = dialogBuilder.create();
+                    dialog.show();
+                } else {
+                    Util.showView(mProgressBar);
+                    Ribbit.login(email, password, LoginActivity.this);
                 }
-            });
-        }
+            }
+        });
+
+
     }
 
     private void initView(){
@@ -102,11 +83,27 @@ public class LoginActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
     }
 
-    private void toggleLoadingScreen(){
-        if (mProgressBar.getVisibility() == View.INVISIBLE){
-            mProgressBar.setVisibility(View.VISIBLE);
-        }else{
-            mProgressBar.setVisibility(View.INVISIBLE);
-        }
+    @Override
+    public void onFinish() {
+        Util.hideView(mProgressBar);
+    }
+
+    @Override
+    public void onSuccess() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    @Override
+    public void onError(Throwable e) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this);
+        dialogBuilder.setMessage(e.getMessage())
+                .setTitle(R.string.loginErrorTitle)
+                .setPositiveButton(android.R.string.ok, null);
+
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.show();
     }
 }

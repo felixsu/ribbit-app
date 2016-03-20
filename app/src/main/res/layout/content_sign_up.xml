@@ -35,7 +35,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="prev"/>
+            android:text="@string/text_previous"/>
 
         <TextView
             android:layout_width="0dp"
@@ -47,12 +47,12 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="next"/>
+            android:text="@string/text_next"/>
 
     </LinearLayout>
 
     <ProgressBar
-        android:id="@+id/etc_progress_bar"
+        android:id="@+id/progress_bar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
