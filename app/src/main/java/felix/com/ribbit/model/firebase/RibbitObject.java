@@ -1,4 +1,4 @@
-package felix.com.ribbit.model;
+package felix.com.ribbit.model.firebase;
 
 import java.io.Serializable;
 import java.util.Date;

@@ -12,8 +12,8 @@ import felix.com.ribbit.R;
 import felix.com.ribbit.adapter.FriendAdapter;
 import felix.com.ribbit.listener.ItemClickListener;
 import felix.com.ribbit.listener.ItemLongClickListener;
-import felix.com.ribbit.model.Ribbit;
-import felix.com.ribbit.model.UserWrapper;
+import felix.com.ribbit.model.ribbit.RibbitUser;
+import felix.com.ribbit.model.wrapper.UserWrapper;
 
 /**
  * Created by fsoewito on 11/20/2015.
@@ -31,7 +31,7 @@ public class FriendsFragment extends Fragment implements ItemClickListener, Item
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_edit_friends, container, false);
-        mCurrentUser = Ribbit.getCurrentUser();
+        mCurrentUser = RibbitUser.getCurrentUser();
         if (mCurrentUser != null) {
         }
         ButterKnife.bind(getActivity());

@@ -9,6 +9,7 @@ import android.support.v4.graphics.drawable.DrawableCompat;
 import android.util.Base64;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -72,6 +73,15 @@ public class Util {
     public static void showView(View v) {
         v.setVisibility(View.VISIBLE);
     }
+
+    public static void showTextView(TextView v, String text){
+        if (v.getVisibility() != View.VISIBLE) {
+            v.setVisibility(View.VISIBLE);
+        }
+        v.setText(text);
+    }
+
+
 
     public static ObjectMapper getMapperInstance() {
         return mapper;

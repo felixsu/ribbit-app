@@ -22,9 +22,9 @@ import felix.com.ribbit.R;
 import felix.com.ribbit.adapter.AddFriendAdapter;
 import felix.com.ribbit.listener.ItemClickListener;
 import felix.com.ribbit.listener.ItemLongClickListener;
-import felix.com.ribbit.model.Ribbit;
-import felix.com.ribbit.model.UserData;
-import felix.com.ribbit.model.UserWrapper;
+import felix.com.ribbit.model.ribbit.RibbitUser;
+import felix.com.ribbit.model.firebase.UserData;
+import felix.com.ribbit.model.wrapper.UserWrapper;
 
 public class AddFriendsActivity extends AppCompatActivity
         implements ItemClickListener, ItemLongClickListener {
@@ -54,7 +54,7 @@ public class AddFriendsActivity extends AppCompatActivity
         ButterKnife.bind(this);
         initView();
 
-        mCurrentUser = Ribbit.getCurrentUser();
+        mCurrentUser = RibbitUser.getCurrentUser();
         //mFriendsRelation = mCurrentUser.getRelation(ParseConstants.KEY_FRIENDS_RELATION);
     }
 

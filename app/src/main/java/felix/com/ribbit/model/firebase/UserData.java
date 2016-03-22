@@ -1,4 +1,4 @@
-package felix.com.ribbit.model;
+package felix.com.ribbit.model.firebase;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -10,10 +10,15 @@ import felix.com.ribbit.util.Util;
  * Created by fsoewito on 3/19/2016.
  */
 
-public class UserData extends SimpleUserData implements Serializable {
+public class UserData extends RibbitObject implements Serializable {
     private static final String TAG = UserData.class.getName();
 
-    protected String mEmail;
+    protected String name;
+    protected String phoneNumber;
+    protected String status;
+
+    @JsonIgnore(value = true)
+    protected transient String mEmail;
 
     @JsonIgnore(value = true)
     protected transient String mPassword;
@@ -25,6 +30,30 @@ public class UserData extends SimpleUserData implements Serializable {
     protected String mPictureLocalUri;
 
     public UserData() {
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getEmail() {
@@ -77,6 +106,12 @@ public class UserData extends SimpleUserData implements Serializable {
         byte[] uriBytes = pictureLocalUri.getBytes();
         String uriString = Util.base64Encode(uriBytes, uriBytes.length);
         mPictureLocalUri = uriString;
+    }
+
+    public void prepareForSignUp(){
+        mPassword = null;
+        mUsername = null;
+        updateDate();
     }
 
 }

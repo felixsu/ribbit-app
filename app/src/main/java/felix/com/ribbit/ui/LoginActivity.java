@@ -13,11 +13,11 @@ import android.widget.ProgressBar;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import felix.com.ribbit.R;
-import felix.com.ribbit.listener.RibbitListener;
-import felix.com.ribbit.model.Ribbit;
+import felix.com.ribbit.listener.RibbitResultListener;
+import felix.com.ribbit.model.ribbit.RibbitUser;
 import felix.com.ribbit.util.Util;
 
-public class LoginActivity extends AppCompatActivity implements RibbitListener {
+public class LoginActivity extends AppCompatActivity implements RibbitResultListener {
     @Bind(R.id.button_sign_up)
     Button mSignUpButton;
 
@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity implements RibbitListener {
                     dialog.show();
                 } else {
                     Util.showView(mProgressBar);
-                    Ribbit.login(email, password, LoginActivity.this);
+                    RibbitUser.login(email, password, LoginActivity.this);
                 }
             }
         });
@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity implements RibbitListener {
     }
 
     @Override
-    public void onError(Throwable e) {
+    public void onError(Throwable e, String message) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this);
         dialogBuilder.setMessage(e.getMessage())
                 .setTitle(R.string.loginErrorTitle)

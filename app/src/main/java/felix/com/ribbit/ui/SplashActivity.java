@@ -10,8 +10,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import felix.com.ribbit.R;
-import felix.com.ribbit.model.Ribbit;
-import felix.com.ribbit.model.UserWrapper;
+import felix.com.ribbit.model.ribbit.RibbitUser;
+import felix.com.ribbit.model.wrapper.UserWrapper;
 import felix.com.ribbit.receiver.MyReceiver;
 import felix.com.ribbit.receiver.Receiver;
 import felix.com.ribbit.service.MyService;
@@ -55,7 +55,7 @@ public class SplashActivity extends AppCompatActivity implements Receiver {
     public void onReceiveResult(int resultCode, Bundle resultData) {
         Log.d(TAG, "enter on receiver receiver");
 
-        UserWrapper currentUser = Ribbit.getCurrentUser();
+        UserWrapper currentUser = RibbitUser.getCurrentUser();
         if (currentUser == null) {
             navigateToLogin();
         } else {

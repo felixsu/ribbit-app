@@ -9,7 +9,7 @@ import java.util.List;
 
 import felix.com.ribbit.R;
 import felix.com.ribbit.adapter.base.SingleSelectableAdapter;
-import felix.com.ribbit.model.UserData;
+import felix.com.ribbit.model.firebase.UserData;
 import felix.com.ribbit.view.FriendViewHolder;
 
 /**

@@ -11,7 +11,7 @@ import android.view.MenuItem;
 
 import felix.com.ribbit.R;
 import felix.com.ribbit.adapter.SectionsPagerAdapter;
-import felix.com.ribbit.model.Ribbit;
+import felix.com.ribbit.model.ribbit.RibbitUser;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_logout) {
-            Ribbit.logout();
+            RibbitUser.logout();
             navigateToLogin();
             return true;
         }

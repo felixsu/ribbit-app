@@ -9,7 +9,7 @@ import android.widget.TextView;
 import felix.com.ribbit.R;
 import felix.com.ribbit.listener.ItemClickListener;
 import felix.com.ribbit.listener.ItemLongClickListener;
-import felix.com.ribbit.model.UserData;
+import felix.com.ribbit.model.firebase.UserData;
 import felix.com.ribbit.util.Util;
 import felix.com.ribbit.view.base.BaseViewHolder;
 

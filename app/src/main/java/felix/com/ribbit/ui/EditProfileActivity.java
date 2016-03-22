@@ -29,14 +29,14 @@ import java.io.InputStream;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import felix.com.ribbit.R;
-import felix.com.ribbit.listener.RibbitListener;
-import felix.com.ribbit.model.Ribbit;
-import felix.com.ribbit.model.UserData;
-import felix.com.ribbit.model.UserWrapper;
+import felix.com.ribbit.listener.RibbitResultListener;
+import felix.com.ribbit.model.ribbit.RibbitUser;
+import felix.com.ribbit.model.firebase.UserData;
+import felix.com.ribbit.model.wrapper.UserWrapper;
 import felix.com.ribbit.util.MediaUtil;
 import felix.com.ribbit.util.Util;
 
-public class EditProfileActivity extends AppCompatActivity implements RibbitListener {
+public class EditProfileActivity extends AppCompatActivity implements RibbitResultListener {
 
     private static final String TAG = EditProfileActivity.class.getName();
 
@@ -95,7 +95,7 @@ public class EditProfileActivity extends AppCompatActivity implements RibbitList
     }
 
     private void initData() {
-        mCurrentUser = Ribbit.getCurrentUser();
+        mCurrentUser = RibbitUser.getCurrentUser();
         mUserData = mCurrentUser.getData();
 
         mEditNameButton.setImageDrawable(Util.setTint(
@@ -268,7 +268,7 @@ public class EditProfileActivity extends AppCompatActivity implements RibbitList
         mUserData.setStatus(newStatus);
 
         Util.showView(mProgressBar);
-        mCurrentUser.update(this);
+        mCurrentUser.store(this);
     }
 
     @Override
@@ -283,7 +283,7 @@ public class EditProfileActivity extends AppCompatActivity implements RibbitList
     }
 
     @Override
-    public void onError(Throwable e) {
+    public void onError(Throwable e, String message) {
         Log.e(TAG, "profile not saved", e);
         Toast.makeText(EditProfileActivity.this, R.string.negative_save_profile, Toast.LENGTH_SHORT).show();
     }

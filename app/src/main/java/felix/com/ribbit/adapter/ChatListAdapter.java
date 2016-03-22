@@ -17,7 +17,7 @@ import java.util.List;
 
 import felix.com.ribbit.R;
 import felix.com.ribbit.model.Message;
-import felix.com.ribbit.model.Ribbit;
+import felix.com.ribbit.model.ribbit.RibbitUser;
 
 /**
  * Created by rrsari on 01/03/2016.
@@ -60,7 +60,7 @@ public class ChatListAdapter extends ArrayAdapter<Message> {
         }
         final Message message = getItem(position);
         final ViewHolder holder = (ViewHolder) convertView.getTag();
-        mUserId = Ribbit.getCurrentUser().getUid();
+        mUserId = RibbitUser.getCurrentUser().getId();
         //String messageId=(String)message.get(ParseConstants.KEY_USER_ID);
         final boolean isMe = true;//messageId.equals(mUserId);
 
