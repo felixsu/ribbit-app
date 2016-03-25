@@ -14,9 +14,9 @@ import butterknife.ButterKnife;
 import felix.com.ribbit.R;
 import felix.com.ribbit.exception.InputValidityException;
 import felix.com.ribbit.listener.TextInputLayoutFocusListener;
+import felix.com.ribbit.model.Validatable;
 import felix.com.ribbit.model.firebase.UserData;
 import felix.com.ribbit.model.wrapper.UserWrapper;
-import felix.com.ribbit.model.Validatable;
 import felix.com.ribbit.ui.SignUpActivity;
 import felix.com.ribbit.util.Util;
 
@@ -37,7 +37,7 @@ public class AccountDataFragment extends Fragment implements Validatable {
 
     @Bind(R.id.holder_email)
     TextInputLayout mUsernameHolder;
-    @Bind(R.id.holde_password)
+    @Bind(R.id.holder_password)
     TextInputLayout mPasswordHolder;
 
     @Bind(R.id.emailHolder)
@@ -71,7 +71,7 @@ public class AccountDataFragment extends Fragment implements Validatable {
 
     private void initData() {
         mActivity = (SignUpActivity) getActivity();
-        mCandidate = mActivity.getCandidate();
+        mCandidate = mActivity.getUserWrapper();
         mUserData = mCandidate.getData();
 
         if ((mEmailHolder != null) && (mEmailField != null)) {

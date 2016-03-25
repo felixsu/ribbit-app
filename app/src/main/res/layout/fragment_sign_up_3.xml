@@ -2,7 +2,7 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             xmlns:tools="http://schemas.android.com/tools">
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -15,26 +15,28 @@
             android:id="@+id/image_profile_picture"
             android:layout_width="160dp"
             android:layout_height="160dp"
-            tools:src="@drawable/ic_user_default"/>
+            android:src="@drawable/ic_user_default"/>
 
         <ImageView
-            android:layout_alignTop="@id/image_profile_picture"
-            android:layout_alignBottom="@id/image_profile_picture"
-            android:layout_alignLeft="@id/image_profile_picture"
-            android:layout_alignRight="@id/image_profile_picture"
             android:id="@+id/button_edit_profile_picture"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/image_profile_picture"
+            android:layout_alignLeft="@id/image_profile_picture"
+            android:layout_alignRight="@id/image_profile_picture"
+            android:layout_alignTop="@id/image_profile_picture"
+            android:adjustViewBounds="true"
             android:background="@color/transparent_grey"
-            tools:src="@drawable/ic_action_camera"/>
+            android:scaleType="center"
+            android:src="@drawable/ic_action_camera"/>
 
         <android.support.design.widget.TextInputLayout
             android:id="@+id/nameHolder"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="8dp"
             android:layout_alignBottom="@id/image_profile_picture"
-            android:layout_toRightOf="@id/image_profile_picture">
+            android:layout_toRightOf="@id/image_profile_picture"
+            android:paddingLeft="8dp">
 
             <EditText
                 android:id="@+id/nameField"

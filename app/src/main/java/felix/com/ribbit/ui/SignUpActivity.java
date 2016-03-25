@@ -3,6 +3,9 @@ package felix.com.ribbit.ui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +19,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.commit451.inkpageindicator.InkPageIndicator;
-import com.firebase.client.Firebase;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -24,12 +31,12 @@ import felix.com.ribbit.R;
 import felix.com.ribbit.adapter.SignUpPagerAdapter;
 import felix.com.ribbit.exception.InputValidityException;
 import felix.com.ribbit.listener.RibbitResultListener;
-import felix.com.ribbit.model.firebase.UserData;
-import felix.com.ribbit.model.ribbit.RibbitPhone;
+import felix.com.ribbit.model.Validatable;
 import felix.com.ribbit.model.ribbit.RibbitUser;
 import felix.com.ribbit.model.wrapper.PhoneWrapper;
+import felix.com.ribbit.model.wrapper.PictureWrapper;
 import felix.com.ribbit.model.wrapper.UserWrapper;
-import felix.com.ribbit.model.Validatable;
+import felix.com.ribbit.util.MediaUtil;
 import felix.com.ribbit.util.Util;
 
 public class SignUpActivity extends AppCompatActivity {
@@ -52,8 +59,97 @@ public class SignUpActivity extends AppCompatActivity {
     private SignUpPagerAdapter mSignUpPagerAdapter;
     private ViewPager mViewPager;
     private int mCurrentPage = 0;
-    private UserWrapper mCandidate;
+    private UserWrapper mUserWrapper;
+    private Uri mProfilePictureUri;
 
+    private int completeSignUpTask = 0;
+    private int successSignUpTask = 0;
+    private View.OnClickListener mPrevListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            goToPrevPage();
+        }
+    };
+    private RibbitResultListener mDeleteUserListener = new RibbitResultListener() {
+        @Override
+        public void onFinish() {
+
+        }
+
+        @Override
+        public void onSuccess() {
+            Toast.makeText(SignUpActivity.this, "undone previous operation completed successfully", Toast.LENGTH_SHORT).show();
+        }
+
+        @Override
+        public void onError(Throwable e, String message) {
+            Toast.makeText(SignUpActivity.this, "undone previous operation not completed", Toast.LENGTH_SHORT).show();
+        }
+    };
+    private View.OnClickListener mNextListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            goToNextPage();
+        }
+    };
+    //store main data listener
+    private RibbitResultListener mStoreDataListener = new RibbitResultListener() {
+        @Override
+        public void onFinish() {
+            incrementCompleteTask();
+        }
+
+        @Override
+        public void onSuccess() {
+            incrementSuccessTask();
+            checkResult();
+        }
+
+        @Override
+        public void onError(Throwable e, String message) {
+            showErrorSignUpDialog(e.getMessage());
+            checkResult();
+        }
+    };
+    //store phone data listener
+    private RibbitResultListener mStorePhoneDataListener = new RibbitResultListener() {
+        @Override
+        public void onFinish() {
+            incrementCompleteTask();
+        }
+
+        @Override
+        public void onSuccess() {
+            incrementSuccessTask();
+            checkResult();
+        }
+
+        @Override
+        public void onError(Throwable e, String message) {
+            showErrorSignUpDialog(e.getMessage());
+            checkResult();
+        }
+    };
+    //store picture data listener
+    private RibbitResultListener mStorePictureDataListener = new RibbitResultListener() {
+        @Override
+        public void onFinish() {
+            incrementCompleteTask();
+        }
+
+        @Override
+        public void onSuccess() {
+            incrementSuccessTask();
+            checkResult();
+        }
+
+        @Override
+        public void onError(Throwable e, String message) {
+            showErrorSignUpDialog(e.getMessage());
+            checkResult();
+        }
+    };
+    //section sign-up and login process, delete on failed
     private RibbitResultListener mBasicSignUpListener = new RibbitResultListener() {
         @Override
         public void onFinish() {
@@ -63,62 +159,18 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         public void onSuccess() {
             storeUserData();
-        }
-
-        @Override
-        public void onError(Throwable e, String message) {
-            showErrorSignUpDialog(e.getMessage());
-        }
-    };
-
-    private RibbitResultListener mStoreDataListener = new RibbitResultListener() {
-        @Override
-        public void onFinish() {
-            Util.showTextView(mTextLoading, "setup additional data");
-        }
-
-        @Override
-        public void onSuccess() {
             storeAdditionalData();
+            storePicture();
         }
 
         @Override
         public void onError(Throwable e, String message) {
+            hideProgressBar();
+            setButtonOnClickListener();
+            performDeleteUser();
             showErrorSignUpDialog(e.getMessage());
         }
     };
-
-    private RibbitResultListener mStoreAdditionalDataListener = new RibbitResultListener() {
-        @Override
-        public void onFinish() {
-            Util.hideView(mTextLoading);
-            Util.hideView(mProgressBar);
-        }
-
-        @Override
-        public void onSuccess() {
-            Toast.makeText(SignUpActivity.this, "success to create user " + mCandidate.getId(), Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-        }
-
-        @Override
-        public void onError(Throwable e, String message) {
-            showErrorSignUpDialog(e.getMessage());
-        }
-    };
-
-    private void storeUserData(){
-        mCandidate.store(mStoreDataListener);
-    }
-
-    private void storeAdditionalData(){
-        PhoneWrapper phoneWrapper = new PhoneWrapper(mCandidate);
-        phoneWrapper.store(mStoreAdditionalDataListener);
-    }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,19 +202,8 @@ public class SignUpActivity extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSignUpPagerAdapter);
         mIndicator.setViewPager(mViewPager);
-        mButtonNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToNextPage();
-            }
-        });
 
-        mButtonPrev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                goToPrevPage();
-            }
-        });
+        setButtonOnClickListener();
 
         mButtonPrev.setVisibility(View.INVISIBLE);
     }
@@ -183,7 +224,7 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void initData() {
-        mCandidate = new UserWrapper();
+        mUserWrapper = new UserWrapper();
 
     }
 
@@ -205,7 +246,7 @@ public class SignUpActivity extends AppCompatActivity {
                 mCurrentPage++;
                 mViewPager.setCurrentItem(mCurrentPage, true);
             } else {
-                doFinalize();
+                signUpUser();
             }
 
         } catch (InputValidityException e) {
@@ -213,10 +254,12 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    public void doFinalize() {
+    public void signUpUser() {
         hideKeyboard();
         Util.showView(mProgressBar);
-        mCandidate.signUp(mBasicSignUpListener);
+        removeButtonOnClickListener();
+
+        mUserWrapper.signUp(mBasicSignUpListener);
     }
 
     private void hideKeyboard() {
@@ -227,11 +270,29 @@ public class SignUpActivity extends AppCompatActivity {
         }
     }
 
-    public UserWrapper getCandidate() {
-        return mCandidate;
+    private void removeButtonOnClickListener() {
+        mButtonNext.setOnClickListener(null);
+        mButtonPrev.setOnClickListener(null);
     }
 
-    private void showErrorSignUpDialog(String message){
+    private void setButtonOnClickListener() {
+        mButtonNext.setOnClickListener(mNextListener);
+        mButtonPrev.setOnClickListener(mPrevListener);
+    }
+
+    public UserWrapper getUserWrapper() {
+        return mUserWrapper;
+    }
+
+    public Uri getProfilePictureUri() {
+        return mProfilePictureUri;
+    }
+
+    public void setProfilePictureUri(Uri profilePictureUri) {
+        mProfilePictureUri = profilePictureUri;
+    }
+
+    private void showErrorSignUpDialog(String message) {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(SignUpActivity.this);
         dialogBuilder.setMessage(message)
                 .setTitle(R.string.signUpErrorTitle)
@@ -239,5 +300,91 @@ public class SignUpActivity extends AppCompatActivity {
 
         AlertDialog dialog = dialogBuilder.create();
         dialog.show();
+    }
+
+    private void hideProgressBar() {
+        Util.hideView(mTextLoading);
+        Util.hideView(mProgressBar);
+    }
+
+    private void startMainActivity() {
+        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    private void storeUserData() {
+        mUserWrapper.store(mStoreDataListener);
+    }
+
+    private void storeAdditionalData() {
+        PhoneWrapper phoneWrapper = new PhoneWrapper(mUserWrapper);
+        phoneWrapper.store(mStorePhoneDataListener);
+    }
+
+    private void storePicture() {
+        Bitmap rawPicture = null;
+
+        try {
+            if (mProfilePictureUri != null) {
+                InputStream is = getContentResolver().openInputStream(mProfilePictureUri);
+                rawPicture = BitmapFactory.decodeStream(is);
+                if (is != null) {
+                    is.close();
+                }
+
+                File oldFile = new File(mProfilePictureUri.getPath());
+                boolean deleted = oldFile.delete();
+                Log.i(TAG, "delete " + deleted);
+
+                Uri newUri = MediaUtil.getProfilePictureUri(mUserWrapper.getId());
+                if (newUri == null) {
+                    throw new IOException("failed get new uri");
+                }
+                mProfilePictureUri = newUri;
+                File outputFile = new File(newUri.getPath());
+
+                FileOutputStream os = new FileOutputStream(outputFile);
+                rawPicture.compress(Bitmap.CompressFormat.JPEG, 80, os);
+            }
+        } catch (IOException e) {
+            Log.e(TAG, "error read/write file", e);
+        }
+        PictureWrapper pictureWrapper = new PictureWrapper(mUserWrapper.getId(), mProfilePictureUri);
+        pictureWrapper.store(mStorePictureDataListener);
+    }
+
+    private void resetTask() {
+        completeSignUpTask = 0;
+        successSignUpTask = 0;
+    }
+
+    private void incrementSuccessTask() {
+        successSignUpTask++;
+    }
+
+    private void incrementCompleteTask() {
+        completeSignUpTask++;
+    }
+
+    private void performDeleteUser() {
+        String userEmail = mUserWrapper.getData().getEmail();
+        String password = mUserWrapper.getData().getPassword();
+        RibbitUser.deleteUser(userEmail, password, mDeleteUserListener);
+    }
+
+    private synchronized void checkResult() {
+        if (completeSignUpTask == 3) {
+            hideProgressBar();
+            setButtonOnClickListener();
+            if (successSignUpTask < 3) {
+                resetTask();
+            }
+        }
+        if (successSignUpTask == 3) {
+            RibbitUser.setCurrentUser(mUserWrapper);
+            startMainActivity();
+        }
     }
 }

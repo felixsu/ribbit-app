@@ -1,15 +1,17 @@
 package felix.com.ribbit.model.wrapper;
 
-import felix.com.ribbit.model.base.RibbitBase;
+import com.firebase.client.Firebase;
+import com.firebase.client.FirebaseError;
+
+import felix.com.ribbit.listener.RibbitResultListener;
 import felix.com.ribbit.model.firebase.RibbitObject;
 
 /**
  * Created by fsoewito on 3/20/2016.
  */
-public class RibbitWrapper<T extends RibbitObject> {
+public abstract class RibbitWrapper<T extends RibbitObject> {
     protected String mId;
     protected T mData;
-
 
     public T getData() {
         return mData;
@@ -25,5 +27,32 @@ public class RibbitWrapper<T extends RibbitObject> {
 
     public void setId(String id) {
         mId = id;
+    }
+
+    public void store(RibbitResultListener resultListener) {
+        Firebase fb = getFirebase().child("/" + mId);
+        mData.updateDate();
+        fb.setValue(mData, new StoreResultListener(resultListener));
+    }
+
+    public abstract Firebase getFirebase();
+
+    private class StoreResultListener implements Firebase.CompletionListener {
+
+        final private RibbitResultListener mResultListener;
+
+        public StoreResultListener(RibbitResultListener resultListener) {
+            mResultListener = resultListener;
+        }
+
+        @Override
+        public void onComplete(FirebaseError e, Firebase firebase) {
+            mResultListener.onFinish();
+            if (e == null) {
+                mResultListener.onSuccess();
+            } else {
+                mResultListener.onError(e.toException(), e.getMessage());
+            }
+        }
     }
 }

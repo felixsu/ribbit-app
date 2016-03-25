@@ -4,8 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import java.io.Serializable;
 
-import felix.com.ribbit.util.Util;
-
 /**
  * Created by fsoewito on 3/19/2016.
  */
@@ -24,10 +22,6 @@ public class UserData extends RibbitObject implements Serializable {
     protected transient String mPassword;
 
     protected String mUsername;
-
-    protected String mPictureUri;
-
-    protected String mPictureLocalUri;
 
     public UserData() {
     }
@@ -80,38 +74,9 @@ public class UserData extends RibbitObject implements Serializable {
         mUsername = username;
     }
 
-    public String getPictureUri() {
-        if (mPictureUri != null) {
-            return new String(Util.base64Decode(mPictureUri));
-        } else {
-            return null;
-        }
-    }
-
-    public void setPictureUri(String pictureUri) {
-        byte[] uriBytes = pictureUri.getBytes();
-        String uriString = Util.base64Encode(uriBytes, uriBytes.length);
-        mPictureUri = uriString;
-    }
-
-    public String getPictureLocalUri() {
-        if (mPictureLocalUri != null) {
-            return new String(Util.base64Decode(mPictureLocalUri));
-        } else {
-            return null;
-        }
-    }
-
-    public void setPictureLocalUri(String pictureLocalUri) {
-        byte[] uriBytes = pictureLocalUri.getBytes();
-        String uriString = Util.base64Encode(uriBytes, uriBytes.length);
-        mPictureLocalUri = uriString;
-    }
-
     public void prepareForSignUp(){
         mPassword = null;
         mUsername = null;
-        updateDate();
     }
 
 }

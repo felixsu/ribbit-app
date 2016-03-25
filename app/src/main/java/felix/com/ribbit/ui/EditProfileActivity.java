@@ -30,21 +30,18 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import felix.com.ribbit.R;
 import felix.com.ribbit.listener.RibbitResultListener;
-import felix.com.ribbit.model.ribbit.RibbitUser;
 import felix.com.ribbit.model.firebase.UserData;
+import felix.com.ribbit.model.ribbit.RibbitUser;
 import felix.com.ribbit.model.wrapper.UserWrapper;
 import felix.com.ribbit.util.MediaUtil;
 import felix.com.ribbit.util.Util;
 
 public class EditProfileActivity extends AppCompatActivity implements RibbitResultListener {
 
+    public static final int MAX_FILE_SIZE = 5 * 1024 * 1024;
     private static final String TAG = EditProfileActivity.class.getName();
-
     private static final int DIALOG_PICK_PICTURE = 0;
     private static final int DIALOG_TAKE_PICTURE = 1;
-
-    private static final int MAX_FILE_SIZE = 5 * 1024 * 1024;
-
     @Bind(R.id.image_profile_picture)
     protected ImageView mProfilePicture;
     @Bind(R.id.label_name)
@@ -129,14 +126,16 @@ public class EditProfileActivity extends AppCompatActivity implements RibbitResu
                         startActivityForResult(pickPictureIntent, MediaUtil.REQUEST_PICK_PICTURE);
                         break;
                     case DIALOG_TAKE_PICTURE:
-                        Log.d(TAG, "entering take picture");
-                        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        mMediaUri = MediaUtil.getOutputMediaFileUri(MediaUtil.MEDIA_TYPE_IMAGE, getString(R.string.title_activity_splash_screen));
-                        if (mMediaUri == null) {
-                            Toast.makeText(EditProfileActivity.this, R.string.media_storage_error, Toast.LENGTH_SHORT).show();
+                        try {
+                            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            mMediaUri = MediaUtil.getOutputMediaFileUri(MediaUtil.MEDIA_TYPE_IMAGE);
+
+                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMediaUri);
+                            startActivityForResult(takePictureIntent, MediaUtil.REQUEST_TAKE_PICTURE);
+                        } catch (IOException e) {
+                            Log.e(TAG, e.getMessage(), e);
+                            Toast.makeText(EditProfileActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
-                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mMediaUri);
-                        startActivityForResult(takePictureIntent, MediaUtil.REQUEST_TAKE_PICTURE);
                     default:
                         break;
                 }

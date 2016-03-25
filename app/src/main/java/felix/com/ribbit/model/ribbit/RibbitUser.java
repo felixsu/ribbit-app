@@ -77,21 +77,20 @@ public class RibbitUser extends RibbitBase {
     }
 
     //fresh login from sign up
-    public static void firstLogin(final String email, final String password, final RibbitResultListener listener) {
+    public static void firstLogin(final String email, final String password, final RibbitResultListener resultListener) {
         RibbitBase.getRoot().authWithPassword(email, password, new Firebase.AuthResultHandler() {
 
             @Override
             public void onAuthenticated(AuthData authData) {
                 Log.d(TAG, "first time login success with uid" + authData.getUid());
-                listener.onFinish();
-                listener.onSuccess();
+                resultListener.onFinish();
+                resultListener.onSuccess();
             }
 
             @Override
             public void onAuthenticationError(FirebaseError e) {
                 Log.i(TAG, "first time login failed" + e.getMessage());
-                listener.onFinish();
-                listener.onError(e.toException(), e.getMessage());
+                deleteUser(email, password, resultListener);
             }
         });
     }
@@ -139,5 +138,36 @@ public class RibbitUser extends RibbitBase {
         RibbitBase.getRoot().unauth();
     }
 
+    public static void deleteUser(String email, String password, RibbitResultListener resultListener) {
+        Firebase root = getRoot();
+        root.removeUser(email, password, new DeleteResultListener(resultListener));
+    }
+
+    private static class DeleteResultListener implements Firebase.ResultHandler {
+
+        private final RibbitResultListener mResultListener;
+
+        public DeleteResultListener(RibbitResultListener resultListener) {
+            mResultListener = resultListener;
+        }
+
+        @Override
+        public void onSuccess() {
+            mResultListener.onFinish();
+            mResultListener.onSuccess();
+        }
+
+        @Override
+        public void onError(FirebaseError firebaseError) {
+            mResultListener.onFinish();
+
+            int errCode = firebaseError.getCode();
+            if (errCode == FirebaseError.USER_DOES_NOT_EXIST) {
+                mResultListener.onSuccess();
+            } else {
+                mResultListener.onError(firebaseError.toException(), firebaseError.getMessage());
+            }
+        }
+    }
 
 }

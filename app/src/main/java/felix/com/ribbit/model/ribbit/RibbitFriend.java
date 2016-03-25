@@ -9,5 +9,9 @@ import felix.com.ribbit.model.base.RibbitBase;
  */
 public class RibbitFriend extends RibbitBase {
 
-    protected static final Firebase FRIENDS = new Firebase(RIBBIT_DATA + "/friends");
+    protected static final Firebase FIREBASE_FRIENDS = new Firebase(RIBBIT_DATA + "/friends");
+
+    public static Firebase getFirebaseFriend() {
+        return FIREBASE_FRIENDS;
+    }
 }

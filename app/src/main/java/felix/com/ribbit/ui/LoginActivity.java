@@ -34,6 +34,60 @@ public class LoginActivity extends AppCompatActivity implements RibbitResultList
     ProgressBar mProgressBar;
 
     View mView;
+    private View.OnClickListener mLoginListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String email = mFieldEmail.getText().toString();
+            String password = mFieldPassword.getText().toString();
+
+            email = email.trim();
+            password = password.trim();
+
+            if (email.isEmpty() || password.isEmpty()) {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this);
+                dialogBuilder.setMessage(R.string.loginErrorMessage)
+                        .setTitle(R.string.loginErrorTitle)
+                        .setPositiveButton(android.R.string.ok, null);
+
+                AlertDialog dialog = dialogBuilder.create();
+                dialog.show();
+            } else {
+                Util.showView(mProgressBar);
+                RibbitUser.login(email, password, LoginActivity.this);
+            }
+        }
+    };
+    private View.OnClickListener mSignUpListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+            startActivity(intent);
+        }
+    };
+    private RibbitResultListener mLoginResultListener = new RibbitResultListener() {
+        @Override
+        public void onFinish() {
+            Util.hideView(mProgressBar);
+        }
+
+        @Override
+        public void onSuccess() {
+
+        }
+
+        @Override
+        public void onError(Throwable e, String message) {
+            enableButtonClick();
+
+            AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this);
+            dialogBuilder.setMessage(e.getMessage())
+                    .setTitle(R.string.loginErrorTitle)
+                    .setPositiveButton(android.R.string.ok, null);
+
+            AlertDialog dialog = dialogBuilder.create();
+            dialog.show();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,37 +95,7 @@ public class LoginActivity extends AppCompatActivity implements RibbitResultList
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         initView();
-        mSignUpButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        mLoginButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = mFieldEmail.getText().toString();
-                String password = mFieldPassword.getText().toString();
-
-                email = email.trim();
-                password = password.trim();
-
-                if (email.isEmpty() || password.isEmpty()) {
-                    AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this);
-                    dialogBuilder.setMessage(R.string.loginErrorMessage)
-                            .setTitle(R.string.loginErrorTitle)
-                            .setPositiveButton(android.R.string.ok, null);
-
-                    AlertDialog dialog = dialogBuilder.create();
-                    dialog.show();
-                } else {
-                    Util.showView(mProgressBar);
-                    RibbitUser.login(email, password, LoginActivity.this);
-                }
-            }
-        });
+        enableButtonClick();
 
 
     }
@@ -83,9 +107,18 @@ public class LoginActivity extends AppCompatActivity implements RibbitResultList
         setSupportActionBar(toolbar);
     }
 
+    private void disableButtonCick() {
+        mLoginButton.setOnClickListener(null);
+        mSignUpButton.setOnClickListener(null);
+    }
+
+    private void enableButtonClick() {
+        mLoginButton.setOnClickListener(mLoginListener);
+        mSignUpButton.setOnClickListener(mSignUpListener);
+    }
+
     @Override
     public void onFinish() {
-        Util.hideView(mProgressBar);
     }
 
     @Override
@@ -98,12 +131,6 @@ public class LoginActivity extends AppCompatActivity implements RibbitResultList
 
     @Override
     public void onError(Throwable e, String message) {
-        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this);
-        dialogBuilder.setMessage(e.getMessage())
-                .setTitle(R.string.loginErrorTitle)
-                .setPositiveButton(android.R.string.ok, null);
 
-        AlertDialog dialog = dialogBuilder.create();
-        dialog.show();
     }
 }

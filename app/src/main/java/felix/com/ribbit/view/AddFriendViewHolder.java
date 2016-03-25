@@ -1,7 +1,6 @@
 package felix.com.ribbit.view;
 
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,7 +9,6 @@ import felix.com.ribbit.R;
 import felix.com.ribbit.listener.ItemClickListener;
 import felix.com.ribbit.listener.ItemLongClickListener;
 import felix.com.ribbit.model.firebase.UserData;
-import felix.com.ribbit.util.Util;
 import felix.com.ribbit.view.base.BaseViewHolder;
 
 /**
@@ -32,8 +30,6 @@ public class AddFriendViewHolder extends BaseViewHolder<UserData> {
     @Override
     public void bindView(UserData userData) {
         mNameLabel.setText(userData.getUsername());
-        Drawable d = Util.stringToDrawable(userData.getPictureLocalUri());
-        mProfileImage.setImageDrawable(d);
     }
 
     private void initView() {

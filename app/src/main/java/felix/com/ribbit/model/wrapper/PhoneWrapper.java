@@ -20,22 +20,18 @@ public class PhoneWrapper extends RibbitWrapper<PhoneData> {
         String name = userData.getName();
         String phoneNumber = userData.getPhoneNumber();
         String status = userData.getStatus();
-        String pictureUri = userData.getPictureUri();
-        String pictureLocalUri = userData.getPictureLocalUri();
 
         mId = phoneNumber;
         mData = new PhoneData.Builder()
                 .setName(name)
-                .setPictureLocalUri(pictureLocalUri)
                 .setStatus(status)
-                .setPictureUri(pictureUri)
                 .setUid(uid)
                 .createSimpleUserData();
     }
 
-    public void store(RibbitResultListener resultListener){
-        Firebase firebasePhone = RibbitPhone.getFirebasePhone().child("/" + mId);
-        firebasePhone.setValue(mData, new StoreResultListener(resultListener));
+    @Override
+    public Firebase getFirebase() {
+        return RibbitPhone.getFirebasePhone();
     }
 
     private class StoreResultListener implements Firebase.CompletionListener {
