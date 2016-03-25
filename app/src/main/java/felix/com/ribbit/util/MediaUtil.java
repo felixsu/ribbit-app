@@ -57,9 +57,27 @@ public class MediaUtil {
         File mediaFile;
         String path = mediaStorageDir.getPath() + File.separator;
         mediaFile = new File(path + uid + ".jpg");
-
+        Log.d(TAG, "create file at " + mediaFile.getPath());
         Uri result = Uri.fromFile(mediaFile);
         return result;
+    }
+
+    public static boolean isProfilePictureAvailable(String uid) throws IOException {
+        if (uid == null) {
+            throw new IOException("uid is null");
+        }
+        Log.d(TAG, "finding picture with uid " + uid);
+        File mediaStorageDir = getMediaDir();
+        String path = mediaStorageDir.getPath() + File.separator + uid + ".jpg";
+
+        File fPicture = new File(path);
+        if (fPicture.exists()) {
+            Log.d(TAG, "picture found");
+            return true;
+        } else {
+            Log.i(TAG, "picture not found " + fPicture.getPath());
+            return false;
+        }
     }
 
 }

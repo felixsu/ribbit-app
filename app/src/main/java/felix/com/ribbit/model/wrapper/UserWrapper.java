@@ -2,6 +2,7 @@ package felix.com.ribbit.model.wrapper;
 
 import android.util.Log;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
@@ -17,7 +18,7 @@ import felix.com.ribbit.model.ribbit.RibbitUser;
  */
 public class UserWrapper extends RibbitWrapper<UserData> implements Cloneable{
 
-    private static final String TAG = UserWrapper.class.getName();
+    transient private static final String TAG = UserWrapper.class.getName();
 
     public UserWrapper(String uid, UserData data) {
         mId = uid;
@@ -46,6 +47,7 @@ public class UserWrapper extends RibbitWrapper<UserData> implements Cloneable{
     }
 
     @Override
+    @JsonIgnore
     public Firebase getFirebase() {
         return RibbitUser.getFirebaseUsers();
     }

@@ -8,4 +8,5 @@
     <color name="transparent">#ffffffff</color>
     <color name="separator">#FFE0E0E0</color>
     <color name="transparent_grey">#809E9E9E</color>
+    <color name="colorWhite">#FFFFFFFF</color>
 </resources>

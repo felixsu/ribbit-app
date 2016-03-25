@@ -3,13 +3,15 @@ package felix.com.ribbit.model.wrapper;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
+import java.io.Serializable;
+
 import felix.com.ribbit.listener.RibbitResultListener;
 import felix.com.ribbit.model.firebase.RibbitObject;
 
 /**
  * Created by fsoewito on 3/20/2016.
  */
-public abstract class RibbitWrapper<T extends RibbitObject> {
+public abstract class RibbitWrapper<T extends RibbitObject> implements Serializable {
     protected String mId;
     protected T mData;
 

@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import felix.com.ribbit.R;
+import felix.com.ribbit.constant.Constants;
 import felix.com.ribbit.util.BitmapUtils;
 import felix.com.ribbit.util.MediaUtil;
 
@@ -35,7 +36,8 @@ public class ImageCropperActivity extends AppCompatActivity {
     ImageView mButtonSnap;
     ImageView mButtonRotate;
 
-    private Uri mUri;
+    private Uri mUri = null;
+    private String mUid = null;
     private Bitmap mBitmap;
     private boolean isSnappedToCenter = false;
 
@@ -164,8 +166,16 @@ public class ImageCropperActivity extends AppCompatActivity {
 
         if (bitmap != null) {
             try {
-                Uri uri = MediaUtil.getOutputMediaFileUri(MediaUtil.MEDIA_TYPE_IMAGE);
+                Uri uri;
+                if (mUid == null) {
+                    uri = MediaUtil.getOutputMediaFileUri(MediaUtil.MEDIA_TYPE_IMAGE);
+                    Log.d(TAG, "storing image to temp dir " + uri.getPath());
+                } else {
+                    uri = MediaUtil.getProfilePictureUri(mUid);
+                    Log.d(TAG, "storing image to uid dir " + uri.getPath());
+                }
                 BitmapUtils.writeBitmapToFile(bitmap, new File(uri.getPath()), 100);
+
                 mUri = uri;
             } catch (IOException e) {
                 Log.e(TAG, e.getMessage(), e);
@@ -200,6 +210,7 @@ public class ImageCropperActivity extends AppCompatActivity {
             finish();
         } else {
             mUri = receivedIntent.getData();
+            mUid = receivedIntent.getStringExtra(Constants.KEY_INTENT_UID);
             Log.d(TAG, "uri received");
         }
     }

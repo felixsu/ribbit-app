@@ -81,9 +81,11 @@ public class Util {
         v.setText(text);
     }
 
+    public static void disableOnClickListener(View view) {
+        view.setOnClickListener(null);
+    }
 
-
-    public static ObjectMapper getMapperInstance() {
-        return mapper;
+    public static void enableOnClickListener(View view, View.OnClickListener onClickListener) {
+        view.setOnClickListener(onClickListener);
     }
 }

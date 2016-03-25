@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
@@ -16,7 +15,7 @@ import felix.com.ribbit.listener.RibbitResultListener;
 import felix.com.ribbit.model.base.RibbitBase;
 import felix.com.ribbit.model.firebase.UserData;
 import felix.com.ribbit.model.wrapper.UserWrapper;
-import felix.com.ribbit.util.Util;
+import felix.com.ribbit.util.JsonUtil;
 
 /**
  * Created by fsoewito on 3/19/2016.
@@ -46,7 +45,7 @@ public class RibbitUser extends RibbitBase {
         try {
             String currentUserJson = mSharedPref.getString(KEY_USER, null);
             if (currentUserJson != null) {
-                mCurrentUser = Util.getMapperInstance().readValue(currentUserJson, UserWrapper.class);
+                mCurrentUser = JsonUtil.getObjectMapper().readValue(currentUserJson, UserWrapper.class);
             } else {
                 mCurrentUser = null;
             }
@@ -60,12 +59,13 @@ public class RibbitUser extends RibbitBase {
     }
 
     public static void setCurrentUser(UserWrapper user) {
+        mCurrentUser = user;
         if (mContext == null) {
             throw new IllegalStateException("context not initialized yet");
         }
         try {
             SharedPreferences.Editor editor = mSharedPref.edit();
-            editor.putString(KEY_USER, new ObjectMapper().writeValueAsString(user)).apply();
+            editor.putString(KEY_USER, JsonUtil.getObjectMapper().writeValueAsString(user)).apply();
         } catch (JsonProcessingException e) {
             Log.e(TAG, "failed to serialize user", e);
         }
@@ -136,6 +136,8 @@ public class RibbitUser extends RibbitBase {
 
     public static void logout() {
         RibbitBase.getRoot().unauth();
+        clearCurrentUser();
+        mCurrentUser = null;
     }
 
     public static void deleteUser(String email, String password, RibbitResultListener resultListener) {

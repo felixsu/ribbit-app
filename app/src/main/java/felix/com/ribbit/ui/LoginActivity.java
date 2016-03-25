@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -19,7 +20,7 @@ import felix.com.ribbit.util.Util;
 
 public class LoginActivity extends AppCompatActivity implements RibbitResultListener {
     @Bind(R.id.button_sign_up)
-    Button mSignUpButton;
+    TextView mSignUpButton;
 
     @Bind(R.id.field_email)
     EditText mFieldEmail;
@@ -30,7 +31,7 @@ public class LoginActivity extends AppCompatActivity implements RibbitResultList
     @Bind(R.id.button_login)
     Button mLoginButton;
 
-    @Bind(R.id.progress_bar)
+    @Bind(R.id.progress_bar_global)
     ProgressBar mProgressBar;
 
     View mView;

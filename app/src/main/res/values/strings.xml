@@ -13,9 +13,8 @@
     <string name="username_hint">Username</string>
     <string name="password_hint">password</string>
     <string name="login_button">Login</string>
-    <string name="email_hint">email</string>
-    <string name="signUpLabel">Sign up</string>
-    <string name="signUpButton">Sign Up</string>
+    <string name="email_hint">Email@gmail.com</string>
+    <string name="signUpLabel">Sign Up</string>
     <string name="signUpErrorMessage">please make sure you fill all field correctly</string>
     <string name="loginErrorMessage">username or password not filled correctly</string>
     <string name="signUpErrorTitle">Oops</string>
@@ -42,15 +41,15 @@
     <string name="name_error">name can\'t be empty</string>
     <string name="phone_number_error">phone number field can\'t be empty</string>
     <string name="media_storage_error">Failed to get destination URI</string>
-    <string name="finish">FINISH</string>
+    <string name="finish">Finish</string>
     <string name="action_cancel">action canceled</string>
     <string name="default_profile_status">i don\'t like share my doubt</string>
     <string name="default_profile_name">No Name</string>
     <string name="positive_save_profile">profile saved successfully</string>
     <string name="negative_save_profile">profile saved unsuccessfully</string>
     <string name="item_statusLabel">my status</string>
-    <string name="text_previous">prev</string>
-    <string name="text_next">next</string>
+    <string name="text_previous">Back</string>
+    <string name="text_next">Next</string>
 
     <string-array name="edit_profile_pictures">
         <item>pick from SD card</item>

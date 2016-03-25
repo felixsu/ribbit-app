@@ -13,8 +13,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,15 +44,18 @@ public class SignUpActivity extends AppCompatActivity {
     public static final String TAG = SignUpActivity.class.getName();
 
     @Bind(R.id.button_next)
-    Button mButtonNext;
+    TextView mButtonNext;
     @Bind(R.id.button_prev)
-    Button mButtonPrev;
+    TextView mButtonPrev;
     @Bind(R.id.indicator)
     InkPageIndicator mIndicator;
 
     //etc section
-    @Bind(R.id.progress_bar)
-    ProgressBar mProgressBar;
+    @Bind(R.id.progress_bar_global)
+    ProgressBar mProgressBarGlobal;
+    @Bind(R.id.wrapper_progress_bar_global)
+    RelativeLayout mWrapperProgressBarGlobal;
+
     @Bind(R.id.text_loading)
     TextView mTextLoading;
 
@@ -62,8 +65,10 @@ public class SignUpActivity extends AppCompatActivity {
     private UserWrapper mUserWrapper;
     private Uri mProfilePictureUri;
 
-    private int completeSignUpTask = 0;
-    private int successSignUpTask = 0;
+    private int mCompleteSignUpTask = 0;
+    private int mSuccessSignUpTask = 0;
+    private boolean mUpdateState = false;
+
     private View.OnClickListener mPrevListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -86,12 +91,6 @@ public class SignUpActivity extends AppCompatActivity {
             Toast.makeText(SignUpActivity.this, "undone previous operation not completed", Toast.LENGTH_SHORT).show();
         }
     };
-    private View.OnClickListener mNextListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            goToNextPage();
-        }
-    };
     //store main data listener
     private RibbitResultListener mStoreDataListener = new RibbitResultListener() {
         @Override
@@ -101,6 +100,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         @Override
         public void onSuccess() {
+            Log.d(TAG, "store primary data finish successfully");
             incrementSuccessTask();
             checkResult();
         }
@@ -120,6 +120,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         @Override
         public void onSuccess() {
+            Log.d(TAG, "store phone data finish successfully");
             incrementSuccessTask();
             checkResult();
         }
@@ -139,6 +140,7 @@ public class SignUpActivity extends AppCompatActivity {
 
         @Override
         public void onSuccess() {
+            Log.d(TAG, "store picture finish successfully");
             incrementSuccessTask();
             checkResult();
         }
@@ -171,6 +173,12 @@ public class SignUpActivity extends AppCompatActivity {
             showErrorSignUpDialog(e.getMessage());
         }
     };
+    private View.OnClickListener mNextListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            goToNextPage();
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -181,10 +189,12 @@ public class SignUpActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (mCurrentPage != 0) {
-            goToPrevPage();
-        } else {
-            super.onBackPressed();
+        if (!mUpdateState) {
+            if (mCurrentPage != 0) {
+                goToPrevPage();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -195,8 +205,7 @@ public class SignUpActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        Util.hideView(mTextLoading);
-        Util.hideView(mProgressBar);
+        hideProgressBar();
 
         mSignUpPagerAdapter = new SignUpPagerAdapter(getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container);
@@ -256,9 +265,10 @@ public class SignUpActivity extends AppCompatActivity {
 
     public void signUpUser() {
         hideKeyboard();
-        Util.showView(mProgressBar);
+        Util.showView(mProgressBarGlobal);
+        Util.showView(mWrapperProgressBarGlobal);
         removeButtonOnClickListener();
-
+        activateUpdateState();
         mUserWrapper.signUp(mBasicSignUpListener);
     }
 
@@ -271,21 +281,17 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void removeButtonOnClickListener() {
-        mButtonNext.setOnClickListener(null);
-        mButtonPrev.setOnClickListener(null);
+        Util.disableOnClickListener(mButtonNext);
+        Util.disableOnClickListener(mButtonPrev);
     }
 
     private void setButtonOnClickListener() {
-        mButtonNext.setOnClickListener(mNextListener);
-        mButtonPrev.setOnClickListener(mPrevListener);
+        Util.enableOnClickListener(mButtonNext, mNextListener);
+        Util.enableOnClickListener(mButtonPrev, mPrevListener);
     }
 
     public UserWrapper getUserWrapper() {
         return mUserWrapper;
-    }
-
-    public Uri getProfilePictureUri() {
-        return mProfilePictureUri;
     }
 
     public void setProfilePictureUri(Uri profilePictureUri) {
@@ -304,7 +310,8 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void hideProgressBar() {
         Util.hideView(mTextLoading);
-        Util.hideView(mProgressBar);
+        Util.hideView(mProgressBarGlobal);
+        Util.hideView(mWrapperProgressBarGlobal);
     }
 
     private void startMainActivity() {
@@ -324,10 +331,11 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void storePicture() {
-        Bitmap rawPicture = null;
+        Bitmap rawPicture;
 
         try {
             if (mProfilePictureUri != null) {
+                Log.d(TAG, "entering replace old picture with new one " + mUserWrapper.getId());
                 InputStream is = getContentResolver().openInputStream(mProfilePictureUri);
                 rawPicture = BitmapFactory.decodeStream(is);
                 if (is != null) {
@@ -347,6 +355,7 @@ public class SignUpActivity extends AppCompatActivity {
 
                 FileOutputStream os = new FileOutputStream(outputFile);
                 rawPicture.compress(Bitmap.CompressFormat.JPEG, 80, os);
+                os.close();
             }
         } catch (IOException e) {
             Log.e(TAG, "error read/write file", e);
@@ -356,16 +365,16 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private void resetTask() {
-        completeSignUpTask = 0;
-        successSignUpTask = 0;
+        mCompleteSignUpTask = 0;
+        mSuccessSignUpTask = 0;
     }
 
     private void incrementSuccessTask() {
-        successSignUpTask++;
+        mSuccessSignUpTask++;
     }
 
     private void incrementCompleteTask() {
-        completeSignUpTask++;
+        mCompleteSignUpTask++;
     }
 
     private void performDeleteUser() {
@@ -375,16 +384,26 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     private synchronized void checkResult() {
-        if (completeSignUpTask == 3) {
+        if (mCompleteSignUpTask == 3) {
             hideProgressBar();
             setButtonOnClickListener();
-            if (successSignUpTask < 3) {
+            deActivateUpdateState();
+            if (mSuccessSignUpTask < 3) {
                 resetTask();
             }
         }
-        if (successSignUpTask == 3) {
+        if (mSuccessSignUpTask == 3) {
+            Log.d(TAG, "user " + mUserWrapper.getId() + " stored successfully");
             RibbitUser.setCurrentUser(mUserWrapper);
             startMainActivity();
         }
+    }
+
+    private void activateUpdateState() {
+        mUpdateState = true;
+    }
+
+    private void deActivateUpdateState() {
+        mUpdateState = false;
     }
 }

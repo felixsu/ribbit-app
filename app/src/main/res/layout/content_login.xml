@@ -46,20 +46,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/holde_password"
+        android:layout_marginTop="12dp"
         android:background="@color/colorPrimary"
-        android:text="@string/login_button"/>
+        android:text="@string/login_button"
+        android:textColor="@color/colorWhite"/>
 
-    <Button
+    <TextView
         android:id="@+id/button_sign_up"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/button_login"
-        android:layout_marginTop="4dp"
-        android:background="@color/colorPrimary"
-        android:text="@string/signUpLabel"/>
+        android:gravity="center_horizontal"
+        android:paddingTop="16dp"
+        android:text="@string/signUpLabel"
+        android:textColor="@color/colorAccent"
+        android:textSize="18sp"/>
 
     <ProgressBar
-        android:id="@+id/progress_bar"
+        android:id="@+id/progress_bar_global"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"

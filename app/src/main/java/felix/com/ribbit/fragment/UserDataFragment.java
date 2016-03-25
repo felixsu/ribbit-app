@@ -94,6 +94,7 @@ public class UserDataFragment extends Fragment implements Validatable {
             dialog.show();
         }
     };
+
     private Callback mPicassoCallback = new Callback() {
         @Override
         public void onSuccess() {
@@ -207,7 +208,7 @@ public class UserDataFragment extends Fragment implements Validatable {
             Log.i(TAG, "error on receiving intent result");
             Toast.makeText(mActivity, R.string.action_cancel, Toast.LENGTH_SHORT).show();
         } else {
-            Log.i(TAG, "un-catched intent");
+            Log.i(TAG, "un-caught intent");
         }
     }
 

@@ -22,6 +22,8 @@ public class PictureWrapper extends RibbitWrapper<PictureData> {
 
     public PictureWrapper(String id, Uri uri) {
         mId = id;
+        mData = new PictureData();
+
         InputStream is = null;
         try {
             if (uri != null) {
@@ -34,7 +36,6 @@ public class PictureWrapper extends RibbitWrapper<PictureData> {
                 int readLen = is.read(byteObject, 0, len);
                 Log.i(TAG, "available " + len + " read " + readLen);
 
-                mData = new PictureData();
                 mData.setPicture(Util.base64Encode(byteObject, readLen));
             }
         } catch (IOException e) {

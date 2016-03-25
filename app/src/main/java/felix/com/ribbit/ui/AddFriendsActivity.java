@@ -22,8 +22,8 @@ import felix.com.ribbit.R;
 import felix.com.ribbit.adapter.AddFriendAdapter;
 import felix.com.ribbit.listener.ItemClickListener;
 import felix.com.ribbit.listener.ItemLongClickListener;
-import felix.com.ribbit.model.ribbit.RibbitUser;
 import felix.com.ribbit.model.firebase.UserData;
+import felix.com.ribbit.model.ribbit.RibbitUser;
 import felix.com.ribbit.model.wrapper.UserWrapper;
 
 public class AddFriendsActivity extends AppCompatActivity
@@ -37,7 +37,7 @@ public class AddFriendsActivity extends AppCompatActivity
     @Bind(R.id.recyclerView)
     protected RecyclerView mRecyclerView;
 
-    @Bind(R.id.progress_bar)
+    @Bind(R.id.progress_bar_global)
     protected ProgressBar mProgressBar;
 
     private ActionBar mActionBar;
