@@ -1,6 +1,5 @@
 package felix.com.ribbit.view;
 
-import android.content.res.Resources;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -8,7 +7,7 @@ import android.widget.TextView;
 import felix.com.ribbit.R;
 import felix.com.ribbit.listener.ItemClickListener;
 import felix.com.ribbit.listener.ItemLongClickListener;
-import felix.com.ribbit.model.firebase.UserData;
+import felix.com.ribbit.model.wrapper.PhoneWrapper;
 import felix.com.ribbit.view.base.BaseViewHolder;
 
 /**
@@ -16,20 +15,18 @@ import felix.com.ribbit.view.base.BaseViewHolder;
  * todo
  * increase performance on inflating layout (generate thumbnails use many resource)
  */
-public class AddFriendViewHolder extends BaseViewHolder<UserData> {
+public class AddFriendViewHolder extends BaseViewHolder<PhoneWrapper> {
     private TextView mNameLabel;
     private ImageView mProfileImage;
-    private Resources mRes;
 
-    public AddFriendViewHolder(View itemView, ItemClickListener itemClickListener, ItemLongClickListener itemLongClickListener, Resources res) {
+    public AddFriendViewHolder(View itemView, ItemClickListener itemClickListener, ItemLongClickListener itemLongClickListener) {
         super(itemView, itemClickListener, itemLongClickListener);
-        mRes = res;
         initView();
     }
 
     @Override
-    public void bindView(UserData userData) {
-        mNameLabel.setText(userData.getUsername());
+    public void bindView(PhoneWrapper phoneData) {
+        mNameLabel.setText(phoneData.getData().getName());
     }
 
     private void initView() {

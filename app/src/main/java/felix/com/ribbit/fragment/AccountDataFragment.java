@@ -76,12 +76,9 @@ public class AccountDataFragment extends Fragment implements Validatable {
         String email = mFieldEmail.getText().toString();
         String errorMsg;
 
-        username = username.trim();
+        username = username.trim().toLowerCase();
         password = password.trim();
-        email = email.trim();
-
-        username = username.toLowerCase();
-        email = email.toLowerCase();
+        email = email.trim().toLowerCase();
 
         if (!Util.isValidEmail(email)) {
             errorMsg = getString(R.string.email_error);

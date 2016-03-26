@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import butterknife.Bind;
@@ -18,7 +19,7 @@ import felix.com.ribbit.listener.RibbitResultListener;
 import felix.com.ribbit.model.ribbit.RibbitUser;
 import felix.com.ribbit.util.Util;
 
-public class LoginActivity extends AppCompatActivity implements RibbitResultListener {
+public class LoginActivity extends AppCompatActivity {
     @Bind(R.id.button_sign_up)
     TextView mSignUpButton;
 
@@ -32,32 +33,16 @@ public class LoginActivity extends AppCompatActivity implements RibbitResultList
     Button mLoginButton;
 
     @Bind(R.id.progress_bar_global)
-    ProgressBar mProgressBar;
+    ProgressBar mProgressBarGlobal;
 
+    @Bind(R.id.wrapper_progress_bar_global)
+    RelativeLayout mWrapperProgressBarGlobal;
+
+    @Bind(R.id.text_loading)
+    TextView mTextLoading;
+
+    boolean mUpdateState = false;
     View mView;
-    private View.OnClickListener mLoginListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            String email = mFieldEmail.getText().toString();
-            String password = mFieldPassword.getText().toString();
-
-            email = email.trim();
-            password = password.trim();
-
-            if (email.isEmpty() || password.isEmpty()) {
-                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this);
-                dialogBuilder.setMessage(R.string.loginErrorMessage)
-                        .setTitle(R.string.loginErrorTitle)
-                        .setPositiveButton(android.R.string.ok, null);
-
-                AlertDialog dialog = dialogBuilder.create();
-                dialog.show();
-            } else {
-                Util.showView(mProgressBar);
-                RibbitUser.login(email, password, LoginActivity.this);
-            }
-        }
-    };
     private View.OnClickListener mSignUpListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -68,12 +53,16 @@ public class LoginActivity extends AppCompatActivity implements RibbitResultList
     private RibbitResultListener mLoginResultListener = new RibbitResultListener() {
         @Override
         public void onFinish() {
-            Util.hideView(mProgressBar);
+            disableLoading();
+            enableButtonClick();
         }
 
         @Override
         public void onSuccess() {
-
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
         }
 
         @Override
@@ -89,6 +78,33 @@ public class LoginActivity extends AppCompatActivity implements RibbitResultList
             dialog.show();
         }
     };
+    private View.OnClickListener mLoginListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String email = mFieldEmail.getText().toString();
+            String password = mFieldPassword.getText().toString();
+
+            email = email.trim().toLowerCase();
+            password = password.trim();
+
+
+            if (email.isEmpty() || password.isEmpty()) {
+                AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(LoginActivity.this);
+                dialogBuilder.setMessage(R.string.loginErrorMessage)
+                        .setTitle(R.string.loginErrorTitle)
+                        .setPositiveButton(android.R.string.ok, null);
+
+                AlertDialog dialog = dialogBuilder.create();
+                dialog.show();
+            } else {
+                Util.hideKeyboard(LoginActivity.this);
+                Util.showView(mProgressBarGlobal);
+                disableButtonClick();
+                enableLoading();
+                RibbitUser.login(email, password, mLoginResultListener);
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,42 +112,44 @@ public class LoginActivity extends AppCompatActivity implements RibbitResultList
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
         initView();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
         enableButtonClick();
-
-
+        disableLoading();
     }
 
     private void initView(){
         mView = getWindow().getDecorView().getRootView();
-        mProgressBar.setVisibility(View.INVISIBLE);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
 
-    private void disableButtonCick() {
-        mLoginButton.setOnClickListener(null);
-        mSignUpButton.setOnClickListener(null);
+    private void disableButtonClick() {
+        Util.disableOnClickListener(mLoginButton);
+        Util.disableOnClickListener(mSignUpButton);
     }
 
     private void enableButtonClick() {
-        mLoginButton.setOnClickListener(mLoginListener);
-        mSignUpButton.setOnClickListener(mSignUpListener);
+        Util.enableOnClickListener(mLoginButton, mLoginListener);
+        Util.enableOnClickListener(mSignUpButton, mSignUpListener);
     }
 
-    @Override
-    public void onFinish() {
+    private void enableLoading() {
+        mUpdateState = true;
+        Util.showView(mTextLoading);
+        Util.showView(mProgressBarGlobal);
+        Util.showView(mWrapperProgressBarGlobal);
     }
 
-    @Override
-    public void onSuccess() {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-    }
-
-    @Override
-    public void onError(Throwable e, String message) {
-
+    private void disableLoading() {
+        mUpdateState = false;
+        Util.hideView(mWrapperProgressBarGlobal);
+        Util.hideView(mProgressBarGlobal);
+        Util.hideView(mTextLoading);
     }
 }

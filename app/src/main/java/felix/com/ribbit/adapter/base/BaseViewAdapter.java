@@ -1,6 +1,7 @@
 package felix.com.ribbit.adapter.base;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public abstract class BaseViewAdapter<T, V extends BaseViewHolder<T>> extends Re
 
     protected List<T> mItems;
 
-    public BaseViewAdapter(Context context, List<T> items) {
+    public BaseViewAdapter(Context context, @NonNull List<T> items) {
         mContext = context;
         mItems = items;
     }

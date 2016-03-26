@@ -9,18 +9,26 @@
     tools:context="felix.com.ribbit.ui.AddFriendsActivity"
     tools:showIn="@layout/activity_add_friends">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/wrapper_container_friend_candidate"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:verticalScrollbarPosition="right">
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent">
 
-    <ProgressBar
-        android:id="@+id/progress_bar_global"
-        android:layout_width="wrap_content"
+        <felix.com.ribbit.view.EmptyRecyclerView
+            android:id="@+id/container_friend_candidate"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:verticalScrollbarPosition="right">
+        </felix.com.ribbit.view.EmptyRecyclerView>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
+
+    <TextView
+        android:id="@+id/text_empty_view"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:indeterminate="true"/>
+        android:maxLength="20"
+        android:maxLines="1"
+        android:text="Pull to refresh"
+        />
 </RelativeLayout>

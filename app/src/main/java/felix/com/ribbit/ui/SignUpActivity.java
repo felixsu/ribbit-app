@@ -1,7 +1,6 @@
 package felix.com.ribbit.ui;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,7 +11,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -89,6 +87,12 @@ public class SignUpActivity extends AppCompatActivity {
         @Override
         public void onError(Throwable e, String message) {
             Toast.makeText(SignUpActivity.this, "undone previous operation not completed", Toast.LENGTH_SHORT).show();
+        }
+    };
+    private View.OnClickListener mNextListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            goToNextPage();
         }
     };
     //store main data listener
@@ -171,12 +175,6 @@ public class SignUpActivity extends AppCompatActivity {
             setButtonOnClickListener();
             performDeleteUser();
             showErrorSignUpDialog(e.getMessage());
-        }
-    };
-    private View.OnClickListener mNextListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            goToNextPage();
         }
     };
 
@@ -264,20 +262,12 @@ public class SignUpActivity extends AppCompatActivity {
     }
 
     public void signUpUser() {
-        hideKeyboard();
+        Util.hideKeyboard(this);
         Util.showView(mProgressBarGlobal);
         Util.showView(mWrapperProgressBarGlobal);
         removeButtonOnClickListener();
         activateUpdateState();
         mUserWrapper.signUp(mBasicSignUpListener);
-    }
-
-    private void hideKeyboard() {
-        View view = getCurrentFocus();
-        if (view != null) {
-            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).
-                    hideSoftInputFromWindow(view.getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
-        }
     }
 
     private void removeButtonOnClickListener() {

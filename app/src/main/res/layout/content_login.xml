@@ -5,68 +5,92 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="@dimen/activity_vertical_margin"
-    android:paddingLeft="@dimen/activity_horizontal_margin"
-    android:paddingRight="@dimen/activity_horizontal_margin"
-    android:paddingTop="@dimen/activity_vertical_margin"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="felix.com.ribbit.ui.LoginActivity"
     tools:showIn="@layout/activity_login">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/holder_email"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingRight="@dimen/activity_horizontal_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
 
-        <EditText
-            android:id="@+id/field_email"
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/holder_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText
+                android:id="@+id/field_email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/email_hint"
+                android:inputType="textEmailAddress">
+            </EditText>
+        </android.support.design.widget.TextInputLayout>
+
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/holde_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/email_hint"
-            android:inputType="textEmailAddress">
-        </EditText>
-    </android.support.design.widget.TextInputLayout>
+            android:layout_below="@id/holder_email">
 
-    <android.support.design.widget.TextInputLayout
-        android:id="@+id/holde_password"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/holder_email">
+            <com.xwray.passwordview.PasswordView
+                android:id="@+id/field_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/password_hint"
+                android:inputType="textPassword"/>
+        </android.support.design.widget.TextInputLayout>
 
-        <com.xwray.passwordview.PasswordView
-            android:id="@+id/field_password"
+        <Button
+            android:id="@+id/button_login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/password_hint"
-            android:inputType="textPassword"/>
-    </android.support.design.widget.TextInputLayout>
+            android:layout_below="@id/holde_password"
+            android:layout_marginTop="12dp"
+            android:background="@color/colorPrimary"
+            android:text="@string/login_button"
+            android:textColor="@color/colorWhite"/>
 
-    <Button
-        android:id="@+id/button_login"
+        <TextView
+            android:id="@+id/button_sign_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/button_login"
+            android:gravity="center_horizontal"
+            android:paddingTop="16dp"
+            android:text="@string/signUpLabel"
+            android:textColor="@color/colorAccent"
+            android:textSize="18sp"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/wrapper_progress_bar_global"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/holde_password"
-        android:layout_marginTop="12dp"
-        android:background="@color/colorPrimary"
-        android:text="@string/login_button"
-        android:textColor="@color/colorWhite"/>
+        android:layout_height="match_parent"
+        android:background="@color/transparent_grey">
 
-    <TextView
-        android:id="@+id/button_sign_up"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/button_login"
-        android:gravity="center_horizontal"
-        android:paddingTop="16dp"
-        android:text="@string/signUpLabel"
-        android:textColor="@color/colorAccent"
-        android:textSize="18sp"/>
+        <ProgressBar
+            android:id="@+id/progress_bar_global"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:indeterminate="true"/>
 
-    <ProgressBar
-        android:id="@+id/progress_bar_global"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:indeterminate="true"/>
+        <TextView
+            android:id="@+id/text_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/progress_bar_global"
+            android:layout_centerHorizontal="true"
+            android:maxLines="2"
+            android:text="Signing In\nPlease wait"
+            android:textColor="@color/colorWhite"/>
+    </RelativeLayout>
+
 </RelativeLayout>
