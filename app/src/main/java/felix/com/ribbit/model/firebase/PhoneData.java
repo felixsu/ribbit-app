@@ -9,6 +9,9 @@ public class PhoneData extends RibbitObject {
     protected String mName;
     protected String mStatus;
 
+    public PhoneData() {
+    }
+
     public PhoneData(String uid, String name, String status) {
         mUid = uid;
         mName = name;

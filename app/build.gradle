@@ -45,4 +45,5 @@ dependencies {
     compile 'com.fenchtose.nocropper:nocropper:0.1.4'
     compile 'com.squareup.picasso:picasso:2.3.3'
     compile 'com.github.chenupt.android:springindicator:1.0.2@aar'
+    compile 'com.yalantis:phoenix:1.2.3'
 }

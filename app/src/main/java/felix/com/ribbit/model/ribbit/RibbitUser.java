@@ -1,6 +1,5 @@
 package felix.com.ribbit.model.ribbit;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
 
@@ -26,22 +25,15 @@ public class RibbitUser extends RibbitBase {
 
     private static final Firebase FIREBASE_USERS = new Firebase(RIBBIT_DATA + "/users");
 
-    private static final String MASTER_DATA = "ribbit-app-master";
     private static final String KEY_USER = "key-current-user";
 
-
-    private static Context mContext;
-    private static SharedPreferences mSharedPref;
     private static UserWrapper mCurrentUser;
 
     public static Firebase getFirebaseUsers() {
         return FIREBASE_USERS;
     }
 
-    public static void setAndroidContext(Context context) {
-        mContext = context;
-        mSharedPref = context.getSharedPreferences(MASTER_DATA, Context.MODE_PRIVATE);
-
+    public static void init() {
         try {
             String currentUserJson = mSharedPref.getString(KEY_USER, null);
             if (currentUserJson != null) {

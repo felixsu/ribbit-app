@@ -10,13 +10,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import felix.com.ribbit.R;
-import felix.com.ribbit.adapter.SectionsPagerAdapter;
+import felix.com.ribbit.adapter.MainActivityPageAdapter;
 import felix.com.ribbit.model.ribbit.RibbitUser;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
-    private SectionsPagerAdapter mSectionsPagerAdapter;
+    private MainActivityPageAdapter mMainActivityPageAdapter;
     private ViewPager mViewPager;
 
     @Override
@@ -26,9 +26,9 @@ public class MainActivity extends AppCompatActivity {
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        mSectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        mMainActivityPageAdapter = new MainActivityPageAdapter(this, getSupportFragmentManager());
         mViewPager = (ViewPager) findViewById(R.id.container);
-        mViewPager.setAdapter(mSectionsPagerAdapter);
+        mViewPager.setAdapter(mMainActivityPageAdapter);
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(mViewPager);

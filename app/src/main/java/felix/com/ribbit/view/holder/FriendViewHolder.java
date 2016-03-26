@@ -1,4 +1,4 @@
-package felix.com.ribbit.view;
+package felix.com.ribbit.view.holder;
 
 import android.view.View;
 import android.widget.ImageView;
@@ -7,13 +7,13 @@ import android.widget.TextView;
 import felix.com.ribbit.R;
 import felix.com.ribbit.listener.ItemClickListener;
 import felix.com.ribbit.listener.ItemLongClickListener;
-import felix.com.ribbit.model.firebase.UserData;
+import felix.com.ribbit.model.wrapper.PhoneWrapper;
 import felix.com.ribbit.view.base.BaseViewHolder;
 
 /**
  * Created by fsoewito on 3/11/2016.
  */
-public class FriendViewHolder extends BaseViewHolder<UserData> {
+public class FriendViewHolder extends BaseViewHolder<PhoneWrapper> {
     private TextView mNameLabel;
     private TextView mStatusLabel;
     private ImageView mProfileImage;
@@ -24,9 +24,9 @@ public class FriendViewHolder extends BaseViewHolder<UserData> {
     }
 
     @Override
-    public void bindView(UserData object) {
-        mNameLabel.setText(object.getUsername());
-        mStatusLabel.setText(object.getStatus());
+    public void bindView(PhoneWrapper object) {
+        mNameLabel.setText(object.getData().getName());
+        mStatusLabel.setText(object.getData().getStatus());
     }
 
     private void initView() {

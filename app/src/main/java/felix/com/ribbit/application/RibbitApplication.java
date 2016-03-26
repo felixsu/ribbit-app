@@ -4,7 +4,7 @@ import android.app.Application;
 
 import com.firebase.client.Firebase;
 
-import felix.com.ribbit.model.ribbit.RibbitUser;
+import felix.com.ribbit.model.ribbit.RibbitGlobal;
 import io.filepicker.Filepicker;
 
 /**
@@ -25,6 +25,6 @@ public class RibbitApplication extends Application {
 
         Firebase.setAndroidContext(this);
 
-        RibbitUser.setAndroidContext(this);
+        RibbitGlobal.setAndroidContext(this);
     }
 }

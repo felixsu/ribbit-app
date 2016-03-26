@@ -13,6 +13,9 @@ import felix.com.ribbit.model.ribbit.RibbitPhone;
  */
 public class PhoneWrapper extends RibbitWrapper<PhoneData> {
 
+    public PhoneWrapper() {
+    }
+
     public PhoneWrapper(UserWrapper userWrapper){
         String uid = userWrapper.getId();
         UserData userData = userWrapper.getData();

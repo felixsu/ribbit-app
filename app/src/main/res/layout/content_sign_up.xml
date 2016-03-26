@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <felix.com.ribbit.view.NoGestureViewPager
+    <felix.com.ribbit.view.custom.NoGestureViewPager
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="180dp"/>

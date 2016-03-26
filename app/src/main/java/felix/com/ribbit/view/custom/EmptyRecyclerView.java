@@ -1,4 +1,4 @@
-package felix.com.ribbit.view;
+package felix.com.ribbit.view.custom;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

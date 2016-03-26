@@ -1,6 +1,7 @@
 package felix.com.ribbit.adapter.base;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.view.ViewGroup;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import felix.com.ribbit.view.base.BaseViewHolder;
  * Created by fsoewito on 3/12/2016.
  */
 public class SingleSelectableAdapter<T, V extends BaseViewHolder<T>> extends BaseViewAdapter<T,V> {
-    public SingleSelectableAdapter(Context context, List<T> items) {
+    public SingleSelectableAdapter(Context context, @NonNull List<T> items) {
         super(context, items);
     }
 

@@ -13,11 +13,11 @@ import felix.com.ribbit.fragment.InboxFragment;
  * Created by fsoewito on 11/20/2015.
  *
  */
-public class SectionsPagerAdapter extends FragmentPagerAdapter {
+public class MainActivityPageAdapter extends FragmentPagerAdapter {
 
     protected Context mContext;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm) {
+    public MainActivityPageAdapter(Context context, FragmentManager fm) {
         super(fm);
         mContext = context;
     }
