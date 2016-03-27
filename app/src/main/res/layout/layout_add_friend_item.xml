@@ -22,7 +22,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_profile"/>
+            android:src="@drawable/ic_user_default"/>
 
         <RelativeLayout
             android:layout_width="match_parent"

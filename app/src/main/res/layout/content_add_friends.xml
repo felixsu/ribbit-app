@@ -9,10 +9,15 @@
     tools:context="felix.com.ribbit.ui.AddFriendsActivity"
     tools:showIn="@layout/activity_add_friends">
 
-    <com.yalantis.phoenix.PullToRefreshView
+    <com.cjj.MaterialRefreshLayout
         android:id="@+id/wrapper_container_friend_candidate"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        app:overlay="false"
+        app:progress_colors="@array/material_colors"
+        app:progress_show_circle_backgroud="false"
+        app:wave_height_type="higher"
+        app:wave_show="false">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/container_friend_candidate"
@@ -21,6 +26,6 @@
             android:verticalScrollbarPosition="right">
         </android.support.v7.widget.RecyclerView>
 
-    </com.yalantis.phoenix.PullToRefreshView>
+    </com.cjj.MaterialRefreshLayout>
 
 </RelativeLayout>

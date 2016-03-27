@@ -14,7 +14,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.yalantis.phoenix.PullToRefreshView;
+import com.cjj.MaterialRefreshLayout;
+import com.cjj.MaterialRefreshListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,7 +34,7 @@ import felix.com.ribbit.model.wrapper.PhoneWrapper;
 import felix.com.ribbit.model.wrapper.UserWrapper;
 
 public class AddFriendsActivity extends AppCompatActivity
-        implements ItemClickListener, ItemLongClickListener, PullToRefreshView.OnRefreshListener {
+        implements ItemClickListener, ItemLongClickListener {
 
     private static final String TAG = AddFriendsActivity.class.getSimpleName();
     private static final int MAX_FRIEND = 1000;
@@ -41,7 +42,7 @@ public class AddFriendsActivity extends AppCompatActivity
     private static final int INDEX_ADD_FRIEND = 1;
 
     @Bind(R.id.wrapper_container_friend_candidate)
-    protected PullToRefreshView mWrapperCandidate;
+    protected MaterialRefreshLayout mWrapperCandidate;
 
     @Bind(R.id.container_friend_candidate)
     protected RecyclerView mContainerCandidate;
@@ -54,7 +55,7 @@ public class AddFriendsActivity extends AppCompatActivity
     private RibbitValueListener<PhoneWrapper> mCandidateListener = new RibbitValueListener<PhoneWrapper>() {
         @Override
         public void onFinish() {
-            mWrapperCandidate.setRefreshing(false);
+            mWrapperCandidate.finishRefresh();
         }
 
         @Override
@@ -71,6 +72,12 @@ public class AddFriendsActivity extends AppCompatActivity
         @Override
         public void onError(Throwable e, String message) {
 
+        }
+    };
+    private MaterialRefreshListener mRefreshListener = new MaterialRefreshListener() {
+        @Override
+        public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
+            RibbitPhone.getAll(mCandidateListener);
         }
     };
 
@@ -130,7 +137,7 @@ public class AddFriendsActivity extends AppCompatActivity
     }
 
     private void setupWrapper() {
-        mWrapperCandidate.setOnRefreshListener(this);
+        mWrapperCandidate.setMaterialRefreshListener(mRefreshListener);
     }
 
     private void setupContainerView() {
@@ -160,19 +167,6 @@ public class AddFriendsActivity extends AppCompatActivity
         builder.setItems(R.array.add_friend_dialog, new MyDialogOnClickListener(index));
         AlertDialog dialog = builder.create();
         dialog.show();
-    }
-
-    @Override
-    public void onRefresh() {
-        final int REFRESH_DELAY = 2000;
-        RibbitPhone.getAll(mCandidateListener);
-        mWrapperCandidate.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mWrapperCandidate.setRefreshing(false);
-            }
-        }, REFRESH_DELAY);
-        //mWrapperCandidate.setRefreshing(false);
     }
 
     public class MyDialogOnClickListener implements DialogInterface.OnClickListener {
