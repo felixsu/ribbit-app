@@ -70,7 +70,7 @@ public class SplashActivity extends AppCompatActivity implements Receiver {
 
         Drawable splashIcon = Util.setTint(
                 getResources().getDrawable(R.drawable.ic_chat_icon),
-                getResources().getColor(R.color.white));
+                getResources().getColor(R.color.colorWhite));
         mSplashIcon.setImageDrawable(splashIcon);
         mReceiver = new MyReceiver(new Handler());
     }

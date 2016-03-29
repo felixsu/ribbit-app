@@ -1,9 +1,11 @@
 package felix.com.ribbit.model.firebase;
 
+import java.io.Serializable;
+
 /**
  * Created by fsoewito on 3/21/2016.
  */
-public class PhoneData extends RibbitObject {
+public class PhoneData extends RibbitObject implements Serializable {
 
     protected String mUid;
     protected String mName;

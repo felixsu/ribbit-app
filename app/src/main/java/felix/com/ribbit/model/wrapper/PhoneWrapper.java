@@ -1,5 +1,6 @@
 package felix.com.ribbit.model.wrapper;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 
@@ -33,6 +34,7 @@ public class PhoneWrapper extends RibbitWrapper<PhoneData> {
     }
 
     @Override
+    @JsonIgnore()
     public Firebase getFirebase() {
         return RibbitPhone.getFirebasePhone();
     }

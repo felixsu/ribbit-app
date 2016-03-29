@@ -22,6 +22,7 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_centerVertical="true"
+            android:background="@drawable/shape_circle"
             android:src="@drawable/ic_user_default"/>
 
         <RelativeLayout
@@ -32,9 +33,10 @@
             android:paddingLeft="24dp">
 
             <TextView
-                android:id="@+id/label_name"
+                android:id="@+id/text_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
                 android:textSize="21sp"
                 android:textStyle="bold"
                 tools:text="@string/item_nameLabel"/>
@@ -67,7 +69,7 @@
         <View
             android:id="@+id/view_empty_separator"
             android:layout_width="match_parent"
-            android:layout_height="2dp"
+            android:layout_height="1dp"
             android:layout_below="@id/text_empty_add_friend"
             android:background="@color/transparent_grey"/>
     </RelativeLayout>

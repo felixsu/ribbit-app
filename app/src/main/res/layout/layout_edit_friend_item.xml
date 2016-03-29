@@ -32,7 +32,7 @@
             android:paddingLeft="24dp">
 
             <TextView
-                android:id="@+id/label_name"
+                android:id="@+id/text_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="21sp"
@@ -40,10 +40,10 @@
                 tools:text="@string/item_nameLabel"/>
 
             <TextView
-                android:id="@+id/label_status"
+                android:id="@+id/field_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/label_name"
+                android:layout_below="@id/text_name"
                 android:paddingTop="4dp"
                 tools:text="@string/item_statusLabel"/>
 

@@ -42,7 +42,7 @@ public class RibbitUser extends RibbitBase {
                 mCurrentUser = null;
             }
         } catch (Exception e) {
-            Log.e(TAG, "failed to deserialize user");
+            Log.e(TAG, "failed to deserialize user", e);
         }
     }
 

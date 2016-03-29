@@ -30,8 +30,8 @@ public class FriendViewHolder extends BaseViewHolder<PhoneWrapper> {
     }
 
     private void initView() {
-        mNameLabel = (TextView) itemView.findViewById(R.id.label_name);
-        mStatusLabel = (TextView) itemView.findViewById(R.id.label_status);
+        mNameLabel = (TextView) itemView.findViewById(R.id.text_name);
+        mStatusLabel = (TextView) itemView.findViewById(R.id.field_status);
         mProfileImage = (ImageView) itemView.findViewById(R.id.image_profile);
     }
 

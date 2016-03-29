@@ -32,15 +32,14 @@ public class FriendsFragment extends Fragment implements ItemClickListener, Item
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_edit_friends, container, false);
         mCurrentUser = RibbitUser.getCurrentUser();
-        if (mCurrentUser != null) {
-        }
+        initData();
         ButterKnife.bind(getActivity());
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerViewFriends);
         return view;
     }
 
     private void initData() {
-        lockScreen();
+        unlockScreen();
     }
 
     private void emptyFriendListLayout() {

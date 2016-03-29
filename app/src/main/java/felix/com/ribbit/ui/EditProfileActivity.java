@@ -46,9 +46,9 @@ public class EditProfileActivity extends AppCompatActivity implements RibbitResu
 
     @Bind(R.id.image_profile_picture)
     protected ImageView mImageProfilePicture;
-    @Bind(R.id.label_name)
+    @Bind(R.id.text_name)
     protected TextView mTextName;
-    @Bind(R.id.label_status)
+    @Bind(R.id.field_status)
     protected EditText mStatusField;
     @Bind(R.id.button_edit_name)
     protected ImageView mEditNameButton;

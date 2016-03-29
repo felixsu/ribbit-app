@@ -25,8 +25,10 @@ public class RibbitPhone extends RibbitBase {
 
     private static final Firebase FIREBASE_PHONE = new Firebase(RIBBIT_DATA + "/phoneNumber");
 
-    private static final String KEY_USER = "key-current-candidate";
+    private static final String KEY_CANDIDATE = "key-candidate";
+
     private static PhoneWrapper[] mCandidates;
+
     private static ValueEventListener mValueEventListener = new ValueEventListener() {
         @Override
         public void onDataChange(DataSnapshot dataSnapshot) {
@@ -45,15 +47,34 @@ public class RibbitPhone extends RibbitBase {
 
     public static void init() {
         try {
-            String currentUserJson = mSharedPref.getString(KEY_USER, null);
+            String currentUserJson = mSharedPref.getString(KEY_CANDIDATE, null);
             if (currentUserJson != null) {
                 mCandidates = JsonUtil.getObjectMapper().readValue(currentUserJson, PhoneWrapper[].class);
             } else {
                 mCandidates = null;
             }
         } catch (Exception e) {
-            Log.e(TAG, "failed to deserialize user");
+            Log.e(TAG, "failed to deserialize candidate", e);
         }
+    }
+
+    public static void persist(PhoneWrapper[] candidates) {
+        try {
+            String candidateJson = JsonUtil.toJson(candidates);
+            if (candidateJson != null) {
+                Log.d(TAG, "candidates serialization finish successfully");
+                mCandidates = candidates;
+                mSharedPref.edit().putString(KEY_CANDIDATE, candidateJson).apply();
+            } else {
+                mCandidates = null;
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "failed to serialize candidate", e);
+        }
+    }
+
+    public static PhoneWrapper[] getLocalCandidates() {
+        return mCandidates;
     }
 
     public static void getAll(RibbitValueListener<PhoneWrapper> valueListener) {

@@ -12,7 +12,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
+        android:background="@color/colorWhite"
         android:paddingBottom="@dimen/activity_vertical_margin"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:paddingRight="@dimen/activity_horizontal_margin"
@@ -25,20 +25,23 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/label_name"
+                android:id="@+id/text_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:maxLength="30"
                 android:maxLines="1"
+                android:textColor="@color/colorBlack"
                 android:textSize="24sp"
                 tools:text="My Name "/>
 
             <ImageView
                 android:id="@+id/button_edit_name"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_toRightOf="@id/label_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@id/text_name"
+                android:layout_alignTop="@id/text_name"
+                android:layout_toRightOf="@id/text_name"
                 android:clickable="true"
                 android:paddingLeft="8dp"
                 tools:src="@drawable/ic_action_edit"/>
@@ -51,7 +54,7 @@
             android:layout_height="200dp"
             android:layout_below="@id/container_name"
             android:layout_centerHorizontal="true"
-            android:paddingTop="24dp"
+            android:paddingTop="8dp"
             android:scaleType="fitXY"
             android:src="@drawable/ic_user_default"/>
 
@@ -84,8 +87,8 @@
 
             <ImageView
                 android:id="@+id/button_edit_profile_picture"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
                 android:clickable="true"
                 tools:src="@drawable/ic_action_edit"/>
         </RelativeLayout>
@@ -98,10 +101,11 @@
             android:layout_centerHorizontal="true"
             android:maxLines="1"
             android:paddingTop="8dp"
-            android:text="status"/>
+            android:text="status"
+            android:textColor="@color/colorBlack"/>
 
         <EditText
-            android:id="@+id/label_status"
+            android:id="@+id/field_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/text_status"

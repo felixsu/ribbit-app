@@ -42,6 +42,6 @@ dependencies {
     compile 'com.firebase:firebase-client-android:2.5.1'
     compile 'com.xwray:passwordview:0.1'
     compile 'com.fenchtose.nocropper:nocropper:0.1.4'
-    compile 'com.squareup.picasso:picasso:2.3.3'
     compile 'com.cjj.materialrefeshlayout:library:1.3.0'
+    compile 'com.squareup.picasso:picasso:2.5.2'
 }

@@ -18,13 +18,13 @@ import com.cjj.MaterialRefreshLayout;
 import com.cjj.MaterialRefreshListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import felix.com.ribbit.R;
 import felix.com.ribbit.adapter.AddFriendAdapter;
+import felix.com.ribbit.decoration.DividerItemDecoration;
 import felix.com.ribbit.listener.ItemClickListener;
 import felix.com.ribbit.listener.ItemLongClickListener;
 import felix.com.ribbit.listener.RibbitValueListener;
@@ -37,7 +37,6 @@ public class AddFriendsActivity extends AppCompatActivity
         implements ItemClickListener, ItemLongClickListener {
 
     private static final String TAG = AddFriendsActivity.class.getSimpleName();
-    private static final int MAX_FRIEND = 1000;
     private static final int INDEX_OPEN = 0;
     private static final int INDEX_ADD_FRIEND = 1;
 
@@ -52,6 +51,7 @@ public class AddFriendsActivity extends AppCompatActivity
     private AddFriendAdapter mAdapter;
 
     private UserWrapper mCurrentUser;
+
     private RibbitValueListener<PhoneWrapper> mCandidateListener = new RibbitValueListener<PhoneWrapper>() {
         @Override
         public void onFinish() {
@@ -60,18 +60,22 @@ public class AddFriendsActivity extends AppCompatActivity
 
         @Override
         public void onSuccess(PhoneWrapper[] data) {
-            List<PhoneWrapper> c = Arrays.asList(data);
+            List<PhoneWrapper> c = new ArrayList<>();
+            for (PhoneWrapper phoneWrapper : data) {
+                c.add(phoneWrapper);
+            }
             AddFriendAdapter adapter = new AddFriendAdapter(AddFriendsActivity.this, c);
             adapter.setItemClickListener(AddFriendsActivity.this);
             adapter.setItemLongClickListener(AddFriendsActivity.this);
             mAdapter = adapter;
+            mListCandidate = c;
             mContainerCandidate.setAdapter(mAdapter);
             mContainerCandidate.invalidate();
         }
 
         @Override
         public void onError(Throwable e, String message) {
-
+            Log.e(TAG, message, e);
         }
     };
     private MaterialRefreshListener mRefreshListener = new MaterialRefreshListener() {
@@ -106,14 +110,20 @@ public class AddFriendsActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    private void addFriend(final int pos) {
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
     }
 
     @Override
-    public void onBackPressed() {
-            super.onBackPressed();
+    protected void onPause() {
+        super.onPause();
+        if (mListCandidate.size() != 0) {
+            PhoneWrapper[] localCandidates = new PhoneWrapper[mListCandidate.size()];
+            localCandidates = mListCandidate.toArray(localCandidates);
+            Log.d(TAG, "candidate array size = " + localCandidates.length);
+            RibbitPhone.persist(localCandidates);
+        }
     }
 
     private void initView() {
@@ -143,11 +153,19 @@ public class AddFriendsActivity extends AppCompatActivity
     private void setupContainerView() {
         mContainerCandidate.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
         mContainerCandidate.setAdapter(mAdapter);
+        mContainerCandidate.addItemDecoration(new DividerItemDecoration(this, null));
     }
 
     private void setupBaseData() {
         mCurrentUser = RibbitUser.getCurrentUser();
+
+        PhoneWrapper[] localCandidates = RibbitPhone.getLocalCandidates();
         mListCandidate = new ArrayList<>();
+        if (localCandidates != null) {
+            for (PhoneWrapper phoneWrapper : localCandidates) {
+                mListCandidate.add(phoneWrapper);
+            }
+        }
     }
 
     private void setupAdapter() {
@@ -169,6 +187,14 @@ public class AddFriendsActivity extends AppCompatActivity
         dialog.show();
     }
 
+    private void showProfile(int pos) {
+        Toast.makeText(AddFriendsActivity.this, "[DEBUG] show profile : " + pos, Toast.LENGTH_SHORT).show();
+    }
+
+    private void addFriend(final int pos) {
+        Toast.makeText(AddFriendsActivity.this, "[DEBUG] add friend : " + pos, Toast.LENGTH_SHORT).show();
+    }
+
     public class MyDialogOnClickListener implements DialogInterface.OnClickListener {
         private int pos;
 
@@ -178,11 +204,11 @@ public class AddFriendsActivity extends AppCompatActivity
 
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            switch (which){
-                case INDEX_OPEN :
-                    Toast.makeText(AddFriendsActivity.this, "[DEBUG] on click : ", Toast.LENGTH_SHORT).show();
+            switch (which) {
+                case INDEX_OPEN:
+                    showProfile(pos);
                     break;
-                case INDEX_ADD_FRIEND :
+                case INDEX_ADD_FRIEND:
                     addFriend(pos);
                     break;
                 default:
@@ -190,4 +216,6 @@ public class AddFriendsActivity extends AppCompatActivity
             }
         }
     }
+
+
 }

@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="horizontal" android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#ffffff">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#ffffff"
+                android:orientation="horizontal">
 
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout"
         android:gravity="right"
-        android:layout_above="@+id/linearLayout">
+        android:orientation="vertical">
 
        <!-- <TextView
             android:layout_width="fill_parent"
@@ -19,54 +20,54 @@
 
         <ListView
             android:id="@+id/lvChat"
-            android:transcriptMode="alwaysScroll"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentRight="true"
-            android:layout_above="@+id/llSend"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:divider="@null" />
+            android:layout_above="@+id/llSend"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:divider="@null"
+            android:transcriptMode="alwaysScroll"/>
     </LinearLayout>
 
     <LinearLayout
-        android:orientation="vertical"
+        android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="false"
         android:layout_alignParentBottom="true"
-        android:id="@+id/linearLayout">
+        android:layout_alignParentEnd="false"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:id="@+id/layoutChatField"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_alignParentBottom="true"
-            android:id="@+id/layoutChatField"
+            android:background="#DDDBDB"
             android:gravity="center_vertical"
-            android:background="#DDDBDB">
+            android:orientation="horizontal">
 
             <EditText
+                android:id="@+id/etMessage"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:id="@+id/etMessage"
-                android:layout_weight=".8"
-                android:hint="  Hi there!"
-                android:background="@drawable/btn_brown"
-                android:textColor="@color/colorPrimary"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp" />
-
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="40dp"
-                android:text="Send"
-                android:id="@+id/btnSendMessage"
-                android:layout_weight=".2"
-                android:textColor="@color/white"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
-                android:background="@drawable/btn_blue" />
+                android:layout_weight=".8"
+                android:background="@drawable/btn_brown"
+                android:hint="  Hi there!"
+                android:textColor="@color/colorPrimary"/>
+
+            <Button
+                android:id="@+id/btnSendMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:layout_marginLeft="5dp"
+                android:layout_marginRight="5dp"
+                android:layout_weight=".2"
+                android:background="@drawable/btn_blue"
+                android:text="Send"
+                android:textColor="@color/colorWhite"/>
         </LinearLayout>
     </LinearLayout>
 
