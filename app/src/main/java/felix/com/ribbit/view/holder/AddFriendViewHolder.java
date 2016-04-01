@@ -8,20 +8,20 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.firebase.client.DataSnapshot;
 import com.firebase.client.Firebase;
-import com.firebase.client.FirebaseError;
-import com.firebase.client.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.io.File;
+import java.io.IOException;
 
 import felix.com.ribbit.R;
 import felix.com.ribbit.listener.ItemClickListener;
 import felix.com.ribbit.listener.ItemLongClickListener;
 import felix.com.ribbit.listener.PersistFileListener;
-import felix.com.ribbit.model.firebase.PictureData;
+import felix.com.ribbit.listener.PictureValueListener;
 import felix.com.ribbit.model.ribbit.RibbitPicture;
 import felix.com.ribbit.model.wrapper.PhoneWrapper;
-import felix.com.ribbit.task.ImageLoader;
+import felix.com.ribbit.util.MediaUtil;
 import felix.com.ribbit.view.base.BaseViewHolder;
 
 /**
@@ -29,11 +29,9 @@ import felix.com.ribbit.view.base.BaseViewHolder;
  * todo
  * increase performance on inflating layout (generate thumbnails use many resource)
  */
-public class AddFriendViewHolder extends BaseViewHolder<PhoneWrapper> implements PersistFileListener {
+public class AddFriendViewHolder extends BaseViewHolder<PhoneWrapper> {
     private static final String TAG = AddFriendViewHolder.class.getName();
 
-
-    private String mPictureJson;
     private Context mContext;
 
     private TextView mNameLabel;
@@ -42,7 +40,16 @@ public class AddFriendViewHolder extends BaseViewHolder<PhoneWrapper> implements
     private RelativeLayout mContainerEmpty;
     private TextView mTextEmpty;
     private View mViewSeparator;
-
+    private PersistFileListener mPersistFileListener = new PersistFileListener() {
+        @Override
+        public void onFinish(Throwable e, Uri uri) {
+            if (e == null) {
+                Picasso.with(mContext).load(uri).into(mProfileImage);
+            } else {
+                Log.e(TAG, e.getMessage(), e);
+            }
+        }
+    };
 
     public AddFriendViewHolder(View itemView,
                                ItemClickListener itemClickListener, ItemLongClickListener itemLongClickListener, boolean isEmpty,
@@ -56,12 +63,26 @@ public class AddFriendViewHolder extends BaseViewHolder<PhoneWrapper> implements
     public void bindView(PhoneWrapper phoneData) {
         if (phoneData.getData() != null) {
             mNameLabel.setText(phoneData.getData().getName());
+            String uid = phoneData.getData().getUid();
+
+            try {
+                Uri imageUri = MediaUtil.getProfilePictureUri(uid);
+                if (imageUri == null) {
+                    throw new IOException("uri not created");
+                }
+
+                File f = new File(imageUri.getPath());
+                if (f.exists()) {
+                    Picasso.with(mContext).load(imageUri).into(mProfileImage);
+                } else {
+                    Firebase pictureFirebase = RibbitPicture.getFirebasePicture().child(uid);
+                    pictureFirebase.addListenerForSingleValueEvent(new PictureValueListener(uid, mPersistFileListener));
+                }
+            } catch (IOException e) {
+                Log.e(TAG, e.getMessage(), e);
+                mProfileImage.setImageResource(R.drawable.ic_user_default);
+            }
         }
-
-        String uid = phoneData.getData().getUid();
-
-        Firebase pictureFirebase = RibbitPicture.getFirebasePicture().child(uid);
-        pictureFirebase.addListenerForSingleValueEvent(new PictureValueListener(uid));
     }
 
     private void initView(boolean isEmpty) {
@@ -86,32 +107,6 @@ public class AddFriendViewHolder extends BaseViewHolder<PhoneWrapper> implements
 
             mNameLabel.setVisibility(View.VISIBLE);
             mProfileImage.setVisibility(View.VISIBLE);
-        }
-    }
-
-    @Override
-    public void onFinish(Uri uri) {
-        Picasso.with(mContext).load(uri).into(mProfileImage);
-    }
-
-    private class PictureValueListener implements ValueEventListener {
-
-        private final String mUid;
-
-        public PictureValueListener(String uid) {
-            mUid = uid;
-        }
-
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            mPictureJson = dataSnapshot.getValue(PictureData.class).getPicture();
-            Log.d(TAG, mPictureJson);
-            new ImageLoader(AddFriendViewHolder.this).execute(mUid, mPictureJson);
-        }
-
-        @Override
-        public void onCancelled(FirebaseError firebaseError) {
-            Log.e(TAG, firebaseError.getMessage());
         }
     }
 }

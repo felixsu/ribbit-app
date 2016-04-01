@@ -31,7 +31,7 @@ import felix.com.ribbit.util.MediaUtil;
 public class ImageCropperActivity extends AppCompatActivity {
     private static final String TAG = ImageCropperActivity.class.getName();
 
-    private static final float SCALE = 1280f;
+    private static final float SCALE = 960f;
     CropperView mCropperView;
     ImageView mButtonSnap;
     ImageView mButtonRotate;

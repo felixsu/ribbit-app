@@ -1,5 +1,6 @@
 package felix.com.ribbit.model.ribbit;
 
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.firebase.client.DataSnapshot;
@@ -71,6 +72,12 @@ public class RibbitPhone extends RibbitBase {
         } catch (Exception e) {
             Log.e(TAG, "failed to serialize candidate", e);
         }
+    }
+
+    public static void clearCandidateData() {
+        SharedPreferences.Editor editor = mSharedPref.edit();
+        editor.remove(KEY_CANDIDATE).apply();
+        mCandidates = null;
     }
 
     public static PhoneWrapper[] getLocalCandidates() {

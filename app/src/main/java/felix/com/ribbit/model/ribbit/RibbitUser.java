@@ -66,6 +66,7 @@ public class RibbitUser extends RibbitBase {
     public static void clearCurrentUser() {
         SharedPreferences.Editor editor = mSharedPref.edit();
         editor.remove(KEY_USER).apply();
+        mCurrentUser = null;
     }
 
     //fresh login from sign up
@@ -129,7 +130,8 @@ public class RibbitUser extends RibbitBase {
     public static void logout() {
         RibbitBase.getRoot().unauth();
         clearCurrentUser();
-        mCurrentUser = null;
+        RibbitPhone.clearCandidateData();
+
     }
 
     public static void deleteUser(String email, String password, RibbitResultListener resultListener) {
