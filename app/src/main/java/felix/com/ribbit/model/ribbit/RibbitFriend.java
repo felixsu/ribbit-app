@@ -22,17 +22,14 @@ import felix.com.ribbit.util.JsonUtil;
  */
 public class RibbitFriend extends RibbitBase {
 
-    private static final String TAG = RibbitFriend.class.getName();
-
     protected static final Firebase FIREBASE_FRIENDS = new Firebase(RIBBIT_DATA + "/friends");
+    private static final String TAG = RibbitFriend.class.getName();
+    private static final String KEY_FRIEND = "key-friend";
+    private static FriendWrapper[] mFriends;
 
     public static Firebase getFirebaseFriend() {
         return FIREBASE_FRIENDS;
     }
-
-    private static final String KEY_FRIEND = "key-friend";
-
-    private static FriendWrapper[] mFriends;
 
     public static void init() {
         try {
@@ -47,12 +44,12 @@ public class RibbitFriend extends RibbitBase {
         }
     }
 
-    public static void persist(FriendWrapper[] fiends) {
+    public static void persist(FriendWrapper[] friends) {
         try {
-            String candidateJson = JsonUtil.toJson(fiends);
+            String candidateJson = JsonUtil.toJson(friends);
             if (candidateJson != null) {
-                Log.d(TAG, "fiends serialization finish successfully");
-                mFriends = fiends;
+                Log.d(TAG, "friends serialization finish successfully");
+                mFriends = friends;
                 mSharedPref.edit().putString(KEY_FRIEND, candidateJson).apply();
             } else {
                 mFriends = null;
@@ -73,7 +70,8 @@ public class RibbitFriend extends RibbitBase {
     }
 
     public static void getAll(String selfUid, RibbitValueListener<FriendWrapper> valueListener) {
-        FIREBASE_FRIENDS.addListenerForSingleValueEvent(new FriendValueEventListenerImpl(valueListener));
+        Firebase firebase = FIREBASE_FRIENDS.child("/" + selfUid);
+        firebase.addListenerForSingleValueEvent(new FriendValueEventListenerImpl(valueListener));
     }
 
 

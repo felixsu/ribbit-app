@@ -11,10 +11,16 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 import felix.com.ribbit.listener.RibbitResultListener;
 import felix.com.ribbit.listener.RibbitValueListener;
 import felix.com.ribbit.model.base.RibbitBase;
+import felix.com.ribbit.model.firebase.FriendData;
 import felix.com.ribbit.model.firebase.UserData;
+import felix.com.ribbit.model.wrapper.FriendWrapper;
 import felix.com.ribbit.model.wrapper.UserWrapper;
 import felix.com.ribbit.util.JsonUtil;
 
@@ -28,8 +34,13 @@ public class RibbitUser extends RibbitBase {
     private static final Firebase FIREBASE_USERS = new Firebase(RIBBIT_DATA + "/users");
 
     private static final String KEY_USER = "key-current-user";
+    private static final int NOT_LOGGED_IN = 2;
+    private static final int LOGGED_IN = 0;
 
     private static UserWrapper mCurrentUser;
+    private static FriendWrapper[] mFriends;
+    private static int mLoginState;
+    private static int mLoginStateTry;
 
     public static Firebase getFirebaseUsers() {
         return FIREBASE_USERS;
@@ -40,8 +51,10 @@ public class RibbitUser extends RibbitBase {
             String currentUserJson = mSharedPref.getString(KEY_USER, null);
             if (currentUserJson != null) {
                 mCurrentUser = JsonUtil.getObjectMapper().readValue(currentUserJson, UserWrapper.class);
+                mLoginState = LOGGED_IN;
             } else {
                 mCurrentUser = null;
+                mLoginState = NOT_LOGGED_IN;
             }
         } catch (Exception e) {
             Log.e(TAG, "failed to deserialize user", e);
@@ -49,7 +62,7 @@ public class RibbitUser extends RibbitBase {
     }
 
     @JsonIgnore
-    public static void getUser(String uid, RibbitValueListener<UserWrapper> valueListener){
+    public static void getUser(String uid, RibbitValueListener<UserWrapper> valueListener) {
         if ((uid != null) && (uid.length() != mCurrentUser.getId().length())) {
             throw new IllegalStateException("requested user id not valid : " + uid);
         }
@@ -99,41 +112,26 @@ public class RibbitUser extends RibbitBase {
         });
     }
 
-    public static void login(final String email, final String password, final RibbitResultListener listener) {
+    public static void login(final String email, final String password, final RibbitResultListener resultListener) {
+        mLoginState = NOT_LOGGED_IN;
+        mLoginStateTry = 0;
         RibbitBase.getRoot().authWithPassword(email, password, new Firebase.AuthResultHandler() {
             @Override
             public void onAuthenticated(AuthData authData) {
                 final String uid = authData.getUid();
 
                 Firebase firebaseUser = getFirebaseUsers().child("/" + uid);
-                firebaseUser.addListenerForSingleValueEvent(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(DataSnapshot result) {
-                        UserData u = result.getValue(UserData.class);
-                        if (mCurrentUser == null) {
-                            mCurrentUser = new UserWrapper(uid, u);
-                        } else {
-                            mCurrentUser.setId(uid);
-                            mCurrentUser.setData(u);
-                        }
-                        setCurrentUser(mCurrentUser);
-                        listener.onFinish();
-                        listener.onSuccess();
-                    }
+                firebaseUser.addListenerForSingleValueEvent(new LoginUserValueListener(uid, resultListener));
 
-                    @Override
-                    public void onCancelled(FirebaseError e) {
-                        listener.onFinish();
-                        listener.onError(e.toException(), e.getMessage());
-                    }
-                });
+                Firebase firebaseFriend = RibbitFriend.getFirebaseFriend().child("/" + uid);
+                firebaseFriend.addListenerForSingleValueEvent(new FriendValueListener(resultListener));
             }
 
             @Override
             public void onAuthenticationError(FirebaseError e) {
                 Log.e(TAG, "login error " + e.getCode());
-                listener.onFinish();
-                listener.onError(e.toException(), e.getMessage());
+                resultListener.onFinish();
+                resultListener.onError(e.toException(), e.getMessage());
             }
         });
     }
@@ -142,12 +140,32 @@ public class RibbitUser extends RibbitBase {
         RibbitBase.getRoot().unauth();
         clearCurrentUser();
         RibbitPhone.clearCandidateData();
+        RibbitFriend.clearFriendData();
 
     }
 
     public static void deleteUser(String email, String password, RibbitResultListener resultListener) {
         Firebase root = getRoot();
         root.removeUser(email, password, new DeleteResultListener(resultListener));
+    }
+
+    private static synchronized void checkResult(boolean isSuccess, RibbitResultListener resultListener) {
+        Log.i(TAG, "check result called " + mLoginStateTry);
+        mLoginStateTry++;
+        if (isSuccess) {
+            mLoginState--;
+        }
+        if (mLoginStateTry == 2 && mLoginState == LOGGED_IN) {
+            RibbitFriend.persist(mFriends);
+            setCurrentUser(mCurrentUser);
+            resultListener.onFinish();
+            resultListener.onSuccess();
+        } else if (mLoginStateTry == 2) {
+            mLoginStateTry = 0;
+            mLoginState = NOT_LOGGED_IN;
+            resultListener.onFinish();
+            resultListener.onError(new RuntimeException("login error"), "failed to complete login sequence");
+        }
     }
 
     private static class DeleteResultListener implements Firebase.ResultHandler {
@@ -177,7 +195,7 @@ public class RibbitUser extends RibbitBase {
         }
     }
 
-    private static class UserValueListener implements ValueEventListener{
+    private static class UserValueListener implements ValueEventListener {
 
         private final RibbitValueListener<UserWrapper> mValueListener;
 
@@ -203,6 +221,70 @@ public class RibbitUser extends RibbitBase {
         public void onCancelled(FirebaseError firebaseError) {
             mValueListener.onFinish();
             mValueListener.onError(firebaseError.toException(), firebaseError.getMessage());
+        }
+    }
+
+    private static class LoginUserValueListener implements ValueEventListener {
+
+        private final String mUid;
+        private final RibbitResultListener mResultListener;
+
+        public LoginUserValueListener(String uid, RibbitResultListener resultListener) {
+            mUid = uid;
+            mResultListener = resultListener;
+        }
+
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            UserData u = dataSnapshot.getValue(UserData.class);
+            if (mCurrentUser == null) {
+                mCurrentUser = new UserWrapper(mUid, u);
+            } else {
+                mCurrentUser.setId(mUid);
+                mCurrentUser.setData(u);
+            }
+            checkResult(true, mResultListener);
+        }
+
+        @Override
+        public void onCancelled(FirebaseError firebaseError) {
+            checkResult(false, mResultListener);
+        }
+    }
+
+    private static class FriendValueListener implements ValueEventListener {
+
+        private final RibbitResultListener mResultListener;
+
+        public FriendValueListener(RibbitResultListener resultListener) {
+            mResultListener = resultListener;
+        }
+
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            if (dataSnapshot.getValue() != null) {
+                try {
+                    HashMap<String, String> map = dataSnapshot.getValue(HashMap.class);
+                    mFriends = new FriendWrapper[map.size()];
+                    int i = 0;
+                    for (Map.Entry<String, String> entry : map.entrySet()) {
+                        FriendWrapper friendWrapper = new FriendWrapper();
+                        friendWrapper.setId(entry.getKey());
+                        friendWrapper.setData(JsonUtil.getObjectMapper().readValue(entry.getValue(), FriendData.class));
+                        mFriends[i] = friendWrapper;
+                    }
+                    checkResult(true, mResultListener);
+                } catch (IOException e) {
+                    checkResult(false, mResultListener);
+                }
+            } else {
+                checkResult(true, mResultListener);
+            }
+        }
+
+        @Override
+        public void onCancelled(FirebaseError firebaseError) {
+            checkResult(false, mResultListener);
         }
     }
 
