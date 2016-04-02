@@ -68,7 +68,7 @@ public class SplashActivity extends AppCompatActivity implements Receiver {
         mSplashLabel = (TextView) findViewById(R.id.label_splash_message);
         mSplashIcon = (ImageView) findViewById(R.id.image_splash);
 
-        Drawable splashIcon = Util.setTint(
+        Drawable splashIcon = Util.tintDrawable(
                 getResources().getDrawable(R.drawable.ic_chat_icon),
                 getResources().getColor(R.color.colorWhite));
         mSplashIcon.setImageDrawable(splashIcon);

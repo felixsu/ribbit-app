@@ -62,4 +62,5 @@
     </string-array>
     <string name="title_activity_image_cropper">ImageCropperActivity</string>
     <string name="action_done">done</string>
+    <string name="action_refresh">refresh</string>
 </resources>

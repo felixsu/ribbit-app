@@ -18,33 +18,17 @@ import felix.com.ribbit.view.holder.AddFriendViewHolder;
  */
 public class AddFriendAdapter extends SingleSelectableAdapter<PhoneWrapper, AddFriendViewHolder> {
 
-    boolean mIsEmpty = false;
     Context mContext;
 
     public AddFriendAdapter(Context context, @NonNull List<PhoneWrapper> items) {
         super(context, items);
-
         mContext = context;
-        if (items.size() == 0) {
-            items.add(new PhoneWrapper());
-            mIsEmpty = true;
-        }
-    }
-
-    @Override
-    public void remove(int pos) {
-        super.remove(pos);
-        if (getItemCount() == 0) {
-            mItems.add(new PhoneWrapper());
-            mIsEmpty = true;
-            notifyItemInserted(0);
-        }
     }
 
     @Override
     public AddFriendViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.layout_add_friend_item, parent, false);
-        return new AddFriendViewHolder(view, mItemClickListener, mItemLongClickListener, mIsEmpty, mContext);
+        return new AddFriendViewHolder(view, mItemClickListener, mItemLongClickListener, mContext);
     }
 
 }

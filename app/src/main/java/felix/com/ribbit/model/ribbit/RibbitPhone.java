@@ -30,18 +30,6 @@ public class RibbitPhone extends RibbitBase {
 
     private static PhoneWrapper[] mCandidates;
 
-    private static ValueEventListener mValueEventListener = new ValueEventListener() {
-        @Override
-        public void onDataChange(DataSnapshot dataSnapshot) {
-            Log.d(TAG, "data changed");
-        }
-
-        @Override
-        public void onCancelled(FirebaseError firebaseError) {
-
-        }
-    };
-
     public static Firebase getFirebasePhone() {
         return FIREBASE_PHONE;
     }
@@ -84,15 +72,17 @@ public class RibbitPhone extends RibbitBase {
         return mCandidates;
     }
 
-    public static void getAll(RibbitValueListener<PhoneWrapper> valueListener) {
-        FIREBASE_PHONE.addListenerForSingleValueEvent(new PhoneValueEventListenerImpl(valueListener));
+    public static void getAll(String selfUid, RibbitValueListener<PhoneWrapper> valueListener) {
+        FIREBASE_PHONE.addListenerForSingleValueEvent(new PhoneValueEventListenerImpl(selfUid, valueListener));
     }
 
     private static class PhoneValueEventListenerImpl implements ValueEventListener {
 
         private final RibbitValueListener<PhoneWrapper> mValueListener;
+        private final String mSelfPhoneNumber;
 
-        private PhoneValueEventListenerImpl(RibbitValueListener<PhoneWrapper> valueListener) {
+        private PhoneValueEventListenerImpl(String selfPhoneNumber, RibbitValueListener<PhoneWrapper> valueListener) {
+            mSelfPhoneNumber = selfPhoneNumber;
             mValueListener = valueListener;
         }
 
@@ -101,24 +91,29 @@ public class RibbitPhone extends RibbitBase {
 
             if (dataSnapshot != null) {
                 Map<String, Map<String, String>> m = dataSnapshot.getValue(HashMap.class);
-                PhoneWrapper[] w = new PhoneWrapper[m.size()];
+                PhoneWrapper[] w = new PhoneWrapper[m.size() - 1];
                 int i = 0;
                 for (Map.Entry<String, Map<String, String>> e : m.entrySet()) {
-                    w[i] = new PhoneWrapper();
-                    w[i].setId(e.getKey());
-                    w[i].setData(JsonUtil.getObjectMapper().convertValue(e.getValue(), PhoneData.class));
-                    i++;
+                    if (!e.getKey().equals(mSelfPhoneNumber)) {
+                        w[i] = new PhoneWrapper();
+                        w[i].setId(e.getKey());
+                        w[i].setData(JsonUtil.getObjectMapper().convertValue(e.getValue(), PhoneData.class));
+                        i++;
+                    }
                 }
                 mCandidates = w;
                 mValueListener.onFinish();
                 mValueListener.onSuccess(mCandidates);
+            } else {
+                onCancelled(new FirebaseError(96, "no data received"));
             }
 
         }
 
         @Override
         public void onCancelled(FirebaseError firebaseError) {
-
+            mValueListener.onFinish();
+            mValueListener.onError(firebaseError.toException(), firebaseError.getMessage());
         }
     }
 

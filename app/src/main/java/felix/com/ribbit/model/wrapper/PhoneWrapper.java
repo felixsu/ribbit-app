@@ -38,23 +38,4 @@ public class PhoneWrapper extends RibbitWrapper<PhoneData> {
     public Firebase getFirebase() {
         return RibbitPhone.getFirebasePhone();
     }
-
-    private class StoreResultListener implements Firebase.CompletionListener {
-
-        final private RibbitResultListener mResultListener;
-
-        public StoreResultListener(RibbitResultListener resultListener) {
-            mResultListener = resultListener;
-        }
-
-        @Override
-        public void onComplete(FirebaseError e, Firebase firebase) {
-            mResultListener.onFinish();
-            if (e == null){
-                mResultListener.onSuccess();
-            }else{
-                mResultListener.onError(e.toException(), e.getMessage());
-            }
-        }
-    }
 }

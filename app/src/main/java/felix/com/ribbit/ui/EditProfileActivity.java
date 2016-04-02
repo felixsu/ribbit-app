@@ -154,6 +154,7 @@ public class EditProfileActivity extends AppCompatActivity implements RibbitResu
             checkResult();
         }
     };
+
     private RibbitResultListener mPhoneDataResultListener = new RibbitResultListener() {
         @Override
         public void onFinish() {
@@ -171,6 +172,7 @@ public class EditProfileActivity extends AppCompatActivity implements RibbitResu
             checkResult();
         }
     };
+
     private RibbitResultListener mPictureDataResultListener = new RibbitResultListener() {
         @Override
         public void onFinish() {
@@ -217,7 +219,7 @@ public class EditProfileActivity extends AppCompatActivity implements RibbitResu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_edit_profile, menu);
-        menu.getItem(0).setIcon(Util.setTint(
+        menu.getItem(0).setIcon(Util.tintDrawable(
                         getResources().getDrawable(R.drawable.ic_action_done),
                         getResources().getColor(R.color.colorAccent))
         );
@@ -315,10 +317,10 @@ public class EditProfileActivity extends AppCompatActivity implements RibbitResu
     }
 
     private void coloringView() {
-        mEditNameButton.setImageDrawable(Util.setTint(
+        mEditNameButton.setImageDrawable(Util.tintDrawable(
                 getResources().getDrawable(R.drawable.ic_action_edit),
                 getResources().getColor(R.color.colorAccent)));
-        mEditProfilePictureButton.setImageDrawable(Util.setTint(
+        mEditProfilePictureButton.setImageDrawable(Util.tintDrawable(
                 getResources().getDrawable(R.drawable.ic_action_edit),
                 getResources().getColor(R.color.colorAccent)));
     }

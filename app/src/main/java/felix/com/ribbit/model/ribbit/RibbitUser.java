@@ -3,6 +3,7 @@ package felix.com.ribbit.model.ribbit;
 import android.content.SharedPreferences;
 import android.util.Log;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.firebase.client.AuthData;
 import com.firebase.client.DataSnapshot;
@@ -11,6 +12,7 @@ import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
 import felix.com.ribbit.listener.RibbitResultListener;
+import felix.com.ribbit.listener.RibbitValueListener;
 import felix.com.ribbit.model.base.RibbitBase;
 import felix.com.ribbit.model.firebase.UserData;
 import felix.com.ribbit.model.wrapper.UserWrapper;
@@ -44,6 +46,15 @@ public class RibbitUser extends RibbitBase {
         } catch (Exception e) {
             Log.e(TAG, "failed to deserialize user", e);
         }
+    }
+
+    @JsonIgnore
+    public static void getUser(String uid, RibbitValueListener<UserWrapper> valueListener){
+        if ((uid != null) && (uid.length() != mCurrentUser.getId().length())) {
+            throw new IllegalStateException("requested user id not valid : " + uid);
+        }
+        Firebase firebase = RibbitUser.getFirebaseUsers().child("/" + uid);
+        firebase.addListenerForSingleValueEvent(new UserValueListener(valueListener));
     }
 
     public static UserWrapper getCurrentUser() {
@@ -163,6 +174,35 @@ public class RibbitUser extends RibbitBase {
             } else {
                 mResultListener.onError(firebaseError.toException(), firebaseError.getMessage());
             }
+        }
+    }
+
+    private static class UserValueListener implements ValueEventListener{
+
+        private final RibbitValueListener<UserWrapper> mValueListener;
+
+        public UserValueListener(RibbitValueListener<UserWrapper> valueListener) {
+            mValueListener = valueListener;
+        }
+
+        @Override
+        public void onDataChange(DataSnapshot dataSnapshot) {
+            if (dataSnapshot.getValue() != null) {
+                UserWrapper userWrapper = new UserWrapper();
+                userWrapper.setId(dataSnapshot.getKey());
+                userWrapper.setData(dataSnapshot.getValue(UserData.class));
+                mValueListener.onFinish();
+                mValueListener.onSuccess(new UserWrapper[]{userWrapper});
+            } else {
+                Log.i(TAG, "user not found " + dataSnapshot.getKey());
+                onCancelled(new FirebaseError(96, "user not found : " + dataSnapshot.getKey()));
+            }
+        }
+
+        @Override
+        public void onCancelled(FirebaseError firebaseError) {
+            mValueListener.onFinish();
+            mValueListener.onError(firebaseError.toException(), firebaseError.getMessage());
         }
     }
 

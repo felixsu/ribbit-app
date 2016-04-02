@@ -6,16 +6,12 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
-import com.cjj.MaterialRefreshLayout;
-import com.cjj.MaterialRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,23 +24,23 @@ import felix.com.ribbit.decoration.DividerItemDecoration;
 import felix.com.ribbit.listener.ItemClickListener;
 import felix.com.ribbit.listener.ItemLongClickListener;
 import felix.com.ribbit.listener.RibbitValueListener;
+import felix.com.ribbit.model.ribbit.RibbitFriend;
 import felix.com.ribbit.model.ribbit.RibbitPhone;
 import felix.com.ribbit.model.ribbit.RibbitUser;
+import felix.com.ribbit.model.wrapper.FriendWrapper;
 import felix.com.ribbit.model.wrapper.PhoneWrapper;
 import felix.com.ribbit.model.wrapper.UserWrapper;
+import felix.com.ribbit.util.Util;
+import felix.com.ribbit.view.custom.EmptyRecyclerView;
 
-public class AddFriendsActivity extends AppCompatActivity
-        implements ItemClickListener, ItemLongClickListener {
+public class AddFriendsActivity extends AppCompatActivity {
 
     private static final String TAG = AddFriendsActivity.class.getSimpleName();
     private static final int INDEX_OPEN = 0;
     private static final int INDEX_ADD_FRIEND = 1;
 
-    @Bind(R.id.wrapper_container_friend_candidate)
-    protected MaterialRefreshLayout mWrapperCandidate;
-
     @Bind(R.id.container_friend_candidate)
-    protected RecyclerView mContainerCandidate;
+    protected EmptyRecyclerView mContainerCandidate;
 
     private List<PhoneWrapper> mListCandidate;
 
@@ -52,21 +48,33 @@ public class AddFriendsActivity extends AppCompatActivity
 
     private UserWrapper mCurrentUser;
 
+    private List<FriendWrapper> mListFriend;
+
     private RibbitValueListener<PhoneWrapper> mCandidateListener = new RibbitValueListener<PhoneWrapper>() {
         @Override
         public void onFinish() {
-            mWrapperCandidate.finishRefresh();
+            Log.d(TAG, "candidate refresh finish");
+            Toast.makeText(AddFriendsActivity.this, "refresh finish", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onSuccess(PhoneWrapper[] data) {
             List<PhoneWrapper> c = new ArrayList<>();
             for (PhoneWrapper phoneWrapper : data) {
-                c.add(phoneWrapper);
+                boolean found = false;
+                for (FriendWrapper friendWrapper : mListFriend){
+                    if (friendWrapper.getId().equals(phoneWrapper.getData().getUid())){
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    c.add(phoneWrapper);
+                }
             }
             AddFriendAdapter adapter = new AddFriendAdapter(AddFriendsActivity.this, c);
-            adapter.setItemClickListener(AddFriendsActivity.this);
-            adapter.setItemLongClickListener(AddFriendsActivity.this);
+            adapter.setItemClickListener(mItemClickListener);
+            adapter.setItemLongClickListener(mItemLongClickListener);
             mAdapter = adapter;
             mListCandidate = c;
             mContainerCandidate.setAdapter(mAdapter);
@@ -76,12 +84,6 @@ public class AddFriendsActivity extends AppCompatActivity
         @Override
         public void onError(Throwable e, String message) {
             Log.e(TAG, message, e);
-        }
-    };
-    private MaterialRefreshListener mRefreshListener = new MaterialRefreshListener() {
-        @Override
-        public void onRefresh(MaterialRefreshLayout materialRefreshLayout) {
-            RibbitPhone.getAll(mCandidateListener);
         }
     };
 
@@ -101,12 +103,19 @@ public class AddFriendsActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_add_friends, menu);
+        updateMenuStyle(menu);
         return true;
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_refresh) {
+            String selfPhoneNumber = mCurrentUser.getData().getPhoneNumber();
+            Log.d(TAG, "refresh with current id " + selfPhoneNumber);
+            RibbitPhone.getAll(selfPhoneNumber, mCandidateListener);
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -126,6 +135,12 @@ public class AddFriendsActivity extends AppCompatActivity
         }
     }
 
+    private void updateMenuStyle(Menu menu) {
+        menu.getItem(0).setIcon(Util.tintDrawable(
+                getResources().getDrawable(R.drawable.ic_action_refresh),
+                getResources().getColor(R.color.colorAccent)));
+    }
+
     private void initView() {
         Log.d(TAG, "entering initView()");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -140,18 +155,14 @@ public class AddFriendsActivity extends AppCompatActivity
     }
 
     private void initData() {
-        setupWrapper();
         setupBaseData();
         setupAdapter();
         setupContainerView();
     }
 
-    private void setupWrapper() {
-        mWrapperCandidate.setMaterialRefreshListener(mRefreshListener);
-    }
-
     private void setupContainerView() {
         mContainerCandidate.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mContainerCandidate.setEmptyView(findViewById(R.id.container_empty_add_friend));
         mContainerCandidate.setAdapter(mAdapter);
         mContainerCandidate.addItemDecoration(new DividerItemDecoration(this, null));
     }
@@ -160,39 +171,53 @@ public class AddFriendsActivity extends AppCompatActivity
         mCurrentUser = RibbitUser.getCurrentUser();
 
         PhoneWrapper[] localCandidates = RibbitPhone.getLocalCandidates();
+        FriendWrapper[] localFriends = RibbitFriend.getLocalFriends();
+
         mListCandidate = new ArrayList<>();
-        if (localCandidates != null) {
+        if ((localCandidates != null) && (localCandidates.length > 0)) {
             for (PhoneWrapper phoneWrapper : localCandidates) {
                 mListCandidate.add(phoneWrapper);
+            }
+        }
+
+        mListFriend = new ArrayList<>();
+        if ((localFriends != null) && (localFriends.length > 0)){
+            for (FriendWrapper friendWrapper : localFriends){
+                mListFriend.add(friendWrapper);
             }
         }
     }
 
     private void setupAdapter() {
         mAdapter = new AddFriendAdapter(this, mListCandidate);
-        mAdapter.setItemClickListener(this);
-        mAdapter.setItemLongClickListener(this);
+        mAdapter.setItemClickListener(mItemClickListener);
+        mAdapter.setItemLongClickListener(mItemLongClickListener);
     }
 
-    @Override
-    public void onItemClick(View view, int index) {
-        Toast.makeText(this, "[DEBUG] on click : " + index, Toast.LENGTH_SHORT).show();
-    }
+    private ItemClickListener mItemClickListener = new ItemClickListener() {
+        @Override
+        public void onItemClick(View view, int index) {
+            showProfile(index);
+        }
+    };
 
-    @Override
-    public void OnLongClick(View view, int index) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(AddFriendsActivity.this);
-        builder.setItems(R.array.add_friend_dialog, new MyDialogOnClickListener(index));
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
+    private ItemLongClickListener mItemLongClickListener = new ItemLongClickListener() {
+        @Override
+        public void OnLongClick(View view, int index) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(AddFriendsActivity.this);
+            builder.setItems(R.array.add_friend_dialog, new MyDialogOnClickListener(index));
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+    };
 
     private void showProfile(int pos) {
-        Toast.makeText(AddFriendsActivity.this, "[DEBUG] show profile : " + pos, Toast.LENGTH_SHORT).show();
+        Log.i(TAG, "show profile " + pos);
     }
 
     private void addFriend(final int pos) {
-        Toast.makeText(AddFriendsActivity.this, "[DEBUG] add friend : " + pos, Toast.LENGTH_SHORT).show();
+        Log.i(TAG, "add friend " + pos);
+        RibbitUser.getUser(mAdapter.getItem(pos).getData().getUid(), new AddFriendListener(pos));
     }
 
     public class MyDialogOnClickListener implements DialogInterface.OnClickListener {
@@ -217,5 +242,36 @@ public class AddFriendsActivity extends AppCompatActivity
         }
     }
 
+    private class AddFriendListener implements RibbitValueListener<UserWrapper> {
 
+        private final int mPosition;
+
+        private AddFriendListener(int position) {
+            mPosition = position;
+        }
+
+        @Override
+        public void onFinish() {
+            Log.i(TAG, "querry user finished");
+        }
+
+        @Override
+        public void onSuccess(UserWrapper[] data) {
+            if (data != null && data.length > 0){
+                UserWrapper retrievedUser = data[0];
+                Log.i(TAG, "user found : " + retrievedUser.getId());
+
+                FriendWrapper friendWrapper = new FriendWrapper(retrievedUser);
+                mListFriend.add(friendWrapper);
+                mAdapter.remove(mPosition);
+            } else{
+                Log.i(TAG, "user not found");
+            }
+        }
+
+        @Override
+        public void onError(Throwable e, String message) {
+            Log.e(TAG, e.getMessage(), e);
+        }
+    }
 }

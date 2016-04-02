@@ -28,18 +28,23 @@ public class PictureValueListener implements ValueEventListener {
 
     @Override
     public void onDataChange(DataSnapshot dataSnapshot) {
-        String pictureJson = dataSnapshot.getValue(PictureData.class).getPicture();
-        try {
-            Uri imageUri = MediaUtil.getProfilePictureUri(mUid);
-            if (imageUri == null) {
-                throw new IOException("uri not created");
+        PictureData pictureData = dataSnapshot.getValue(PictureData.class);
+        if(pictureData != null) {
+            String pictureJson = pictureData.getPicture();
+            try {
+                Uri imageUri = MediaUtil.getProfilePictureUri(mUid);
+                if (imageUri == null) {
+                    throw new IOException("uri not created");
+                }
+                byte[] profilePicture = Util.base64Decode(pictureJson);
+                Bitmap bm = BitmapFactory.decodeByteArray(profilePicture, 0, profilePicture.length);
+                BitmapUtils.writeBitmapToFile(bm, new File(imageUri.getPath()), 100);
+                mPersistFileListener.onFinish(null, imageUri);
+            } catch (IOException e) {
+                mPersistFileListener.onFinish(e, null);
             }
-            byte[] profilePicture = Util.base64Decode(pictureJson);
-            Bitmap bm = BitmapFactory.decodeByteArray(profilePicture, 0, profilePicture.length);
-            BitmapUtils.writeBitmapToFile(bm, new File(imageUri.getPath()), 100);
-            mPersistFileListener.onFinish(null, imageUri);
-        } catch (IOException e) {
-            mPersistFileListener.onFinish(e, null);
+        } else {
+            mPersistFileListener.onFinish(null, null);
         }
     }
 

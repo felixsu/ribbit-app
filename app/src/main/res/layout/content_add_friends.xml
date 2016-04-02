@@ -9,23 +9,26 @@
     tools:context="felix.com.ribbit.ui.AddFriendsActivity"
     tools:showIn="@layout/activity_add_friends">
 
-    <com.cjj.MaterialRefreshLayout
-        android:id="@+id/wrapper_container_friend_candidate"
+    <felix.com.ribbit.view.custom.EmptyRecyclerView
+        android:id="@+id/container_friend_candidate"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:overlay="false"
-        app:progress_colors="@array/material_colors"
-        app:progress_show_circle_backgroud="false"
-        app:wave_height_type="higher"
-        app:wave_show="false">
+        android:clickable="false"
+        android:verticalScrollbarPosition="right">
+    </felix.com.ribbit.view.custom.EmptyRecyclerView>
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/container_friend_candidate"
+    <RelativeLayout
+        android:id="@+id/container_empty_add_friend"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TextView
+            android:id="@+id/text_empty_add_friend"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:verticalScrollbarPosition="right">
-        </android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:text="Empty, Please refresh"/>
 
-    </com.cjj.MaterialRefreshLayout>
-
-</RelativeLayout>
+    </RelativeLayout>
+    </RelativeLayout>

@@ -25,7 +25,7 @@ public class Util {
         }
     }
 
-    public static Drawable setTint(Drawable d, int color) {
+    public static Drawable tintDrawable(Drawable d, int color) {
         Drawable wrappedDrawable = DrawableCompat.wrap(d);
         DrawableCompat.setTint(wrappedDrawable, color);
         return wrappedDrawable;

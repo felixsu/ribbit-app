@@ -1,8 +1,10 @@
 package felix.com.ribbit.model.wrapper;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.firebase.client.Firebase;
 
 import felix.com.ribbit.model.firebase.FriendData;
+import felix.com.ribbit.model.firebase.UserData;
 import felix.com.ribbit.model.ribbit.RibbitFriend;
 
 /**
@@ -10,7 +12,16 @@ import felix.com.ribbit.model.ribbit.RibbitFriend;
  */
 public class FriendWrapper extends RibbitWrapper<FriendData> {
 
+    public FriendWrapper() {
+    }
+
+    public FriendWrapper(UserWrapper user){
+        mId = user.getId();
+        mData = new FriendData(user.getData());
+    }
+
     @Override
+    @JsonIgnore()
     public Firebase getFirebase() {
         return RibbitFriend.getFirebaseFriend();
     }

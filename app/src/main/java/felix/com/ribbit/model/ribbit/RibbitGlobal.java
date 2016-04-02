@@ -14,5 +14,6 @@ public class RibbitGlobal extends RibbitBase {
         mSharedPref = context.getSharedPreferences(MASTER_DATA, Context.MODE_PRIVATE);
         RibbitUser.init();
         RibbitPhone.init();
+        RibbitFriend.init();
     }
 }
