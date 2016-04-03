@@ -1,10 +1,13 @@
 package felix.com.ribbit.model.firebase;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.io.Serializable;
 
 /**
  * Created by fsoewito on 3/21/2016.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PhoneData extends RibbitObject implements Serializable {
 
     protected String mUid;

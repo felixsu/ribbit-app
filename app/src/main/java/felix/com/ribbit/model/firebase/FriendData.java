@@ -1,8 +1,12 @@
 package felix.com.ribbit.model.firebase;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Created by fsoewito on 3/22/2016.
  */
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class FriendData extends RibbitObject {
 
     private String mPhoneNumber;

@@ -1,18 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-    android:background="#ffffff">
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-
-    <TextView
-        android:id="@+id/noFriendList"
+    <felix.com.ribbit.view.custom.EmptyRecyclerView
+        android:id="@+id/container_friend"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/emptyFriendsLabel"
-        android:layout_marginBottom="20dp"/>
+        android:layout_height="match_parent"
+        android:clickable="false"
+        android:verticalScrollbarPosition="right">
+    </felix.com.ribbit.view.custom.EmptyRecyclerView>
 
-    <include layout="@layout/content_listoffriends"
-        android:layout_below="@+id/noFriendList" />
+    <RelativeLayout
+        android:id="@+id/container_empty_friend"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
+        <TextView
+            android:id="@+id/text_empty_friend"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center_horizontal"
+            android:text="No Friend Available"
+            android:textColor="@color/colorBlack"
+            android:textSize="21sp"/>
+
+    </RelativeLayout>
 </RelativeLayout>

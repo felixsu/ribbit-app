@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="72dp"
-    android:background="@color/colorWhite"
+    android:background="@drawable/bg_ripple"
     android:clickable="true"
     android:gravity="center_vertical"
     android:paddingBottom="@dimen/vertical_separator_half"
@@ -22,9 +22,9 @@
             android:id="@+id/image_profile"
             android:layout_width="48dp"
             android:layout_height="48dp"
-            android:scaleType="fitXY"
             android:layout_centerVertical="true"
-            android:background="@drawable/shape_circle_48"
+            android:background="@drawable/bg_circle_48"
+            android:scaleType="fitXY"
             android:src="@drawable/ic_user_default"/>
 
         <RelativeLayout
@@ -38,10 +38,10 @@
                 android:id="@+id/text_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:clickable="false"
                 android:textColor="@color/colorBlack"
                 android:textSize="21sp"
                 android:textStyle="bold"
-                android:clickable="false"
                 tools:text="@string/item_nameLabel"/>
 
         </RelativeLayout>

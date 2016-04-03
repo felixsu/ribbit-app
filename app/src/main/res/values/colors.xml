@@ -7,7 +7,8 @@
 
     <color name="transparent">#00FFFFFF</color>
     <color name="separator">#FFE0E0E0</color>
-    <color name="transparent_grey">#809E9E9E</color>
+    <color name="transparentGrey">#809E9E9E</color>
+    <color name="transparentAccent">#80FFC107</color>
     <color name="colorWhite">#FFFFFFFF</color>
     <color name="colorBlack">#FF000000</color>
 

@@ -11,7 +11,6 @@ import com.firebase.client.Firebase;
 import com.firebase.client.FirebaseError;
 import com.firebase.client.ValueEventListener;
 
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -264,17 +263,18 @@ public class RibbitUser extends RibbitBase {
         public void onDataChange(DataSnapshot dataSnapshot) {
             if (dataSnapshot.getValue() != null) {
                 try {
-                    HashMap<String, String> map = dataSnapshot.getValue(HashMap.class);
+                    HashMap<String, Map<String, String>> map = dataSnapshot.getValue(HashMap.class);
                     mFriends = new FriendWrapper[map.size()];
                     int i = 0;
-                    for (Map.Entry<String, String> entry : map.entrySet()) {
+                    for (Map.Entry<String, Map<String, String>> entry : map.entrySet()) {
                         FriendWrapper friendWrapper = new FriendWrapper();
                         friendWrapper.setId(entry.getKey());
-                        friendWrapper.setData(JsonUtil.getObjectMapper().readValue(entry.getValue(), FriendData.class));
+                        friendWrapper.setData(JsonUtil.getObjectMapper().convertValue(entry.getValue(), FriendData.class));
                         mFriends[i] = friendWrapper;
+                        i++;
                     }
                     checkResult(true, mResultListener);
-                } catch (IOException e) {
+                } catch (Exception e) {
                     checkResult(false, mResultListener);
                 }
             } else {

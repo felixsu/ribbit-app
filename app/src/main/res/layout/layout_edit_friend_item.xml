@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="80dp"
-    android:background="@drawable/statelist_item_background"
+    android:background="@drawable/bg_ripple"
     android:gravity="center_vertical"
     android:paddingBottom="@dimen/vertical_separator_half"
     android:paddingTop="@dimen/vertical_separator_half">
@@ -22,7 +22,8 @@
             android:layout_width="48dp"
             android:layout_height="48dp"
             android:layout_centerVertical="true"
-            android:src="@drawable/ic_profile"/>
+            android:background="@drawable/bg_circle_48"
+            android:src="@drawable/ic_user_default"/>
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -35,6 +36,7 @@
                 android:id="@+id/text_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
                 android:textSize="21sp"
                 android:textStyle="bold"
                 tools:text="@string/item_nameLabel"/>

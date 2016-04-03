@@ -26,9 +26,12 @@
             android:id="@+id/text_empty_add_friend"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:text="Empty, Please refresh"/>
+            android:layout_centerVertical="true"
+            android:gravity="center_horizontal"
+            android:text="Empty\n Please refresh"
+            android:textColor="@color/colorBlack"
+            android:textSize="21sp"/>
 
     </RelativeLayout>
-    </RelativeLayout>
+</RelativeLayout>
